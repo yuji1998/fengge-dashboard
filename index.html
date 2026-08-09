@@ -49,6 +49,47 @@ main{ display:flex; flex-direction:column; gap:14px; }
 </head>
 <body>
 
+<!-- ===== 访问密码锁（未输入正确密码前遮罩全部内容） ===== -->
+<div id="lock">
+  <div class="lock-box">
+    <div style="font-size:40px;margin-bottom:10px;">🔒</div>
+    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·数据驾驶舱</div>
+    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">请输入访问密码以查看</div>
+    <input type="password" id="lockInput" placeholder="访问密码" autocomplete="off" style="width:200px;padding:10px 14px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:15px;text-align:center;outline:none;" />
+    <div id="lockMsg" style="color:#f85149;font-size:12px;height:18px;margin-top:8px;"></div>
+    <button id="lockBtn" style="margin-top:6px;padding:9px 34px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">进入</button>
+  </div>
+  <style>
+    #lock{ position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;align-items:center;justify-content:center; }
+    .lock-box{ background:#161b22;border:1px solid #21262d;border-radius:14px;padding:36px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5); }
+  </style>
+</div>
+<script>
+(function(){
+  var LOCK_KEY='fg_dash_v1';
+  var unlockBtn=document.getElementById('lockBtn');
+  var lockInput=document.getElementById('lockInput');
+  var lockMsg=document.getElementById('lockMsg');
+  var lock=document.getElementById('lock');
+  var PASS='fg2026';
+  function tryUnlock(){
+    if(lockInput.value===PASS){
+      try{ localStorage.setItem(LOCK_KEY,'1'); }catch(e){}
+      lock.style.display='none';
+    }else{
+      lockMsg.textContent='密码错误，请重试';
+      lockInput.select();
+    }
+  }
+  // 本地已解锁过则直接进入
+  try{
+    if(localStorage.getItem(LOCK_KEY)==='1'){ lock.style.display='none'; }
+  }catch(e){}
+  unlockBtn.addEventListener('click',tryUnlock);
+  lockInput.addEventListener('keydown',function(e){ if(e.key==='Enter'){ tryUnlock(); } });
+})();
+</script>
+
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
@@ -280,7 +321,7 @@ donutChart.setOption({
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, {
     trigger: 'item',
-    formatter: '{b}<br/>市值：¥{c}（占比 {d}%）'
+    formatter: '{b}<br/>占比：{d}%'
   }),
   toolbox: toolboxDark,
   legend: {
