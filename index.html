@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·数据可视化驾驶舱</title>
+<title>丰哥·数据可视化驾驶舱（2026-08-10收盘）</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
 :root{
@@ -20,6 +20,7 @@ body{
 h1{ font-size:24px; font-weight:600; letter-spacing:1px; }
 h1 .dot{ color:var(--accent); }
 .header-right{ display:flex; align-items:center; gap:14px; color:var(--muted); font-size:14px; flex-wrap:wrap; }
+#dataDate{ color:var(--accent); }
 #clock{ color:var(--text); font-variant-numeric:tabular-nums; }
 .switch-wrap{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:6px 12px; transition:border-color .2s; }
 .switch-wrap:hover{ border-color:var(--accent); }
@@ -49,7 +50,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
 </head>
 <body>
 
-<!-- ===== 访问密码锁（未输入正确密码前遮罩全部内容） ===== -->
+<!-- ===== 访问密码锁 ===== -->
 <div id="lock">
   <div class="lock-box">
     <div style="font-size:40px;margin-bottom:10px;">🔒</div>
@@ -81,7 +82,6 @@ main{ display:flex; flex-direction:column; gap:14px; }
       lockInput.select();
     }
   }
-  // 本地已解锁过则直接进入
   try{
     if(localStorage.getItem(LOCK_KEY)==='1'){ lock.style.display='none'; }
   }catch(e){}
@@ -93,8 +93,9 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
+    <span id="dataDate">数据：2026-08-10 收盘</span>
     <span id="clock"></span>
-    <div class="switch-wrap" id="switchWrap" title="点击开启/关闭实时刷新">
+    <div class="switch-wrap" id="switchWrap" title="点击开启/关闭实时刷新（模拟）">
       <div class="switch" id="switchBtn"></div>
       <span class="switch-label" id="switchText">实时刷新：关闭</span>
     </div>
@@ -102,12 +103,12 @@ main{ display:flex; flex-direction:column; gap:14px; }
 </header><section class="cards">
   <div class="card">
     <div class="label">总市值</div>
-    <div class="value">¥161,514</div>
+    <div class="value">¥157,353</div>
     <div class="sub">3 只持仓合计</div>
   </div>
   <div class="card">
     <div class="label">总浮亏</div>
-    <div class="value neg">¥-36,341</div>
+    <div class="value neg">¥-40,502</div>
     <div class="sub">较持仓成本</div>
   </div>
   <div class="card">
@@ -117,15 +118,15 @@ main{ display:flex; flex-direction:column; gap:14px; }
   </div>
   <div class="card">
     <div class="label">今日大盘</div>
-    <div class="value pos">+1.02%</div>
-    <div class="sub">上证指数</div>
+    <div class="value pos">+0.67%</div>
+    <div class="sub">上证指数 3,966.59</div>
   </div>
 </section>
 
 <main>
   <div class="row row-line">
     <div class="panel">
-      <h2>上证指数 · 近60分钟走势</h2>
+      <h2>上证指数 · 当日走势</h2>
       <div id="lineChart" class="chart chart-lg"></div>
     </div>
     <div class="panel">
@@ -147,8 +148,6 @@ main{ display:flex; flex-direction:column; gap:14px; }
 
 <script>
 var pad = function(n){ return (n < 10 ? '0' : '') + n; };
-
-/* ---------- 顶部时钟 ---------- */
 var weeks = ['日','一','二','三','四','五','六'];
 function updateClock(){
   var d = new Date();
@@ -159,7 +158,6 @@ function updateClock(){
 updateClock();
 setInterval(updateClock, 1000);
 
-/* ---------- 通用暗色配置 ---------- */
 var tooltipDark = {
   backgroundColor: 'rgba(22,27,34,0.95)',
   borderColor: '#30363d',
@@ -178,207 +176,115 @@ var toolboxDark = {
 };
 var axisLabelMuted = { color: '#8b949e', fontSize: 11 };
 var axisLabelLight = { color: '#e6edf3', fontSize: 12 };
-var splitLineDark = { lineStyle: { color: '#21262d' } };/* ---------- 1. 持仓盈亏（横向柱状） ---------- */
+var splitLineDark = { lineStyle: { color: '#21262d' } };
+
+/* 1. 持仓盈亏 */
 var plChart = echarts.init(document.getElementById('plChart'));
 plChart.setOption({
   backgroundColor: 'transparent',
-  tooltip: Object.assign({}, tooltipDark, {
-    trigger: 'axis', axisPointer: { type: 'shadow' },
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' },
     formatter: function(params){
       var p = params[0];
-      return p.name + '<br/>持仓盈亏：<span style="color:#3fb950">¥' + p.value.toLocaleString('zh-CN') + '</span>';
-    }
-  }),
+      var c = p.value < 0 ? '#3fb950' : '#f85149';
+      return p.name + '<br/>持仓盈亏：<span style="color:' + c + '">¥' + p.value.toLocaleString('zh-CN') + '</span>';
+    } }),
   toolbox: toolboxDark,
   grid: { left: 100, right: 100, top: 36, bottom: 30 },
-  xAxis: {
-    type: 'value',
-    axisLabel: axisLabelMuted,
-    axisLine: { lineStyle: { color: '#30363d' } },
-    axisTick: { show: false },
-    splitLine: splitLineDark
-  },
-  yAxis: {
-    type: 'category',
-    data: ['莱克电气', '立讯精密', '天孚通信'],
-    axisLabel: axisLabelLight,
-    axisLine: { show: false },
-    axisTick: { show: false }
-  },
-  series: [{
-    name: '持仓盈亏', type: 'bar', barWidth: 16,
-    data: [-3744, -7889, -24707.6],
+  xAxis: { type: 'value', axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
+  yAxis: { type: 'category', data: ["莱克电气", "立讯精密", "天孚通信"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
+  series: [{ name: '持仓盈亏', type: 'bar', barWidth: 16,
+    data: [-3798.0, -9089.0, -27614.6],
     itemStyle: { color: '#3fb950', borderRadius: [0, 6, 6, 0] },
-    label: {
-      show: true, position: 'right', color: '#3fb950', fontSize: 12,
-      formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); }
-    }
+    label: { show: true, position: 'right', color: '#3fb950', fontSize: 12,
+      formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); } }
   }]
-});/* ---------- 2. 大盘涨跌幅（横向条形） ---------- */
+});
+
+/* 2. 大盘涨跌幅 */
 var marketChart = echarts.init(document.getElementById('marketChart'));
 marketChart.setOption({
   backgroundColor: 'transparent',
-  tooltip: Object.assign({}, tooltipDark, {
-    trigger: 'axis', axisPointer: { type: 'shadow' },
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' },
     formatter: function(params){
       var p = params[0];
-      return p.name + '<br/>涨跌幅：<span style="color:#f85149">' + (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%</span>';
-    }
-  }),
+      var sign = p.value >= 0 ? '+' : '';
+      var c = p.value >= 0 ? '#f85149' : '#3fb950';
+      return p.name + '<br/>涨跌幅：<span style="color:' + c + '">' + sign + p.value.toFixed(2) + '%</span>';
+    } }),
   toolbox: toolboxDark,
   grid: { left: 80, right: 70, top: 36, bottom: 30 },
-  xAxis: {
-    type: 'value',
-    axisLabel: Object.assign({}, axisLabelMuted, { formatter: '{value}%' }),
-    axisLine: { lineStyle: { color: '#30363d' } },
-    axisTick: { show: false },
-    splitLine: splitLineDark
-  },
-  yAxis: {
-    type: 'category', inverse: true,
-    data: ['上证50', '中证1000', '科创50', '创业板', '深证成指', '上证指数'],
-    axisLabel: axisLabelLight,
-    axisLine: { show: false },
-    axisTick: { show: false }
-  },
-  series: [{
-    name: '涨跌幅', type: 'bar', barWidth: 13,
-    data: [0.66, 1.98, 2.51, 1.35, 1.42, 1.02],
+  xAxis: { type: 'value', axisLabel: Object.assign({}, axisLabelMuted, { formatter: '{value}%' }), axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
+  yAxis: { type: 'category', inverse: true, data: ["上证50", "中证1000", "科创50", "创业板", "深证成指", "上证指数"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
+  series: [{ name: '涨跌幅', type: 'bar', barWidth: 13,
+    data: [2.18, 0.71, -0.36, -0.73, 0.04, 0.67],
     itemStyle: { color: '#f85149', borderRadius: [0, 6, 6, 0] },
-    label: {
-      show: true, position: 'right', color: '#f85149', fontSize: 12,
-      formatter: function(p){ return '+' + p.value.toFixed(2) + '%'; }
-    }
-  }]
-});/* ---------- 3. 上证指数近60分钟走势 ---------- */
-var lineChart = echarts.init(document.getElementById('lineChart'));
-var lineData = [];
-var lineLabels = [];
-var LINE_MAX = 80;
-(function buildLine(){
-  var d = new Date();
-  d.setHours(9, 30, 0, 0);
-  for (var i = 0; i < 60; i++){
-    var t = i / 59;
-    var base = 3920 + 20 * (0.5 - 0.5 * Math.cos(t * Math.PI)); /* 平滑上升 3920→3940 */
-    lineData.push(+(base + (Math.random() - 0.5) * 4).toFixed(2));
-    lineLabels.push(pad(d.getHours()) + ':' + pad(d.getMinutes()));
-    d.setMinutes(d.getMinutes() + 1);
-  }
-})();
-
-lineChart.setOption({
-  backgroundColor: 'transparent',
-  tooltip: Object.assign({}, tooltipDark, {
-    trigger: 'axis',
-    formatter: function(params){
-      var p = params[0];
-      return p.axisValue + '<br/>收盘价：<span style="color:#58a6ff">' + p.value.toFixed(2) + '</span>';
-    }
-  }),
-  toolbox: toolboxDark,
-  grid: { left: 60, right: 24, top: 36, bottom: 42 },
-  xAxis: {
-    type: 'category', boundaryGap: false, data: lineLabels,
-    axisLabel: axisLabelMuted,
-    axisLine: { lineStyle: { color: '#30363d' } },
-    axisTick: { show: false }
-  },
-  yAxis: {
-    type: 'value', min: 3915, max: 3945,
-    axisLabel: axisLabelMuted,
-    axisLine: { show: false },
-    axisTick: { show: false },
-    splitLine: splitLineDark
-  },
-  series: [{
-    name: '上证指数', type: 'line', data: lineData,
-    smooth: true, symbol: 'none',
-    lineStyle: { width: 2, color: '#58a6ff' },
-    areaStyle: {
-      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: 'rgba(88,166,255,0.32)' },
-        { offset: 1, color: 'rgba(88,166,255,0.02)' }
-      ])
-    },
-    markLine: {
-      silent: true, symbol: 'none',
-      lineStyle: { color: '#30363d', type: 'dashed' },
-      label: { color: '#8b949e', fontSize: 10 },
-      data: [{ yAxis: 3920 }, { yAxis: 3940 }]
-    }
+    label: { show: true, position: 'right', color: '#f85149', fontSize: 12,
+      formatter: function(p){ return (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%'; } }
   }]
 });
 
-function nextLabel(){
-  var last = lineLabels[lineLabels.length - 1].split(':');
-  var d = new Date();
-  d.setHours(+last[0], +last[1] + 1, 0, 0);
-  return pad(d.getHours()) + ':' + pad(d.getMinutes());
-}/* ---------- 4. 持仓市值占比（环形图） ---------- */
+/* 3. 上证指数当日走势 */
+var lineChart = echarts.init(document.getElementById('lineChart'));
+var lineData = [3951.03, 3948.89, 3966.59];
+var lineLabels = ["早盘", "午盘", "收盘"];
+lineChart.setOption({
+  backgroundColor: 'transparent',
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
+    formatter: function(params){
+      var p = params[0];
+      return p.axisValue + '<br/>上证指数：<span style="color:#58a6ff">' + p.value.toFixed(2) + '</span>';
+    } }),
+  toolbox: toolboxDark,
+  grid: { left: 60, right: 24, top: 36, bottom: 42 },
+  xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
+  yAxis: { type: 'value', min: 3944, max: 3972, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+  series: [{ name: '上证指数', type: 'line', data: lineData, smooth: true, symbol: 'circle', symbolSize: 7,
+    lineStyle: { width: 2, color: '#58a6ff' },
+    areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+      { offset: 0, color: 'rgba(88,166,255,0.32)' },
+      { offset: 1, color: 'rgba(88,166,255,0.02)' }
+    ]) }
+  }]
+});
+
+/* 4. 持仓市值占比 */
 var donutChart = echarts.init(document.getElementById('donutChart'));
 donutChart.setOption({
   backgroundColor: 'transparent',
-  tooltip: Object.assign({}, tooltipDark, {
-    trigger: 'item',
-    formatter: '{b}<br/>占比：{d}%'
-  }),
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'item', formatter: '{b}<br/>占比：{d}%' }),
   toolbox: toolboxDark,
-  legend: {
-    bottom: 4, itemWidth: 12, itemHeight: 12, icon: 'circle',
-    textStyle: { color: '#8b949e', fontSize: 12 }
-  },
-  series: [{
-    name: '持仓市值占比', type: 'pie',
+  legend: { bottom: 4, itemWidth: 12, itemHeight: 12, icon: 'circle', textStyle: { color: '#8b949e', fontSize: 12 } },
+  series: [{ name: '持仓市值占比', type: 'pie',
     radius: ['52%', '76%'], center: ['50%', '45%'],
     avoidLabelOverlap: true,
     itemStyle: { borderRadius: 6, borderColor: '#0d1117', borderWidth: 2 },
-    label: {
-      show: true, color: '#e6edf3', fontSize: 11,
-      formatter: '{b}\n¥{c}'
-    },
-    emphasis: {
-      label: { show: true, fontWeight: 'bold', fontSize: 14 }
-    },
-    data: [
-      { value: 16866, name: '莱克电气', itemStyle: { color: '#58a6ff' } },
-      { value: 56990, name: '立讯精密', itemStyle: { color: '#f85149' } },
-      { value: 87658, name: '天孚通信', itemStyle: { color: '#f0b429' } }
-    ]
+    label: { show: true, color: '#e6edf3', fontSize: 11, formatter: '{b}\n¥{c}  {d}%' },
+    emphasis: { label: { show: true, fontWeight: 'bold', fontSize: 14 } },
+    data: [{"value": 16812, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 55790, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 84751, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
   }]
 });
 
-/* ---------- 实时刷新开关 ---------- */
-var refreshTimer = null;
-var refreshing = false;
-
+/* 实时刷新开关（模拟小幅波动） */
+var refreshTimer = null, refreshing = false;
 function startRefresh(){
   if (refreshTimer) return;
   refreshTimer = setInterval(function(){
     var last = lineData[lineData.length - 1];
-    var next = +(last + (Math.random() - 0.5) * 2.2).toFixed(2);
-    lineData.push(next);
-    lineLabels.push(nextLabel());
-    if (lineData.length > LINE_MAX){ lineData.shift(); lineLabels.shift(); }
+    var next = +(last + (Math.random() - 0.5) * 2).toFixed(2);
+    lineData.push(next); lineLabels.push('模拟');
+    if (lineData.length > 80){ lineData.shift(); lineLabels.shift(); }
     lineChart.setOption({ xAxis: { data: lineLabels }, series: [{ data: lineData }] });
   }, 3000);
 }
-
-function stopRefresh(){
-  clearInterval(refreshTimer);
-  refreshTimer = null;
-}
-
+function stopRefresh(){ clearInterval(refreshTimer); refreshTimer = null; }
 function toggleRefreshSwitch(){
   refreshing = !refreshing;
   document.getElementById('switchBtn').classList.toggle('on', refreshing);
   document.getElementById('switchWrap').classList.toggle('active', refreshing);
-  document.getElementById('switchText').textContent = refreshing ? '实时刷新：开启（每3秒）' : '实时刷新：关闭';
+  document.getElementById('switchText').textContent = refreshing ? '实时刷新：开启（每3秒模拟）' : '实时刷新：关闭';
   if (refreshing){ startRefresh(); } else { stopRefresh(); }
 }
 document.getElementById('switchWrap').addEventListener('click', toggleRefreshSwitch);
-
-/* ---------- 自适应 ---------- */
 window.addEventListener('resize', function(){
   [plChart, marketChart, lineChart, donutChart].forEach(function(c){ c.resize(); });
 });
