@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·数据可视化驾驶舱（2026-08-12收盘）</title>
+<title>丰哥·数据可视化驾驶舱（2026-08-13收盘）</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
 :root{
@@ -93,7 +93,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
-    <span id="dataDate">数据：2026-08-12 收盘</span>
+    <span id="dataDate">数据：2026-08-13 收盘</span>
     <span id="clock"></span>
     <div class="switch-wrap" id="switchWrap" title="点击开启/关闭实时刷新（模拟）">
       <div class="switch" id="switchBtn"></div>
@@ -103,12 +103,12 @@ main{ display:flex; flex-direction:column; gap:14px; }
 </header><section class="cards">
   <div class="card">
     <div class="label">总市值</div>
-    <div class="value">¥164,811</div>
+    <div class="value">¥170,065</div>
     <div class="sub">3 只持仓合计</div>
   </div>
   <div class="card">
     <div class="label">总浮亏</div>
-    <div class="value neg">¥-33,044</div>
+    <div class="value neg">¥-27,790</div>
     <div class="sub">较持仓成本</div>
   </div>
   <div class="card">
@@ -118,8 +118,8 @@ main{ display:flex; flex-direction:column; gap:14px; }
   </div>
   <div class="card">
     <div class="label">今日大盘</div>
-    <div class="value pos">+0.32%</div>
-    <div class="sub">上证指数 3,946.68</div>
+    <div class="value neg">-0.50%</div>
+    <div class="sub">上证指数 3,926.96</div>
   </div>
 </section>
 
@@ -193,7 +193,7 @@ plChart.setOption({
   xAxis: { type: 'value', axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
   yAxis: { type: 'category', data: ["莱克电气", "立讯精密", "天孚通信"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
   series: [{ name: '持仓盈亏', type: 'bar', barWidth: 16,
-    data: [-4368.0, -7529.0, -21147.0],
+    data: [-4326.0, -8819.0, -14645.2],
     itemStyle: { color: '#3fb950', borderRadius: [0, 6, 6, 0] },
     label: { show: true, position: 'right', color: '#3fb950', fontSize: 12,
       formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); } }
@@ -216,7 +216,7 @@ marketChart.setOption({
   xAxis: { type: 'value', axisLabel: Object.assign({}, axisLabelMuted, { formatter: '{value}%' }), axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
   yAxis: { type: 'category', inverse: true, data: ["上证50", "中证1000", "科创50", "创业板", "深证成指", "上证指数"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
   series: [{ name: '涨跌幅', type: 'bar', barWidth: 13,
-    data: [0.35, 1.24, 1.61, 1.49, 1.09, 0.32],
+    data: [-0.67, -1.0, -1.11, -0.45, -0.87, -0.5],
     itemStyle: { color: '#f85149', borderRadius: [0, 6, 6, 0] },
     label: { show: true, position: 'right', color: '#f85149', fontSize: 12,
       formatter: function(p){ return (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%'; } }
@@ -225,7 +225,7 @@ marketChart.setOption({
 
 /* 3. 上证指数当日走势 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
-var lineData = [3939.45, 3944.64, 3946.68];
+var lineData = [3965.5, 3964.9, 3926.96];
 var lineLabels = ["早盘", "午盘", "收盘"];
 lineChart.setOption({
   backgroundColor: 'transparent',
@@ -237,7 +237,7 @@ lineChart.setOption({
   toolbox: toolboxDark,
   grid: { left: 60, right: 24, top: 36, bottom: 42 },
   xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
-  yAxis: { type: 'value', min: 3934, max: 3952, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+  yAxis: { type: 'value', min: 3922, max: 3970, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
   series: [{ name: '上证指数', type: 'line', data: lineData, smooth: true, symbol: 'circle', symbolSize: 7,
     lineStyle: { width: 2, color: '#58a6ff' },
     areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -260,7 +260,7 @@ donutChart.setOption({
     itemStyle: { borderRadius: 6, borderColor: '#0d1117', borderWidth: 2 },
     label: { show: true, color: '#e6edf3', fontSize: 11, formatter: '{b}\n¥{c}  {d}%' },
     emphasis: { label: { show: true, fontWeight: 'bold', fontSize: 14 } },
-    data: [{"value": 16242, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 57350, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 91219, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
+    data: [{"value": 16284, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 56060, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 97720, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
   }]
 });
 
