@@ -4,7 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>丰哥·数据可视化驾驶舱（2026-08-19收盘）</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+/* ECharts 多CDN动态加载+自动回退（国内网络首选npmmirror，失败依次回退） */
+(function(){
+  var CDNS = {
+    'npmmirror': 'https://registry.npmmirror.com/echarts/5.5.0/files/dist/echarts.min.js',
+    'bootcdn':   'https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js',
+    'unpkg':     'https://unpkg.com/echarts@5.5.0/dist/echarts.min.js',
+    'jsdelivr':  'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js',
+    'staticfile': 'https://cdn.staticfile.org/echarts/5.5.0/echarts.min.js'
+  };
+  var keys = Object.keys(CDNS);
+  function tryLoad(i, cb){
+    if(i >= keys.length){ cb(false); return; }
+    var k = keys[i];
+    if(window.echarts){ cb(true); return; }
+    var s = document.createElement('script');
+    s.src = CDNS[k];
+    s.onload = function(){ cb(true); };
+    s.onerror = function(){ s.remove(); tryLoad(i+1, cb); };
+    document.head.appendChild(s);
+  }
+  window.__loadECharts = function(cb){ tryLoad(0, cb); };
+})();
+</script>
 <style>
 :root{
   --bg:#0d1117; --panel:#161b22; --border:#21262d;
@@ -189,6 +212,8 @@ function updateClock(){
 }
 updateClock();
 setInterval(updateClock, 1000);
+
+window.__loadECharts(function(){
 
 var tooltipDark = {
   backgroundColor: 'rgba(22,27,34,0.85)',
@@ -379,6 +404,8 @@ document.getElementById('switchWrap').addEventListener('click', toggleRefreshSwi
 window.addEventListener('resize', function(){
   [plChart, marketChart, lineChart, donutChart, northChart].forEach(function(c){ c.resize(); });
 });
+
+}); // end __loadECharts
 </script>
 </body>
 </html>
