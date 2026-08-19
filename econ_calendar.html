@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丰哥·经济数据发布日历</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.5;padding:20px;min-height:100vh}
+.dashboard{max-width:1000px;margin:0 auto}
+.header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid #21262d}
+.header h1{font-size:1.6rem;font-weight:600;background:linear-gradient(135deg,#58a6ff,#f78166);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{color:#8b949e;font-size:0.9rem}
+.legend{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:0.9rem;color:#8b949e}
+.legend ul{list-style:none;padding-left:0;margin:0}
+.legend li{padding:2px 0}
+table{width:100%;border-collapse:collapse;background:#161b22;border:1px solid #21262d;border-radius:12px;overflow:hidden;font-size:0.95rem}
+thead th{background:#21262d;padding:12px 14px;text-align:left;font-weight:600;color:#e6edf3;font-size:0.9rem}
+tbody td{padding:11px 14px;border-top:1px solid #21262d}
+tbody tr:hover{background:#1c2b3a}
+.rel-today{color:#f85149;font-weight:600}
+.rel-tomorrow{color:#f0883e;font-weight:600}
+.rel-later{color:#8b949e}
+.fmt{color:#8b949e;font-size:0.88rem;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="header">
+        <h1>📅 经济数据发布日历</h1>
+        <div class="sub">🌏 中美主要宏观数据 · 未来30天 · 更新 2026-08-19 23:36</div>
+    </div>
+    <div class="legend"><ul>
+    <li>🟢 = 今日发布　🟡 = 明日发布　其余 = N天后</li>
+    <li>各国发布频率均为月度（非农每月第一个周五）</li>
+    <li>数据发布当日，系统会自动拉取最新值并推送</li>
+    </ul></div>
+    <table>
+        <thead>
+            <tr><th>地区</th><th>数据名称</th><th>发布日期</th><th>状态</th><th>发布机构</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>LPR利率</td>
+            <td>2026-08-20</td>
+            <td class="rel-tomorrow">🟡 明天</td>
+            <td>央行</td>
+        </tr>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>官方制造业PMI</td>
+            <td>2026-09-01</td>
+            <td class="rel-later">13天后</td>
+            <td>国家统计局</td>
+        </tr>
+        <tr>
+            <td><span style="color:#58a6ff;font-weight:600">[美国]</span></td>
+            <td>美国ISM制造业PMI</td>
+            <td>2026-09-01</td>
+            <td class="rel-later">13天后</td>
+            <td>ISM</td>
+        </tr>
+        <tr>
+            <td><span style="color:#58a6ff;font-weight:600">[美国]</span></td>
+            <td>美国非农就业报告</td>
+            <td>2026-09-04</td>
+            <td class="rel-later">16天后</td>
+            <td>美国劳工局</td>
+        </tr>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>外汇储备</td>
+            <td>2026-09-07</td>
+            <td class="rel-later">19天后</td>
+            <td>央行</td>
+        </tr>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>进出口数据</td>
+            <td>2026-09-08</td>
+            <td class="rel-later">20天后</td>
+            <td>海关总署</td>
+        </tr>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>CPI/PPI</td>
+            <td>2026-09-09</td>
+            <td class="rel-later">21天后</td>
+            <td>国家统计局</td>
+        </tr>
+        <tr>
+            <td><span style="color:#58a6ff;font-weight:600">[美国]</span></td>
+            <td>美国CPI</td>
+            <td>2026-09-11</td>
+            <td class="rel-later">23天后</td>
+            <td>美国劳工局</td>
+        </tr>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>社融/M2/信贷</td>
+            <td>2026-09-13</td>
+            <td class="rel-later">25天后</td>
+            <td>央行</td>
+        </tr>
+        <tr>
+            <td><span style="color:#58a6ff;font-weight:600">[美国]</span></td>
+            <td>美国PPI</td>
+            <td>2026-09-14</td>
+            <td class="rel-later">26天后</td>
+            <td>美国劳工局</td>
+        </tr>
+        <tr>
+            <td><span style="color:#f85149;font-weight:600">[中国]</span></td>
+            <td>工业增加值/社零/投资</td>
+            <td>2026-09-15</td>
+            <td class="rel-later">27天后</td>
+            <td>国家统计局</td>
+        </tr>
+        <tr>
+            <td><span style="color:#58a6ff;font-weight:600">[美国]</span></td>
+            <td>美国零售销售</td>
+            <td>2026-09-16</td>
+            <td class="rel-later">28天后</td>
+            <td>美国商务部</td>
+        </tr></tbody>
+    </table>
+    <div class="fmt">数据来源：国家统计局 / 央行 / 海关总署 / ISM / 美国劳工局 / 美国商务部。刷新页面获取最新日期。</div>
+</div>
+</body>
+</html>
