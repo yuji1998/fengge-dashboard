@@ -185,19 +185,9 @@ main{ display:flex; flex-direction:column; gap:14px; }
       <div id="donutChart" class="chart"></div>
     </div>
   </div>
-  <div class="row row-two">
-    <div class="panel">
-      <h2>持仓盈亏</h2>
-      <div id="plChart" class="chart"></div>
-    </div>
-    <div class="panel">
-      <h2>大盘涨跌幅</h2>
-      <div id="marketChart" class="chart"></div>
-    </div>
-  </div>
   <div class="panel">
-    <h2>北向资金 <span style="font-size:12px;color:var(--muted);font-weight:normal;">(2026-08-19)</span></h2>
-    <div id="northChart" class="chart chart-sm"></div>
+    <h2>持仓盈亏</h2>
+    <div id="plChart" class="chart"></div>
   </div>
 </main>
 
@@ -258,29 +248,6 @@ plChart.setOption(Object.assign({}, animOpt, {
   }]
 }));
 
-/* 2. 大盘涨跌幅 */
-var marketChart = echarts.init(document.getElementById('marketChart'));
-marketChart.setOption(Object.assign({}, animOpt, {
-  backgroundColor: 'transparent',
-  tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' },
-    formatter: function(params){
-      var p = params[0];
-      var sign = p.value >= 0 ? '+' : '';
-      var c = p.value >= 0 ? '#f85149' : '#3fb950';
-      return p.name + '<br/>涨跌幅：<span style="color:' + c + '">' + sign + p.value.toFixed(2) + '%</span>';
-    } }),
-  toolbox: toolboxDark,
-  grid: { left: 80, right: 70, top: 36, bottom: 30 },
-  xAxis: { type: 'value', axisLabel: Object.assign({}, axisLabelMuted, { formatter: '{value}%' }), axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
-  yAxis: { type: 'category', inverse: true, data: ["上证50", "中证1000", "科创50", "创业板", "深证成指", "上证指数"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
-  series: [{ name: '涨跌幅', type: 'bar', barWidth: 13,
-    data: [-4.14, -5.39, -6.89, -6.26, -5.01, -2.4],
-    itemStyle: { color: '#f85149', borderRadius: [0, 6, 6, 0] },
-    label: { show: true, position: 'right', color: '#f85149', fontSize: 12,
-      formatter: function(p){ return (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%'; } }
-  }]
-}));
-
 /* 3. 上证指数当日走势 + 成交额副轴 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
 var lineData = [3955.98, 3904.78, 3894.42];
@@ -330,34 +297,6 @@ donutChart.setOption(Object.assign({}, animOpt, {
   }]
 }));
 
-/* 5. 北向资金图 */
-var northChart = echarts.init(document.getElementById('northChart'));
-var northData = {"sh": 0.0, "sz": 0.0, "total": 0.0};
-var northHasData = northData && (northData.sh || northData.sz || northData.total);
-if (northHasData) {
-  northChart.setOption(Object.assign({}, animOpt, {
-    backgroundColor: 'transparent',
-    tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' } }),
-    toolbox: toolboxDark,
-    grid: { left: 60, right: 20, top: 36, bottom: 30 },
-    xAxis: { type: 'category', data: ['沪股通', '深股通', '合计'], axisLabel: axisLabelLight, axisLine: { lineStyle: { color: '#30363d' } } },
-    yAxis: { type: 'value', name: '净流入(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: axisLabelMuted, splitLine: splitLineDark },
-    series: [{ name: '北向资金', type: 'bar', barWidth: 30,
-      data: [
-        { value: northData.sh || 0, itemStyle: { color: '#f85149' } },
-        { value: northData.sz || 0, itemStyle: { color: '#3fb950' } },
-        { value: northData.total || 0, itemStyle: { color: '#58a6ff' } }
-      ],
-      label: { show: true, position: 'top', color: '#e6edf3', fontSize: 12, formatter: function(p){ return p.value.toFixed(1) + '亿'; } }
-    }]
-  }));
-} else {
-  northChart.setOption({
-    backgroundColor: 'transparent',
-    title: { text: '当日北向数据待更新', left: 'center', top: 'middle', textStyle: { color: '#8b949e', fontSize: 14, fontWeight: 'normal' } }
-  });
-}
-
 /* 实时刷新开关（尝试真实行情，受跨域限制则提示） */
 var refreshTimer = null, refreshing = false;
 function attemptRealRefresh(){
@@ -402,7 +341,7 @@ function toggleRefreshSwitch(){
 }
 document.getElementById('switchWrap').addEventListener('click', toggleRefreshSwitch);
 window.addEventListener('resize', function(){
-  [plChart, marketChart, lineChart, donutChart, northChart].forEach(function(c){ c.resize(); });
+  [plChart, lineChart, donutChart].forEach(function(c){ c.resize(); });
 });
 
 }); // end __loadECharts
