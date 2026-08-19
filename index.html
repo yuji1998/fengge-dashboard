@@ -8,14 +8,16 @@
 <style>
 :root{
   --bg:#0d1117; --panel:#161b22; --border:#21262d;
-  --text:#e6edf3; --muted:#8b949e; --green:#3fb950; --red:#f85149; --accent:#58a6ff;
+  --text:#e6edf3; --muted:#8b949e; --green:#3fb950; --red:#f85149; --accent:#58a6ff; --yellow:#d29922;
 }
 *{ margin:0; padding:0; box-sizing:border-box; }
 body{
   background:var(--bg); color:var(--text);
   font-family:"Segoe UI","Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-serif;
   padding:20px 24px 40px; min-height:100vh;
+  animation: fadeIn .6s ease;
 }
+@keyframes fadeIn { from{ opacity:0; transform: translateY(8px);} to{ opacity:1; transform:none;} }
 .header{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:18px; }
 h1{ font-size:24px; font-weight:600; letter-spacing:1px; }
 h1 .dot{ color:var(--accent); }
@@ -31,7 +33,8 @@ h1 .dot{ color:var(--accent); }
 .switch-label{ font-size:13px; color:var(--muted); }
 .switch-wrap.active .switch-label{ color:var(--text); }
 .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
-.card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
+.card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.card:hover{ transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(88,166,255,0.15); }
 .card .label{ color:var(--muted); font-size:13px; margin-bottom:8px; }
 .card .value{ font-size:26px; font-weight:600; font-variant-numeric:tabular-nums; }
 .card .sub{ color:var(--muted); font-size:12px; margin-top:6px; }
@@ -41,11 +44,25 @@ main{ display:flex; flex-direction:column; gap:14px; }
 .row{ display:grid; gap:14px; }
 .row-line{ grid-template-columns:2fr 1fr; }
 .row-two{ grid-template-columns:1fr 1fr; }
-.panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 14px 10px; }
+.row-risk{ grid-template-columns:repeat(3, 1fr); }
+.panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 14px 10px; transition: transform .25s ease, border-color .25s ease; }
+.panel:hover{ transform: translateY(-2px); border-color: var(--accent); }
 .panel h2{ font-size:15px; font-weight:600; color:var(--text); margin-bottom:2px; }
 .chart{ width:100%; height:330px; }
 .chart-lg{ height:340px; }
-@media (max-width:980px){ .row-line,.row-two{ grid-template-columns:1fr; } }
+.chart-sm{ height:260px; }
+.risk-indicator{ display:inline-flex; align-items:center; gap:6px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:13px; margin-left:12px; }
+.risk-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+.risk-dot.green{ background:var(--green); box-shadow:0 0 8px var(--green); }
+.risk-dot.yellow{ background:var(--yellow); box-shadow:0 0 8px var(--yellow); }
+.risk-dot.red{ background:var(--red); box-shadow:0 0 8px var(--red); }
+.risk-card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; transition: transform .25s ease, border-color .25s ease; }
+.risk-card:hover{ transform: translateY(-4px); border-color: var(--accent); }
+.risk-card .name{ font-weight:600; font-size:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+.risk-card .metric{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:var(--muted); }
+.risk-card .metric span:last-child{ color:var(--text); font-weight:500; }
+.risk-card .warn{ color:var(--red); font-weight:600; }
+@media (max-width:980px){ .row-line,.row-two,.row-risk{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -95,12 +112,15 @@ main{ display:flex; flex-direction:column; gap:14px; }
   <div class="header-right">
     <span id="dataDate">数据：2026-08-19 收盘</span>
     <span id="clock"></span>
-    <div class="switch-wrap" id="switchWrap" title="点击开启/关闭实时刷新（模拟）">
+    <div class="switch-wrap" id="switchWrap" title="点击尝试连接新浪行情（需本地服务器或代理）">
       <div class="switch" id="switchBtn"></div>
       <span class="switch-label" id="switchText">实时刷新：关闭</span>
     </div>
+    <span class="risk-indicator"><span class="risk-dot red"></span><span>风险偏高：单票集中60%超50%</span></span>
   </div>
-</header><section class="cards">
+</header>
+
+<section class="cards">
   <div class="card">
     <div class="label">总市值</div>
     <div class="value">¥174,764</div>
@@ -124,9 +144,17 @@ main{ display:flex; flex-direction:column; gap:14px; }
 </section>
 
 <main>
+  <!-- 持仓风险监控区块 -->
+  <div class="panel">
+    <h2>⚠️ 持仓风险监控</h2>
+    <div class="row row-risk" style="margin-top:10px;">
+      <div class="risk-card"><div class="name">莱克电气 </div><div class="metric"><span>Beta</span><span>0.88</span></div><div class="metric"><span>年化波动率</span><span>49.9%</span></div><div class="metric"><span>止损位</span><span>25</span></div><div class="metric"><span>集中度</span><span>9.1%</span></div><div class="metric"><span>现价</span><span>26.42</span></div></div><div class="risk-card"><div class="name">立讯精密 </div><div class="metric"><span>Beta</span><span>1.99</span></div><div class="metric"><span>年化波动率</span><span>55.9%</span></div><div class="metric"><span>止损位</span><span>50</span></div><div class="metric"><span>集中度</span><span>30.6%</span></div><div class="metric"><span>现价</span><span>53.50</span></div></div><div class="risk-card"><div class="name">天孚通信 <span class="warn">集中60%超限</span></div><div class="metric"><span>Beta</span><span>2.85</span></div><div class="metric"><span>年化波动率</span><span>94.0%</span></div><div class="metric"><span>止损位</span><span>255</span></div><div class="metric"><span>集中度</span><span>60.3%</span></div><div class="metric"><span>现价</span><span>277.40</span></div></div>
+    </div>
+  </div>
+
   <div class="row row-line">
     <div class="panel">
-      <h2>上证指数 · 当日走势</h2>
+      <h2>上证指数 · 当日走势 <span style="font-size:12px;color:var(--muted);font-weight:normal;">(含成交额)</span></h2>
       <div id="lineChart" class="chart chart-lg"></div>
     </div>
     <div class="panel">
@@ -144,6 +172,10 @@ main{ display:flex; flex-direction:column; gap:14px; }
       <div id="marketChart" class="chart"></div>
     </div>
   </div>
+  <div class="panel">
+    <h2>北向资金 <span style="font-size:12px;color:var(--muted);font-weight:normal;">(2026-08-19)</span></h2>
+    <div id="northChart" class="chart chart-sm"></div>
+  </div>
 </main>
 
 <script>
@@ -159,10 +191,10 @@ updateClock();
 setInterval(updateClock, 1000);
 
 var tooltipDark = {
-  backgroundColor: 'rgba(22,27,34,0.95)',
+  backgroundColor: 'rgba(22,27,34,0.85)',
   borderColor: '#30363d',
   textStyle: { color: '#e6edf3', fontSize: 12 },
-  extraCssText: 'border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.5);'
+  extraCssText: 'border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.6);backdrop-filter:blur(6px);transition:all .2s ease;'
 };
 var toolboxDark = {
   right: 8, top: 2,
@@ -177,10 +209,11 @@ var toolboxDark = {
 var axisLabelMuted = { color: '#8b949e', fontSize: 11 };
 var axisLabelLight = { color: '#e6edf3', fontSize: 12 };
 var splitLineDark = { lineStyle: { color: '#21262d' } };
+var animOpt = { animationDuration: 900, animationEasing: 'cubicOut' };
 
 /* 1. 持仓盈亏 */
 var plChart = echarts.init(document.getElementById('plChart'));
-plChart.setOption({
+plChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' },
     formatter: function(params){
@@ -198,11 +231,11 @@ plChart.setOption({
     label: { show: true, position: 'right', color: '#3fb950', fontSize: 12,
       formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); } }
   }]
-});
+}));
 
 /* 2. 大盘涨跌幅 */
 var marketChart = echarts.init(document.getElementById('marketChart'));
-marketChart.setOption({
+marketChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' },
     formatter: function(params){
@@ -221,35 +254,43 @@ marketChart.setOption({
     label: { show: true, position: 'right', color: '#f85149', fontSize: 12,
       formatter: function(p){ return (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%'; } }
   }]
-});
+}));
 
-/* 3. 上证指数当日走势 */
+/* 3. 上证指数当日走势 + 成交额副轴 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
 var lineData = [3955.98, 3904.78, 3894.42];
 var lineLabels = ["早盘", "午盘", "收盘"];
-lineChart.setOption({
+var lineAmts = [1717.2, 8244.9, 12181.1];
+lineChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
     formatter: function(params){
       var p = params[0];
-      return p.axisValue + '<br/>上证指数：<span style="color:#58a6ff">' + p.value.toFixed(2) + '</span>';
+      var amt = params[1] ? params[1].value : '--';
+      return p.axisValue + '<br/>上证指数：<span style="color:#58a6ff">' + p.value.toFixed(2) + '</span><br/>成交额：<span style="color:#d29922">' + (amt !== '--' ? amt.toFixed(0) + '亿' : '--') + '</span>';
     } }),
   toolbox: toolboxDark,
-  grid: { left: 60, right: 24, top: 36, bottom: 42 },
+  grid: { left: 60, right: 70, top: 36, bottom: 42 },
   xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
-  yAxis: { type: 'value', min: 3889, max: 3961, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
-  series: [{ name: '上证指数', type: 'line', data: lineData, smooth: true, symbol: 'circle', symbolSize: 7,
-    lineStyle: { width: 2, color: '#58a6ff' },
-    areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-      { offset: 0, color: 'rgba(88,166,255,0.32)' },
-      { offset: 1, color: 'rgba(88,166,255,0.02)' }
-    ]) }
-  }]
-});
+  yAxis: [
+    { type: 'value', min: 3889, max: 3961, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+    { type: 'value', name: '成交额(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: { color: '#d29922', fontSize: 11 }, splitLine: { show: false }, axisLine: { show: false } }
+  ],
+  series: [
+    { name: '上证指数', type: 'line', data: lineData, smooth: true, symbol: 'circle', symbolSize: 7,
+      lineStyle: { width: 2, color: '#58a6ff' },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: 'rgba(88,166,255,0.32)' },
+        { offset: 1, color: 'rgba(88,166,255,0.02)' }
+      ]) }
+    },
+    { name: '成交额', type: 'bar', yAxisIndex: 1, data: lineAmts, barWidth: '60%', itemStyle: { color: 'rgba(210,153,34,0.3)', borderRadius: [4,4,0,0] } }
+  ]
+}));
 
 /* 4. 持仓市值占比 */
 var donutChart = echarts.init(document.getElementById('donutChart'));
-donutChart.setOption({
+donutChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'item', formatter: '{b}<br/>占比：{d}%' }),
   toolbox: toolboxDark,
@@ -262,31 +303,81 @@ donutChart.setOption({
     emphasis: { label: { show: true, fontWeight: 'bold', fontSize: 14 } },
     data: [{"value": 15852, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 53500, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 105412, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
   }]
-});
+}));
 
-/* 实时刷新开关（模拟小幅波动） */
+/* 5. 北向资金图 */
+var northChart = echarts.init(document.getElementById('northChart'));
+var northData = {"sh": 0.0, "sz": 0.0, "total": 0.0};
+var northHasData = northData && (northData.sh || northData.sz || northData.total);
+if (northHasData) {
+  northChart.setOption(Object.assign({}, animOpt, {
+    backgroundColor: 'transparent',
+    tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' } }),
+    toolbox: toolboxDark,
+    grid: { left: 60, right: 20, top: 36, bottom: 30 },
+    xAxis: { type: 'category', data: ['沪股通', '深股通', '合计'], axisLabel: axisLabelLight, axisLine: { lineStyle: { color: '#30363d' } } },
+    yAxis: { type: 'value', name: '净流入(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: axisLabelMuted, splitLine: splitLineDark },
+    series: [{ name: '北向资金', type: 'bar', barWidth: 30,
+      data: [
+        { value: northData.sh || 0, itemStyle: { color: '#f85149' } },
+        { value: northData.sz || 0, itemStyle: { color: '#3fb950' } },
+        { value: northData.total || 0, itemStyle: { color: '#58a6ff' } }
+      ],
+      label: { show: true, position: 'top', color: '#e6edf3', fontSize: 12, formatter: function(p){ return p.value.toFixed(1) + '亿'; } }
+    }]
+  }));
+} else {
+  northChart.setOption({
+    backgroundColor: 'transparent',
+    title: { text: '当日北向数据待更新', left: 'center', top: 'middle', textStyle: { color: '#8b949e', fontSize: 14, fontWeight: 'normal' } }
+  });
+}
+
+/* 实时刷新开关（尝试真实行情，受跨域限制则提示） */
 var refreshTimer = null, refreshing = false;
+function attemptRealRefresh(){
+  // 尝试通过JSONP方式获取新浪行情（实际受跨域限制，这里做诚实提示）
+  var script = document.createElement('script');
+  script.src = 'https://hq.sinajs.cn/list=sh603355,sz002475,sz300394,s_sh000001';
+  script.onerror = function(){
+    document.getElementById('switchText').textContent = '跨域受限，需本地服务';
+    stopRefresh();
+    alert('浏览器跨域限制，无法直接获取新浪行情。\n请通过本地服务器或代理访问（如Python http.server）。');
+  };
+  script.onload = function(){
+    // 如果加载成功（实际几乎不可能），尝试解析
+    try {
+      var txt = window.hq_str_sh603355 || '';
+      if (txt) {
+        document.getElementById('switchText').textContent = '已获取实时数据';
+        // 这里简单演示，实际可更新图表
+      } else {
+        throw new Error('empty');
+      }
+    } catch(e) {
+      document.getElementById('switchText').textContent = '跨域受限，需本地服务';
+      stopRefresh();
+    }
+  };
+  document.head.appendChild(script);
+}
 function startRefresh(){
   if (refreshTimer) return;
-  refreshTimer = setInterval(function(){
-    var last = lineData[lineData.length - 1];
-    var next = +(last + (Math.random() - 0.5) * 2).toFixed(2);
-    lineData.push(next); lineLabels.push('模拟');
-    if (lineData.length > 80){ lineData.shift(); lineLabels.shift(); }
-    lineChart.setOption({ xAxis: { data: lineLabels }, series: [{ data: lineData }] });
-  }, 3000);
+  attemptRealRefresh();
+  // 如果加载成功，每10秒尝试一次（实际不会成功）
+  refreshTimer = setInterval(attemptRealRefresh, 10000);
 }
 function stopRefresh(){ clearInterval(refreshTimer); refreshTimer = null; }
 function toggleRefreshSwitch(){
   refreshing = !refreshing;
   document.getElementById('switchBtn').classList.toggle('on', refreshing);
   document.getElementById('switchWrap').classList.toggle('active', refreshing);
-  document.getElementById('switchText').textContent = refreshing ? '实时刷新：开启（每3秒模拟）' : '实时刷新：关闭';
+  document.getElementById('switchText').textContent = refreshing ? '尝试连接行情...' : '实时刷新：关闭';
   if (refreshing){ startRefresh(); } else { stopRefresh(); }
 }
 document.getElementById('switchWrap').addEventListener('click', toggleRefreshSwitch);
 window.addEventListener('resize', function(){
-  [plChart, marketChart, lineChart, donutChart].forEach(function(c){ c.resize(); });
+  [plChart, marketChart, lineChart, donutChart, northChart].forEach(function(c){ c.resize(); });
 });
 </script>
 </body>
