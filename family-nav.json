@@ -1,0 +1,17 @@
+[
+  {
+    "title": "家庭相册",
+    "url": "http://100.127.9.75:5000",
+    "emoji": "📸"
+  },
+  {
+    "title": "投资看板",
+    "url": "https://yuji1998.github.io/fengge-dashboard/?v=20260820",
+    "emoji": "📈"
+  },
+  {
+    "title": "报价看板",
+    "url": "https://yuji1998.github.io/fengge-dashboard/finprice.html?v=20260820",
+    "emoji": "💰"
+  }
+]
