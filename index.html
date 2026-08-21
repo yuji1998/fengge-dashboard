@@ -3,63 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·实时投资监测看板（2026-08-21 07:13）</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<title>丰哥·数据可视化驾驶舱（2026-08-21收盘）</title>
+<script>
+/* ECharts 多CDN动态加载+自动回退（国内网络首选npmmirror，失败依次回退） */
+(function(){
+  var CDNS = {
+    'npmmirror': 'https://registry.npmmirror.com/echarts/5.5.0/files/dist/echarts.min.js',
+    'bootcdn':   'https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js',
+    'unpkg':     'https://unpkg.com/echarts@5.5.0/dist/echarts.min.js',
+    'jsdelivr':  'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js',
+    'staticfile': 'https://cdn.staticfile.org/echarts/5.5.0/echarts.min.js'
+  };
+  var keys = Object.keys(CDNS);
+  function tryLoad(i, cb){
+    if(i >= keys.length){ cb(false); return; }
+    var k = keys[i];
+    if(window.echarts){ cb(true); return; }
+    var s = document.createElement('script');
+    s.src = CDNS[k];
+    s.onload = function(){ cb(true); };
+    s.onerror = function(){ s.remove(); tryLoad(i+1, cb); };
+    document.head.appendChild(s);
+  }
+  window.__loadECharts = function(cb){ tryLoad(0, cb); };
+})();
+</script>
 <style>
-:root{--bg:#0d1117;--panel:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--green:#3fb950;--red:#f85149;--accent:#58a6ff;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;padding:20px 22px 40px;min-height:100vh;}
-.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
-h1{font-size:22px;font-weight:600;letter-spacing:1px;}
-h1 .dot{color:var(--accent);}
-.version{font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 8px;border-radius:12px;margin-left:8px;vertical-align:middle;}
-.meta{color:var(--muted);font-size:13px;}
-.meta b{color:var(--accent);}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:16px;}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-.card .label{color:var(--muted);font-size:12px;margin-bottom:6px;}
-.card .value{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;}
-.card .sub{color:var(--muted);font-size:11px;margin-top:5px;}
-.pos{color:var(--red);}.neg{color:var(--green);}
-main{display:flex;flex-direction:column;gap:14px;}
-.row{display:grid;gap:14px;}
-.row-line{grid-template-columns:2fr 1fr;}
-.row-two{grid-template-columns:1fr 1fr;}
-.row-three{grid-template-columns:repeat(3,1fr);}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;}
-.panel h2{font-size:15px;font-weight:600;margin-bottom:2px;}
-.panel .p-sub{color:var(--muted);font-size:11px;margin-bottom:8px;}
-.chart{width:100%;height:300px;}
-.chart-lg{height:320px;}
-.us-line{display:flex;align-items:center;justify-content:space-between;padding:6px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
-.us-line:last-child{border-bottom:none;}
-.us-name{color:var(--text);font-weight:500;}
-.us-price{color:var(--muted);font-variant-numeric:tabular-nums;}
-.us-pct{font-weight:600;font-variant-numeric:tabular-nums;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th{color:var(--muted);font-weight:500;text-align:left;font-size:11px;padding:5px 6px;border-bottom:1px solid var(--border);}
-td{padding:7px 6px;border-bottom:1px solid var(--border);}
-td.num{text-align:right;font-variant-numeric:tabular-nums;}
-td.unit{color:var(--muted);font-size:11px;text-align:right;}
-.stock-tip{font-size:10px;color:var(--muted);}
-.risk-item{display:flex;align-items:center;gap:8px;padding:7px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
-.risk-item:last-child{border-bottom:none;}
-.risk-name{flex:1;color:var(--text);}
-.risk-lvl{font-size:11px;width:38px;flex-shrink:0;}
-.risk-note{color:var(--muted);font-size:11px;max-width:180px;text-align:right;}
-.econ-item{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
-.econ-item:last-child{border-bottom:none;}
-.econ-date{color:var(--accent);font-size:11px;width:92px;flex-shrink:0;font-variant-numeric:tabular-nums;}
-.econ-name{flex:1;color:var(--text);}
-.news-item{padding:9px 2px;border-bottom:1px dashed var(--border);}
-.news-title{color:var(--accent);font-size:12px;font-weight:600;margin-bottom:4px;}
-.news-body{color:var(--muted);font-size:12px;line-height:1.5;max-height:150px;overflow:auto;white-space:pre-wrap;}
-.ten-h2{font-size:16px;font-weight:700;color:var(--accent);margin:10px 0 6px;}
-.ten-dim{font-size:14px;font-weight:600;color:var(--text);margin:6px 0 2px;}
-.ten-line{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px;white-space:pre-wrap;}
-.ten-empty{color:var(--muted);font-size:13px;}
-.sect-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px;margin-right:6px;}
-@media (max-width:1080px){.row-line,.row-two,.row-three{grid-template-columns:1fr;}}
+:root{
+  --bg:#0d1117; --panel:#161b22; --border:#21262d;
+  --text:#e6edf3; --muted:#8b949e; --green:#3fb950; --red:#f85149; --accent:#58a6ff; --yellow:#d29922;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"Segoe UI","Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-serif;
+  padding:20px 24px 40px; min-height:100vh;
+  animation: fadeIn .6s ease;
+}
+@keyframes fadeIn { from{ opacity:0; transform: translateY(8px);} to{ opacity:1; transform:none;} }
+.header{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:18px; }
+h1{ font-size:24px; font-weight:600; letter-spacing:1px; }
+h1 .dot{ color:var(--accent); }
+.header-right{ display:flex; align-items:center; gap:14px; color:var(--muted); font-size:14px; flex-wrap:wrap; }
+#dataDate{ color:var(--accent); }
+#clock{ color:var(--text); font-variant-numeric:tabular-nums; }
+.switch-wrap{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:6px 12px; transition:border-color .2s; }
+.switch-wrap:hover{ border-color:var(--accent); }
+.switch{ position:relative; width:38px; height:20px; background:#30363d; border-radius:10px; transition:background .25s; flex-shrink:0; }
+.switch::after{ content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#8b949e; transition:left .25s, background .25s; }
+.switch.on{ background:var(--accent); }
+.switch.on::after{ left:20px; background:#fff; }
+.switch-label{ font-size:13px; color:var(--muted); }
+.switch-wrap.active .switch-label{ color:var(--text); }
+.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+.card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.card:hover{ transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(88,166,255,0.15); }
+.card .label{ color:var(--muted); font-size:13px; margin-bottom:8px; }
+.card .value{ font-size:26px; font-weight:600; font-variant-numeric:tabular-nums; }
+.card .sub{ color:var(--muted); font-size:12px; margin-top:6px; }
+.pos{ color:var(--red); }
+.neg{ color:var(--green); }
+main{ display:flex; flex-direction:column; gap:14px; }
+.row{ display:grid; gap:14px; }
+.row-line{ grid-template-columns:2fr 1fr; }
+.row-two{ grid-template-columns:1fr 1fr; }
+.row-risk{ grid-template-columns:repeat(3, 1fr); }
+.panel{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 14px 10px; transition: transform .25s ease, border-color .25s ease; }
+.panel:hover{ transform: translateY(-2px); border-color: var(--accent); }
+.panel h2{ font-size:15px; font-weight:600; color:var(--text); margin-bottom:2px; }
+.chart{ width:100%; height:330px; }
+.chart-lg{ height:340px; }
+.chart-sm{ height:260px; }
+.risk-indicator{ display:inline-flex; align-items:center; gap:6px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:13px; margin-left:12px; }
+.risk-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+.risk-dot.green{ background:var(--green); box-shadow:0 0 8px var(--green); }
+.risk-dot.yellow{ background:var(--yellow); box-shadow:0 0 8px var(--yellow); }
+.risk-dot.red{ background:var(--red); box-shadow:0 0 8px var(--red); }
+.risk-card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; transition: transform .25s ease, border-color .25s ease; }
+.risk-card:hover{ transform: translateY(-4px); border-color: var(--accent); }
+.risk-card .name{ font-weight:600; font-size:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+.risk-card .metric{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:var(--muted); }
+.risk-card .metric span:last-child{ color:var(--text); font-weight:500; }
+.risk-card .warn{ color:var(--red); font-weight:600; }
+@media (max-width:980px){ .row-line,.row-two,.row-risk{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -68,174 +94,257 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
 <div id="lock">
   <div class="lock-box">
     <div style="font-size:40px;margin-bottom:10px;">🔒</div>
-    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·实时投资监测看板</div>
-    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">7×24 盘前指引 · 请输入访问密码</div>
+    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·数据驾驶舱</div>
+    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">请输入访问密码以查看</div>
     <input type="password" id="lockInput" placeholder="访问密码" autocomplete="off" style="width:200px;padding:10px 14px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:15px;text-align:center;outline:none;" />
     <div id="lockMsg" style="color:#f85149;font-size:12px;height:18px;margin-top:8px;"></div>
     <button id="lockBtn" style="margin-top:6px;padding:9px 34px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">进入</button>
   </div>
   <style>
-    #lock{position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;align-items:center;justify-content:center;}
-    .lock-box{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:36px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+    #lock{ position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;align-items:center;justify-content:center; }
+    .lock-box{ background:#161b22;border:1px solid #21262d;border-radius:14px;padding:36px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5); }
   </style>
 </div>
 <script>
 (function(){
-  var LOCK='fg_dash_v2', btn=document.getElementById('lockBtn'), inp=document.getElementById('lockInput'), msg=document.getElementById('lockMsg'), lk=document.getElementById('lock'), PASS='fg2026';
-  function go(){ if(inp.value===PASS){ try{localStorage.setItem(LOCK,'1');}catch(e){} lk.style.display='none'; } else { msg.textContent='密码错误，请重试'; inp.select(); } }
-  try{ if(localStorage.getItem(LOCK)==='1') lk.style.display='none'; }catch(e){}
-  btn.addEventListener('click',go); inp.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+  var LOCK_KEY='fg_dash_v1';
+  var unlockBtn=document.getElementById('lockBtn');
+  var lockInput=document.getElementById('lockInput');
+  var lockMsg=document.getElementById('lockMsg');
+  var lock=document.getElementById('lock');
+  var PASS='fg2026';
+  function tryUnlock(){
+    if(lockInput.value===PASS){
+      try{ localStorage.setItem(LOCK_KEY,'1'); }catch(e){}
+      lock.style.display='none';
+    }else{
+      lockMsg.textContent='密码错误，请重试';
+      lockInput.select();
+    }
+  }
+  try{
+    if(localStorage.getItem(LOCK_KEY)==='1'){ lock.style.display='none'; }
+  }catch(e){}
+  unlockBtn.addEventListener('click',tryUnlock);
+  lockInput.addEventListener('keydown',function(e){ if(e.key==='Enter'){ tryUnlock(); } });
 })();
 </script>
 
 <header class="header">
-  <h1>丰哥<span class="dot">·</span>实时投资监测看板<span class="version">7×24 盘前指引</span></h1>
-  <div class="meta">数据更新时间：<b>2026-08-21 07:13:28</b>　访问密码 <b>fg2026</b></div>
+  <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
+  <div class="header-right">
+    <span id="dataDate">数据：2026-08-21 收盘</span>
+    <span id="clock"></span>
+    <div class="switch-wrap" id="switchWrap" title="点击尝试连接新浪行情（需本地服务器或代理）">
+      <div class="switch" id="switchBtn"></div>
+      <span class="switch-label" id="switchText">实时刷新：关闭</span>
+    </div>
+    <span class="risk-indicator"><span class="risk-dot red"></span><span>风险偏高：单票集中59%超50%</span></span>
+  </div>
 </header>
 
 <section class="cards">
   <div class="card">
-    <div class="label">持仓总市值</div>
-    <div class="value">¥242,464</div>
-    <div class="sub">股票 + 基金</div>
+    <div class="label">总市值</div>
+    <div class="value">¥175,526</div>
+    <div class="sub">3 只持仓合计</div>
   </div>
   <div class="card">
-    <div class="label">持仓累计浮亏</div>
-    <div class="value neg">¥-28,737</div>
-    <div class="sub">持仓总市值242,464</div>
+    <div class="label">总浮亏</div>
+    <div class="value neg">¥-22,329</div>
+    <div class="sub">较持仓成本</div>
   </div>
   <div class="card">
-    <div class="label">A股上证指数</div>
-    <div class="value pos">+0.24%</div>
-    <div class="sub">点位 3,903.72</div>
+    <div class="label">持仓</div>
+    <div class="value">3 只</div>
+    <div class="sub">莱克电气 / 立讯精密 / 天孚通信</div>
+  </div>
+  <div class="card">
+    <div class="label">今日大盘</div>
+    <div class="value pos">+0.04%</div>
+    <div class="sub">上证指数 3,905.20</div>
   </div>
 </section>
 
 <main>
-  <div class="row row-two">
-    <div class="panel">
-      <h2><span class="sect-tag">核心</span>丰哥持仓 · 个股实时</h2>
-      <div class="p-sub">现价 / 当日% / 累计盈亏 / 距成本</div>
-      <table>
-        <tr><th>名称</th><th class="num">现价</th><th class="num">当日</th><th class="num">累计盈亏</th><th class="num">距成本</th></tr>
-        <tr><td>亨通光电<div style="font-size:10px;color:#8b949e">600487</div></td><td class="num">62.02</td><td class="num">+5.28%</td><td class="num" style="color:#f85149">+568</td><td class="num">+3.1%</td></tr><tr><td>莱克电气<div style="font-size:10px;color:#8b949e">603355</div></td><td class="num">27.56</td><td class="num">+4.31%</td><td class="num" style="color:#3fb950">-4,074</td><td class="num">-19.8%</td></tr><tr><td>立讯精密<div style="font-size:10px;color:#8b949e">002475</div></td><td class="num">53.34</td><td class="num">-0.30%</td><td class="num" style="color:#3fb950">-11,539</td><td class="num">-17.8%</td></tr><tr><td>天孚通信<div style="font-size:10px;color:#8b949e">300394</div></td><td class="num">276.25</td><td class="num">-0.41%</td><td class="num" style="color:#3fb950">-7,391</td><td class="num">-6.6%</td></tr>
-      </table>
-    </div>
-    <div class="panel">
-      <h2>基金持仓</h2>
-      <div class="p-sub">参考市值 / 累计盈亏</div>
-      <table>
-        <tr><th>基金</th><th class="num">市值</th><th class="num">累计盈亏</th></tr>
-        <tr><td>融通产业趋势股票</td><td class="num">20,657</td><td class="num" style="color:#3fb950">-6,895</td></tr><tr><td>广发聚荣一年持有混合A</td><td class="num">11,406</td><td class="num" style="color:#f85149">+1,406</td></tr><tr><td>中欧科创AI指数C</td><td class="num">8,055</td><td class="num" style="color:#3fb950">-1,945</td></tr><tr><td>易方达科创50联接C</td><td class="num">8,021</td><td class="num" style="color:#f85149">+698</td></tr><tr><td>活期+</td><td class="num">867</td><td class="num" style="color:#f85149">+434</td></tr>
-      </table>
+  <!-- 持仓风险监控区块 -->
+  <div class="panel">
+    <h2>⚠️ 持仓风险监控</h2>
+    <div class="row row-risk" style="margin-top:10px;">
+      <div class="risk-card"><div class="name">莱克电气 </div><div class="metric"><span>Beta</span><span>0.88</span></div><div class="metric"><span>年化波动率</span><span>49.9%</span></div><div class="metric"><span>止损位</span><span>25</span></div><div class="metric"><span>集中度</span><span>9.7%</span></div><div class="metric"><span>现价</span><span>28.51</span></div></div><div class="risk-card"><div class="name">立讯精密 </div><div class="metric"><span>Beta</span><span>1.99</span></div><div class="metric"><span>年化波动率</span><span>55.9%</span></div><div class="metric"><span>止损位</span><span>50</span></div><div class="metric"><span>集中度</span><span>31.1%</span></div><div class="metric"><span>现价</span><span>54.65</span></div></div><div class="risk-card"><div class="name">天孚通信 <span class="warn">集中59%超限</span></div><div class="metric"><span>Beta</span><span>2.85</span></div><div class="metric"><span>年化波动率</span><span>94.0%</span></div><div class="metric"><span>止损位</span><span>255</span></div><div class="metric"><span>集中度</span><span>59.1%</span></div><div class="metric"><span>现价</span><span>273.08</span></div></div>
     </div>
   </div>
 
-  <div class="row row-two">
+  <div class="row row-line">
     <div class="panel">
-      <h2>持仓累计盈亏</h2>
-      <div id="plChart" class="chart"></div>
+      <h2>上证指数 · 当日走势 <span style="font-size:12px;color:var(--muted);font-weight:normal;">(含成交额)</span></h2>
+      <div id="lineChart" class="chart chart-lg"></div>
     </div>
     <div class="panel">
       <h2>持仓市值占比</h2>
       <div id="donutChart" class="chart"></div>
     </div>
   </div>
-
-  <div class="row row-two">
-    <div class="panel">
-      <h2><span class="sect-tag">模块四</span>今日关注经济数据/事件</h2>
-      <div class="p-sub">宏观日历</div>
-      <div style="max-height:260px;overflow:auto;"><div class="econ-item"><span class="econ-date">08-14 09:30</span><span class="econ-name">70城房价 / 社会消费品零售 / 规上工业</span><span class="econ-region" style="color:#58a6ff">[国内]</span></div><div class="econ-item"><span class="econ-date">08-14 20:30</span><span class="econ-name">美国初请失业金 / 零售销售</span><span class="econ-region" style="color:#58a6ff">[海外]</span></div><div class="econ-item"><span class="econ-date">本周</span><span class="econ-name">美联储官员讲话 / 地缘进展</span><span class="econ-region" style="color:#58a6ff">[海外]</span></div><div class="econ-item"><span class="econ-date">8月</span><span class="econ-name">MLF / LPR 报价窗口</span><span class="econ-region" style="color:#58a6ff">[国内]</span></div></div>
-    </div>
-    <div class="panel">
-      <h2><span class="sect-tag">模块五</span>历史风险清单对照</h2>
-      <div class="p-sub">当前状态评估</div>
-      <div style="max-height:260px;overflow:auto;"><div class="risk-item"><span class="risk-name">霍尔木兹海峡/中东地缘</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注油价与避险传导</span></div><div class="risk-item"><span class="risk-name">美联储利率政策</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注纪要/点阵图</span></div><div class="risk-item"><span class="risk-name">A股踩踏/流动性</span><span class="risk-lvl" style="color:#3fb950">●低</span><span class="risk-note">当前量能正常</span></div><div class="risk-item"><span class="risk-name">中美经贸/关税</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注新增关税措施</span></div><div class="risk-item"><span class="risk-name">台海/技术封锁</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注科技股情绪</span></div><div class="risk-item"><span class="risk-name">美股高位回调</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">纳指高位，防情绪逆转</span></div></div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="panel">
-      <h2><span class="sect-tag">模块二</span>盘前重要消息流</h2>
-      <div class="p-sub">扣子搜索 · 政策/产业/地缘/科技</div>
-      <div style="max-height:320px;overflow:auto;"><div class="news-item"><div class="news-title">🕘 2026-08-21 盘前关注要点（Kimi整理·模型观点）</div><div class="news-body">⚠️ **说明**：我的训练数据截止于2024年6月，无法获取2026年8月21日的真实新闻。以下是基于你给出的市场背景、以及截至我知识 cutoff 的宏观与产业常识所整理的**假设性/条件性盘前观察**，仅供投资参考，不构成买卖建议。
-
-1. **政策面**：市场对稳增长政策进一步发力（如降准、消费补贴、财政加码）仍有期待，若盘中出现政策信号，有望提振风险偏好——【利好】。  
-2. **产业映射**：隔夜中概电商龙头大跌，反映资金对消费复苏、出海监管及关税压力的担忧，可能拖累A股消费、互联网及跨境电商板块情绪——【利空】。  
-3. **地缘风险**：金价与油价维持高位显示地缘风险溢价仍存，全球风险资产估值受压制，A股高估值成长板块或承压——【利空】。  
-4. **科技映射**：美股纳指、标普收涨，AI算力与半导体龙头估值上行，可能带动A股光模块、算力芯片、AI应用等主题短期跟风——【利好】。  
-5. **贵金属与能源**：国际金价高位运行利好贵金属、黄金珠宝板块；油价相对高位亦对油气开采、炼化产业链形成支撑——【利好】。  
-6. **A股自身位置**：上证指数已接近3920点相对高位，成交量能否持续放大及北向/外资流向是日内关键，若量能不足需警惕高位震荡——【中性】。</div></div></div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="panel">
-      <h2><span class="sect-tag">模块六</span>10维框架盘前指引 <span style="font-size:11px;color:#8b949e;font-weight:400;">（Kimi 生成）</span></h2>
-      <div class="p-sub">宏观 / 政策 / 资金 / 技术 / 情绪 / 估值 / 产业 / 汇率 / 商品 / 风险 · 综合评级</div>
-      <div id="tenBlock" style="max-height:560px;overflow:auto;"><div class="ten-h2">十维框架研判</div>
-<div class="ten-line">**【宏观】** 外盘拖累下A股开盘承压，但内需与政策托底特征仍存。</div>
-<div class="ten-line">—— 隔夜道指/纳指/标普分别下跌1.32%/1.00%/0.87%，叠加金价4586.92、油价86.28高位运行，全球风险溢价上升；而A股昨日收盘仍全线飘红，显示内部韧性。</div>
-<div class="ten-line">**【政策】** 稳增长政策预期仍是当前A股最重要的下行缓冲。</div>
-<div class="ten-line">—— 盘前要点指向降准、消费补贴、财政加码等预期仍在，上证50昨日+0.24%也反映蓝筹对政策托底的定价。</div>
-<div class="ten-line">**【资金】** 北向/外资动向是日内关键，量价配合决定突破有效性。</div>
-<div class="ten-line">—— 离岸人民币USD/CNH报6.7225偏强，理论上支撑外资流入；但隔夜美股大跌可能令外资开盘观望，需紧盯开盘后30分钟量能。</div>
-<div class="ten-line">**【技术】** 上证指数逼近3920相对高位，短线跳空低开概率上升。</div>
-<div class="ten-line">—— 上证收盘3903.72，距关键整数关口仅一步之遥；科创50昨日-0.87%与中证1000+0.96%分化，显示成长风格高位承压。</div>
-<div class="ten-line">**【情绪】** 市场情绪偏谨慎，高位获利了结意愿增强。</div>
-<div class="ten-line">—— 美股科技股普遍收跌（苹果-1.75%、特斯拉-1.71%、亚马逊-2.16%），A股持仓中天孚/立讯收跌、仅亨通放量领涨，反映板块情绪分化。</div>
-<div class="ten-line">**【估值】** 成长股估值受海外映射压制，低估值蓝筹相对占优。</div>
-<div class="ten-line">—— 纳指与标普齐跌、科创50回调，表明高估值成长风格承压；上证50估值安全边际更高，防御属性凸显。</div>
-<div class="ten-line">**【产业】** AI/消费电子链分化，上游资源与红利板块受商品高位支撑。</div>
-<div class="ten-line">—— 英伟达-0.33%、苹果-1.75%对A股果链/CPO构成压制（立讯-0.30%、天孚-0.41%），而原油、黄金、铜高位运行利好油气、贵金属及有色板块。</div>
-<div class="ten-line">**【汇率】** 离岸人民币升值压力缓解，外资流出风险短期可控。</div>
-<div class="ten-line">—— USD/CNH 6.7225处于偏强区间，汇率端对A股估值修复和外资回流形成正向贡献。</div>
-<div class="ten-line">**【商品】** 商品高位利好上游资源与黄金股，但加大中游制造业成本压力。</div>
-<div class="ten-line">—— 黄金4586.92、布油93.36、伦铜14044.62均处高位，上游周期股受益，但对消费电子、汽车等中游制造利润形成挤压。</div>
-<div class="ten-line">**【风险】** 外盘突发回调与地缘溢价是今日最大不确定性。</div>
-<div class="ten-line">—— 美股三大指数跌幅均超0.8%、金价/油价同步高位，提示全球避险与地缘风险仍未消退，A股高估值板块首当其冲。</div>
-<div class="ten-h2">综合评级</div>
-<div class="ten-dim">**综合评级：中性偏谨慎（开盘承压，盘中看政策与北向能否托底）。**</div>
-<div class="ten-line">操作倾向：今日不宜追高，重点关注上证3880—3920区间支撑力度；若早盘缩量冲高回落，宜降仓观望。针对持仓，亨通光电已浮盈3.1%且放量领涨，若开盘缩量冲高回落可考虑部分止盈；莱克电气、立讯精密、天孚通信仍处于浮亏且所属消费电子/光模块受美股科技股拖累，日内不建议盲目补仓，等待板块企稳或政策催化。</div>
-<div class="ten-h2">风险提示</div>
-<div class="ten-line">以上研判基于你给定的实时数据与模型推断，市场走势受多重突发因素影响，不构成投资建议。</div></div>
-    </div>
+  <div class="panel">
+    <h2>持仓盈亏</h2>
+    <div id="plChart" class="chart"></div>
   </div>
 </main>
 
 <script>
-var D = {"pl_names": ["亨通光电", "莱克电气", "立讯精密", "天孚通信"], "pl_values": [568.0, -4074.0, -11539.0, -7391.0], "donut": [{"name": "亨通光电", "value": 18606, "itemStyle": {"color": "#58a6ff"}}, {"name": "莱克电气", "value": 16536, "itemStyle": {"color": "#f0b429"}}, {"name": "立讯精密", "value": 53340, "itemStyle": {"color": "#bc8cff"}}, {"name": "天孚通信", "value": 104975, "itemStyle": {"color": "#3fb950"}}, {"name": "基金", "value": 49006, "itemStyle": {"color": "#58a6ff"}}], "mkt_list": ["上证指数", "深证成指", "创业板指", "科创50", "中证1000", "上证50"], "mkt_pct": [0.24, 0.59, 0.64, -0.87, 0.96, 0.24], "trend_labels": ["早盘", "午盘", "收盘"], "trend_vals": [3909.4876, 3907.2749, 3903.721], "plColor": "neg", "shColor": "pos"};
-var tooltipDark={backgroundColor:'rgba(22,27,34,0.95)',borderColor:'#30363d',textStyle:{color:'#e6edf3',fontSize:12},extraCssText:'border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.5);'};
-var muted={color:'#8b949e',fontSize:11};
-var split={lineStyle:{color:'#21262d'}};
-function axisDark(light){return {color:light?'#e6edf3':'#8b949e',fontSize:11};}
+var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+var weeks = ['日','一','二','三','四','五','六'];
+function updateClock(){
+  var d = new Date();
+  document.getElementById('clock').textContent =
+    d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 星期' + weeks[d.getDay()] +
+    ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+}
+updateClock();
+setInterval(updateClock, 1000);
 
-/* 持仓累计盈亏 */
-var plChart=echarts.init(document.getElementById('plChart'));
-plChart.setOption({
-  backgroundColor:'transparent',
-  tooltip:Object.assign({},tooltipDark,{trigger:'axis',axisPointer:{type:'shadow'},formatter:function(ps){var p=ps[0];var c=p.value<0?'#3fb950':'#f85149';return p.name+'<br/>累计盈亏：<span style="color:'+c+'">¥'+p.value.toLocaleString('zh-CN')+'</span>';}}),
-  grid:{left:90,right:90,top:30,bottom:28},
-  xAxis:{type:'value',axisLabel:{color:'#8b949e',fontSize:11,formatter:function(v){return v/1000+'k';}},splitLine:split,axisLine:{show:false}},
-  yAxis:{type:'category',data:D.pl_names,axisLabel:{color:'#e6edf3',fontSize:12},axisTick:{show:false}},
-  series:[{name:'盈亏',type:'bar',barWidth:18,data:D.pl_values,
-    itemStyle:{color:'#3fb950',borderRadius:[0,6,6,0]},
-    label:{show:true,position:'right',color:'#3fb950',fontSize:11,formatter:function(p){return '¥'+p.value.toLocaleString('zh-CN');}} }]
+window.__loadECharts(function(){
+
+var tooltipDark = {
+  backgroundColor: 'rgba(22,27,34,0.85)',
+  borderColor: '#30363d',
+  textStyle: { color: '#e6edf3', fontSize: 12 },
+  extraCssText: 'border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.6);backdrop-filter:blur(6px);transition:all .2s ease;'
+};
+var toolboxDark = {
+  right: 8, top: 2,
+  feature: {
+    dataZoom: { yAxisIndex: 'none', title: { zoom: '区域缩放', back: '还原缩放' } },
+    restore: { title: '重置' },
+    saveAsImage: { title: '保存图片' }
+  },
+  iconStyle: { borderColor: '#8b949e' },
+  emphasis: { iconStyle: { borderColor: '#e6edf3' } }
+};
+var axisLabelMuted = { color: '#8b949e', fontSize: 11 };
+var axisLabelLight = { color: '#e6edf3', fontSize: 12 };
+var splitLineDark = { lineStyle: { color: '#21262d' } };
+var animOpt = { animationDuration: 900, animationEasing: 'cubicOut' };
+
+/* 1. 持仓盈亏 */
+var plChart = echarts.init(document.getElementById('plChart'));
+plChart.setOption(Object.assign({}, animOpt, {
+  backgroundColor: 'transparent',
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'axis', axisPointer: { type: 'shadow' },
+    formatter: function(params){
+      var p = params[0];
+      var c = p.value < 0 ? '#3fb950' : '#f85149';
+      return p.name + '<br/>持仓盈亏：<span style="color:' + c + '">¥' + p.value.toLocaleString('zh-CN') + '</span>';
+    } }),
+  toolbox: toolboxDark,
+  grid: { left: 100, right: 100, top: 36, bottom: 30 },
+  xAxis: { type: 'value', axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
+  yAxis: { type: 'category', data: ["莱克电气", "立讯精密", "天孚通信"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
+  series: [{ name: '持仓盈亏', type: 'bar', barWidth: 16,
+    data: [-3504.0, -10229.0, -8595.6],
+    itemStyle: { color: '#3fb950', borderRadius: [0, 6, 6, 0] },
+    label: { show: true, position: 'right', color: '#3fb950', fontSize: 12,
+      formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); } }
+  }]
+}));
+
+/* 3. 上证指数当日走势 + 成交额副轴 */
+var lineChart = echarts.init(document.getElementById('lineChart'));
+var lineData = [3904.67, 3898.99, 3905.2];
+var lineLabels = ["早盘", "午盘", "收盘"];
+var lineAmts = [2816.8, 6095.5, 8834.2];
+lineChart.setOption(Object.assign({}, animOpt, {
+  backgroundColor: 'transparent',
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
+    formatter: function(params){
+      var p = params[0];
+      var amt = params[1] ? params[1].value : '--';
+      return p.axisValue + '<br/>上证指数：<span style="color:#58a6ff">' + p.value.toFixed(2) + '</span><br/>成交额：<span style="color:#d29922">' + (amt !== '--' ? amt.toFixed(0) + '亿' : '--') + '</span>';
+    } }),
+  toolbox: toolboxDark,
+  grid: { left: 60, right: 70, top: 36, bottom: 42 },
+  xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
+  yAxis: [
+    { type: 'value', min: 3894, max: 3910, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+    { type: 'value', name: '成交额(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: { color: '#d29922', fontSize: 11 }, splitLine: { show: false }, axisLine: { show: false } }
+  ],
+  series: [
+    { name: '上证指数', type: 'line', data: lineData, smooth: true, symbol: 'circle', symbolSize: 7,
+      lineStyle: { width: 2, color: '#58a6ff' },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: 'rgba(88,166,255,0.32)' },
+        { offset: 1, color: 'rgba(88,166,255,0.02)' }
+      ]) }
+    },
+    { name: '成交额', type: 'bar', yAxisIndex: 1, data: lineAmts, barWidth: '60%', itemStyle: { color: 'rgba(210,153,34,0.3)', borderRadius: [4,4,0,0] } }
+  ]
+}));
+
+/* 4. 持仓市值占比 */
+var donutChart = echarts.init(document.getElementById('donutChart'));
+donutChart.setOption(Object.assign({}, animOpt, {
+  backgroundColor: 'transparent',
+  tooltip: Object.assign({}, tooltipDark, { trigger: 'item', formatter: '{b}<br/>占比：{d}%' }),
+  toolbox: toolboxDark,
+  legend: { bottom: 4, itemWidth: 12, itemHeight: 12, icon: 'circle', textStyle: { color: '#8b949e', fontSize: 12 } },
+  series: [{ name: '持仓市值占比', type: 'pie',
+    radius: ['52%', '76%'], center: ['50%', '45%'],
+    avoidLabelOverlap: true,
+    itemStyle: { borderRadius: 6, borderColor: '#0d1117', borderWidth: 2 },
+    label: { show: true, color: '#e6edf3', fontSize: 11, formatter: '{b}\n¥{c}  {d}%' },
+    emphasis: { label: { show: true, fontWeight: 'bold', fontSize: 14 } },
+    data: [{"value": 17106, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 54650, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 103770, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
+  }]
+}));
+
+/* 实时刷新开关（尝试真实行情，受跨域限制则提示） */
+var refreshTimer = null, refreshing = false;
+function attemptRealRefresh(){
+  // 尝试通过JSONP方式获取新浪行情（实际受跨域限制，这里做诚实提示）
+  var script = document.createElement('script');
+  script.src = 'https://hq.sinajs.cn/list=sh603355,sz002475,sz300394,s_sh000001';
+  script.onerror = function(){
+    document.getElementById('switchText').textContent = '跨域受限，需本地服务';
+    stopRefresh();
+    alert('浏览器跨域限制，无法直接获取新浪行情。\n请通过本地服务器或代理访问（如Python http.server）。');
+  };
+  script.onload = function(){
+    // 如果加载成功（实际几乎不可能），尝试解析
+    try {
+      var txt = window.hq_str_sh603355 || '';
+      if (txt) {
+        document.getElementById('switchText').textContent = '已获取实时数据';
+        // 这里简单演示，实际可更新图表
+      } else {
+        throw new Error('empty');
+      }
+    } catch(e) {
+      document.getElementById('switchText').textContent = '跨域受限，需本地服务';
+      stopRefresh();
+    }
+  };
+  document.head.appendChild(script);
+}
+function startRefresh(){
+  if (refreshTimer) return;
+  attemptRealRefresh();
+  // 如果加载成功，每10秒尝试一次（实际不会成功）
+  refreshTimer = setInterval(attemptRealRefresh, 10000);
+}
+function stopRefresh(){ clearInterval(refreshTimer); refreshTimer = null; }
+function toggleRefreshSwitch(){
+  refreshing = !refreshing;
+  document.getElementById('switchBtn').classList.toggle('on', refreshing);
+  document.getElementById('switchWrap').classList.toggle('active', refreshing);
+  document.getElementById('switchText').textContent = refreshing ? '尝试连接行情...' : '实时刷新：关闭';
+  if (refreshing){ startRefresh(); } else { stopRefresh(); }
+}
+document.getElementById('switchWrap').addEventListener('click', toggleRefreshSwitch);
+window.addEventListener('resize', function(){
+  [plChart, lineChart, donutChart].forEach(function(c){ c.resize(); });
 });
 
-/* 市值占比 */
-var donutChart=echarts.init(document.getElementById('donutChart'));
-donutChart.setOption({
-  backgroundColor:'transparent',
-  tooltip:Object.assign({},tooltipDark,{trigger:'item',formatter:'{b}<br/>占比 {d}%<br/>¥{c}'}),
-  legend:{bottom:2,textStyle:{color:'#8b949e',fontSize:11},itemWidth:12,itemHeight:12,icon:'circle'},
-  series:[{type:'pie',radius:['50%','76%'],center:['50%','44%'],data:D.donut,avoidLabelOverlap:true,
-    itemStyle:{borderRadius:6,borderColor:'#0d1117',borderWidth:2},
-    label:{show:true,color:'#e6edf3',fontSize:11,formatter:'{b}\n{d}%'}}]
-});
-
-window.addEventListener('resize',function(){[plChart,donutChart].forEach(function(c){c.resize();});});
+}); // end __loadECharts
 </script>
 </body>
 </html>
