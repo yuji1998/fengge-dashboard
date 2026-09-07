@@ -1,0 +1,21 @@
+<meta charset="utf-8"><title>Token 用量看板</title><style>body{font-family:system-ui,'Microsoft YaHei',sans-serif;margin:22px;background:#f5f6f8;color:#1f2937;max-width:820px}.card{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}h1{font-size:21px;margin:0 0 4px}h2{font-size:15px;margin:0 0 12px}.small{color:#6b7280;font-size:12px;margin-bottom:16px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:6px 9px;text-align:left;border-bottom:1px solid #eef0f2;vertical-align:middle}.bar{height:13px;border-radius:3px}.note{font-size:11px;color:#9aa}.kb{width:34%}</style>
+<h1>🪙 Token 用量看板</h1><div class="small">生成 2026-09-07 12:58 ｜ 数据源 llm_usage.db（全量）</div>
+<div class="card"><h2>累计 · 本地 vs 云</h2><table><tr><th>来源</th><th>次数</th><th>总 Token</th><th class="kb">占比</th></tr>
+<tr><td><span style="color:#dc2626">●</span> 云</td><td>85</td><td>883,087</td><td><div class="bar" style="width:97%;background:#dc2626"></div></td></tr>
+<tr><td><span style="color:#059669">●</span> 本地</td><td>1</td><td>19,300</td><td><div class="bar" style="width:2%;background:#059669"></div></td></tr>
+</table></div>
+<div class="card"><h2>按模型</h2><table><tr><th>模型</th><th>次数</th><th>输入</th><th>输出</th><th>合计</th><th>来源</th></tr>
+<tr><td>kimi</td><td>66</td><td>380,553</td><td>278,556</td><td><b>659,109</b></td><td>云</td></tr>
+<tr><td>deepseek</td><td>19</td><td>198,935</td><td>25,043</td><td><b>223,978</b></td><td>云</td></tr>
+<tr><td>qwen3:30b</td><td>1</td><td>17,300</td><td>2,000</td><td><b>19,300</b></td><td>本地</td></tr>
+</table></div>
+<div class="card"><h2>按日 Token 走势</h2><table><tr><th>日期</th><th>本地</th><th class="kb"></th><th>云</th><th class="kb"></th></tr>
+<tr><td>2026-08-27</td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#059669"></div></td><td>492,520</td><td class="kb"><div class="bar" style="width:100%;background:#dc2626"></div></td></tr>
+<tr><td>2026-08-28</td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#059669"></div></td><td>106,312</td><td class="kb"><div class="bar" style="width:100%;background:#dc2626"></div></td></tr>
+<tr><td>2026-08-31</td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#059669"></div></td><td>90,588</td><td class="kb"><div class="bar" style="width:100%;background:#dc2626"></div></td></tr>
+<tr><td>2026-09-01</td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#059669"></div></td><td>29,785</td><td class="kb"><div class="bar" style="width:100%;background:#dc2626"></div></td></tr>
+<tr><td>2026-09-03</td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#059669"></div></td><td>153,367</td><td class="kb"><div class="bar" style="width:100%;background:#dc2626"></div></td></tr>
+<tr><td>2026-09-06</td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#059669"></div></td><td>10,515</td><td class="kb"><div class="bar" style="width:100%;background:#dc2626"></div></td></tr>
+<tr><td>2026-09-07</td><td>19,300</td><td class="kb"><div class="bar" style="width:100%;background:#059669"></div></td><td>0</td><td class="kb"><div class="bar" style="width:1%;background:#dc2626"></div></td></tr>
+</table></div>
+<div class="card"><div class="note">说明：本地(qwen/qwen3…)为本机 GPU 运行、不计云费；早期直连30B 为估算补登。本页随台账再生。</div></div>
