@@ -34,6 +34,7 @@
 
         /* 头部区域 */
         .header {
+            position: relative;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
@@ -179,52 +180,59 @@
         @media (max-width: 768px) {
             body { padding: 12px; }
             .header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .header-right { width: 100%; justify-content: space-between; }
+            .header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+            .refresh-btn { min-height: 44px; padding: 8px 16px; }
             .cards-row .card { min-width: 120px; }
             .chart { height: 260px; }
         }
 
-        /* ===== 右下角「刷新」浮动按钮（实时更新报价） ===== */
+        /* ===== 顶部「刷新」按钮（实时更新报价） ===== */
         .refresh-btn {
-            position: fixed;
-            right: 18px;
-            bottom: 24px;
-            z-index: 9999;
-            width: 60px;
-            height: 60px;
-            padding: 0;
-            border-radius: 50%;
-            background: #161b22;
-            border: 1px solid #30363d;
-            color: #e6edf3;
-            font-size: 26px;
-            line-height: 1;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 7px;
+            min-height: 40px;
+            min-width: 104px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%);
+            border: 1px solid rgba(88, 166, 255, 0.55);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            line-height: 1;
+            white-space: nowrap;
             cursor: pointer;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+            box-shadow: 0 4px 14px rgba(31, 111, 235, 0.35);
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
         }
 
         .refresh-btn:hover {
-            border-color: #58a6ff;
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.65);
+            filter: brightness(1.1);
+            box-shadow: 0 6px 20px rgba(56, 139, 253, 0.5);
         }
 
         /* 按压反馈（移动端手指友好） */
         .refresh-btn:active {
-            transform: scale(0.92);
-            border-color: #58a6ff;
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(31, 111, 235, 0.4);
+        }
+
+        .refresh-ico {
+            display: inline-block;
+            font-size: 1.05rem;
+            line-height: 1;
         }
 
         /* 刷新中：禁用点击 + 图标旋转 */
         .refresh-btn.busy {
             pointer-events: none;
-            opacity: 0.85;
-            border-color: #58a6ff;
+            opacity: 0.8;
         }
 
         .refresh-btn.busy .refresh-ico {
@@ -236,23 +244,23 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 刷新结果提示气泡 */
+        /* 刷新结果提示气泡：吸附在头部右下方 */
         .refresh-tip {
-            position: fixed;
-            right: 18px;
-            bottom: 94px;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 6px);
             z-index: 9999;
-            max-width: 60vw;
+            max-width: 70vw;
             padding: 8px 14px;
             border-radius: 10px;
-            background: #161b22;
+            background: rgba(22, 27, 34, 0.96);
             border: 1px solid #30363d;
             color: #e6edf3;
             font-size: 0.85rem;
             white-space: nowrap;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
             opacity: 0;
-            transform: translateY(6px);
+            transform: translateY(-6px);
             pointer-events: none;
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
@@ -269,9 +277,6 @@
         }
 
         .cards-row .card.flash { animation: cardFlash 0.9s ease; }
-
-        /* 为右下角浮动按钮预留底部空间，避免遮挡最后一张图表 */
-        body { padding-bottom: 96px; }
 
         /* 毛玻璃tooltip (ECharts内使用) */
         .glass-tooltip {
@@ -301,8 +306,14 @@
         <div class="header">
             <h1>丰哥·金融价格看板</h1>
             <div class="header-right">
-                <span class="update-time">🕒 更新: 2026-09-10 23:03:35</span>
+                <span class="update-time">🕒 更新: 2026-09-10 23:20:49</span>
                 <span class="clock" id="liveClock">--:--:--</span>
+                <!-- 顶部「刷新」按钮：点击拉取实时行情并就地更新；失败则带时间戳重载 -->
+                <button id="refreshBtn" class="refresh-btn" type="button" aria-label="刷新实时报价" title="点击刷新实时报价">
+                    <span class="refresh-ico">🔄</span>
+                    <span class="refresh-txt">刷新</span>
+                </button>
+                <div id="refreshTip" class="refresh-tip"></div>
             </div>
         </div>
 
@@ -362,43 +373,43 @@
 
         <div class="card">
             <div class="name">道琼斯</div>
-            <div class="price">52104.49</div>
-            <div class="change neg">比昨收 -0.53%</div>
+            <div class="price">52151.01</div>
+            <div class="change neg">比昨收 -0.44%</div>
             <div class="change pos">比年初 +11.65%</div>
         </div>
 
         <div class="card">
             <div class="name">标普500</div>
-            <div class="price">7599.95</div>
-            <div class="change neg">比昨收 -0.48%</div>
+            <div class="price">7603.48</div>
+            <div class="change neg">比昨收 -0.43%</div>
             <div class="change pos">比年初 +12.94%</div>
         </div>
 
         <div class="card">
             <div class="name">纳斯达克</div>
-            <div class="price">26132.54</div>
-            <div class="change neg">比昨收 -0.46%</div>
+            <div class="price">26124.26</div>
+            <div class="change neg">比昨收 -0.49%</div>
             <div class="change pos">比年初 +13.35%</div>
         </div>
 
         <div class="card">
             <div class="name">英国富时100</div>
-            <div class="price">10609.69</div>
-            <div class="change neg">比昨收 -0.57%</div>
+            <div class="price">10616.73</div>
+            <div class="change neg">比昨收 -0.50%</div>
             <div class="change pos">比年初 +8.02%</div>
         </div>
 
         <div class="card">
             <div class="name">德国DAX</div>
-            <div class="price">25391.33</div>
-            <div class="change neg">比昨收 -0.72%</div>
+            <div class="price">25394.84</div>
+            <div class="change neg">比昨收 -0.71%</div>
             <div class="change pos">比年初 +6.69%</div>
         </div>
 
         <div class="card">
             <div class="name">法国CAC40</div>
-            <div class="price">8115.24</div>
-            <div class="change neg">比昨收 -0.51%</div>
+            <div class="price">8117.74</div>
+            <div class="change neg">比昨收 -0.48%</div>
             <div class="change pos">比年初 +4.42%</div>
         </div>
 
@@ -428,16 +439,16 @@
                 
         <div class="card">
             <div class="name">美元/人民币</div>
-            <div class="price">6.71</div>
-            <div class="change neg">比上月 -0.06%</div>
-            <div class="change neg">比年初 -0.45%</div>
+            <div class="price">6.70</div>
+            <div class="change neg">比上月 -0.14%</div>
+            <div class="change neg">比年初 -0.54%</div>
         </div>
 
         <div class="card">
             <div class="name">美元/离岸</div>
             <div class="price">6.71</div>
-            <div class="change pos">比上月 +0.04%</div>
-            <div class="change neg">比年初 -0.44%</div>
+            <div class="change pos">比上月 +0.05%</div>
+            <div class="change neg">比年初 -0.43%</div>
         </div>
 
         <div class="card">
@@ -450,15 +461,15 @@
         <div class="card">
             <div class="name">日元/百</div>
             <div class="price">0.04</div>
-            <div class="change pos">比上月 +1.46%</div>
-            <div class="change pos">比年初 +2.92%</div>
+            <div class="change pos">比上月 +1.44%</div>
+            <div class="change pos">比年初 +2.90%</div>
         </div>
 
         <div class="card">
             <div class="name">英镑/人民币</div>
-            <div class="price">9.07</div>
-            <div class="change neg">比上月 -0.04%</div>
-            <div class="change neg">比年初 -0.68%</div>
+            <div class="price">9.08</div>
+            <div class="change neg">比上月 -0.01%</div>
+            <div class="change neg">比年初 -0.65%</div>
         </div>
 
         <div class="card">
@@ -480,25 +491,25 @@
                 
         <div class="card">
             <div class="name">沪金</div>
-            <div class="price">946.54</div>
-            <div class="change neg">比年初 -4.87%</div>
+            <div class="price">948.22</div>
+            <div class="change neg">比年初 -4.70%</div>
         </div>
 
         <div class="card">
             <div class="name">沪银</div>
-            <div class="price">15736.00</div>
-            <div class="change neg">比年初 -13.76%</div>
+            <div class="price">15755.00</div>
+            <div class="change neg">比年初 -13.66%</div>
         </div>
 
         <div class="card">
             <div class="name">COMEX黄金</div>
-            <div class="price">4394.43</div>
+            <div class="price">4400.32</div>
             <div class="change flat">--</div>
         </div>
 
         <div class="card">
             <div class="name">COMEX白银</div>
-            <div class="price">64.87</div>
+            <div class="price">65.01</div>
             <div class="change flat">--</div>
         </div>
 
@@ -520,14 +531,14 @@
                 
         <div class="card">
             <div class="name">沪铜</div>
-            <div class="price">108590.00</div>
-            <div class="change pos">比年初 +7.14%</div>
+            <div class="price">108480.00</div>
+            <div class="change pos">比年初 +7.04%</div>
         </div>
 
         <div class="card">
             <div class="name">原油(SC)</div>
-            <div class="price">797.80</div>
-            <div class="change pos">比年初 +89.19%</div>
+            <div class="price">801.30</div>
+            <div class="change pos">比年初 +90.02%</div>
         </div>
 
         <div class="card">
@@ -544,19 +555,19 @@
 
         <div class="card">
             <div class="name">WTI原油</div>
-            <div class="price">100.17</div>
+            <div class="price">100.47</div>
             <div class="change flat">--</div>
         </div>
 
         <div class="card">
             <div class="name">布伦特原油</div>
-            <div class="price">105.54</div>
+            <div class="price">105.72</div>
             <div class="change flat">--</div>
         </div>
 
         <div class="card">
             <div class="name">COMEX铜</div>
-            <div class="price">654.64</div>
+            <div class="price">653.73</div>
             <div class="change flat">--</div>
         </div>
             </div>
@@ -669,10 +680,10 @@
     <script>
         // 注意：这些变量由脚本替换为真实JSON数组
         // 格式: [{"name":"美元兑人民币","price":6.7371,"ytd":1.23}, ...]
-        var fxData = {"names": ["美元/人民币", "美元/离岸", "欧元/人民币", "日元/百", "英镑/人民币", "港元/人民币"], "values": [-0.45, -0.44, -0.26, 2.92, -0.68, -0.46], "prices": [6.7066, 6.7105, 7.7979, 0.0436, 9.0736, 0.8554]};
-        var metalData = {"names": ["沪金", "沪银", "COMEX黄金", "COMEX白银", "黄金ETF(元)"], "values": [-4.87, -13.76, null, null, null], "prices": [946.54, 15736.0, 4394.429, 64.869, null]};
-        var commodityData = {"names": ["沪铜", "原油(SC)", "螺纹钢", "铁矿石", "WTI原油", "布伦特原油", "COMEX铜"], "values": [7.14, 89.19, 1.13, -9.35, null, null, null], "prices": [108590.0, 797.8, 3139.0, 722.5, 100.17, 105.54, 654.643]};
-        var stockData = {"names": ["上证指数", "深证成指", "创业板指", "科创50", "沪深300", "上证50", "中证1000", "道琼斯", "标普500", "纳斯达克", "英国富时100", "德国DAX", "法国CAC40", "日经225", "韩国KOSPI"], "values": [-2.21, -1.53, 1.33, 11.81, -3.59, -6.31, -2.14, 11.65, 12.94, 13.35, 8.02, 6.69, 4.42, 29.77, 53.56], "prices": [3934.4036, 13617.67, 3338.42, 1569.2182, 4548.3898, 2904.2931, 7587.7521, 52104.4883, 7599.9502, 26132.5393, 10609.69, 25391.33, 8115.2397, 65270.88, 7033.92]};
+        var fxData = {"names": ["美元/人民币", "美元/离岸", "欧元/人民币", "日元/百", "英镑/人民币", "港元/人民币"], "values": [-0.54, -0.43, -0.26, 2.9, -0.65, -0.46], "prices": [6.7008, 6.7113, 7.7979, 0.0436, 9.0761, 0.8554]};
+        var metalData = {"names": ["沪金", "沪银", "COMEX黄金", "COMEX白银", "黄金ETF(元)"], "values": [-4.7, -13.66, null, null, null], "prices": [948.22, 15755.0, 4400.32, 65.008, null]};
+        var commodityData = {"names": ["沪铜", "原油(SC)", "螺纹钢", "铁矿石", "WTI原油", "布伦特原油", "COMEX铜"], "values": [7.04, 90.02, 1.13, -9.35, null, null, null], "prices": [108480.0, 801.3, 3139.0, 722.5, 100.466, 105.723, 653.732]};
+        var stockData = {"names": ["上证指数", "深证成指", "创业板指", "科创50", "沪深300", "上证50", "中证1000", "道琼斯", "标普500", "纳斯达克", "英国富时100", "德国DAX", "法国CAC40", "日经225", "韩国KOSPI"], "values": [-2.21, -1.53, 1.33, 11.81, -3.59, -6.31, -2.14, 11.65, 12.94, 13.35, 8.02, 6.69, 4.42, 29.77, 53.56], "prices": [3934.4036, 13617.67, 3338.42, 1569.2182, 4548.3898, 2904.2931, 7587.7521, 52151.0117, 7603.48, 26124.2631, 10616.73, 25394.84, 8117.74, 65270.88, 7033.92]};
         var rateData = {"names": ["1年期LPR", "5年期LPR", "7天逆回购", "1年存款基准"], "values": [0.0, 0.0, 0.0, 0.0], "prices": [3.0, 3.5, 1.5, 1.35]};
     </script>
 
@@ -815,7 +826,7 @@
                 Object.values(charts).forEach(chart => chart.resize());
             });
 
-            // 暴露给右下角「刷新」按钮：实时行情更新后重绘对应图表
+            // 暴露给顶部「刷新」按钮：实时行情更新后重绘对应图表
             window.__finDashboard = {
                 charts: charts,
                 render: function(key, data) {
@@ -826,19 +837,19 @@
     </script>
 
     <!-- 占位符说明 (仅用于模板展示，实际会被替换) -->
-    <!-- 所有占位符均已使用: 丰哥·金融价格看板（金融市场价格实时报价） 已在<h1>中，2026-09-10 23:03:35 在头部，
+    <!-- 所有占位符均已使用: 丰哥·金融价格看板（金融市场价格实时报价） 已在<h1>中，2026-09-10 23:20:49 在头部，
         <div class="card">
             <div class="name">美元/人民币</div>
-            <div class="price">6.71</div>
-            <div class="change neg">比上月 -0.06%</div>
-            <div class="change neg">比年初 -0.45%</div>
+            <div class="price">6.70</div>
+            <div class="change neg">比上月 -0.14%</div>
+            <div class="change neg">比年初 -0.54%</div>
         </div>
 
         <div class="card">
             <div class="name">美元/离岸</div>
             <div class="price">6.71</div>
-            <div class="change pos">比上月 +0.04%</div>
-            <div class="change neg">比年初 -0.44%</div>
+            <div class="change pos">比上月 +0.05%</div>
+            <div class="change neg">比年初 -0.43%</div>
         </div>
 
         <div class="card">
@@ -851,15 +862,15 @@
         <div class="card">
             <div class="name">日元/百</div>
             <div class="price">0.04</div>
-            <div class="change pos">比上月 +1.46%</div>
-            <div class="change pos">比年初 +2.92%</div>
+            <div class="change pos">比上月 +1.44%</div>
+            <div class="change pos">比年初 +2.90%</div>
         </div>
 
         <div class="card">
             <div class="name">英镑/人民币</div>
-            <div class="price">9.07</div>
-            <div class="change neg">比上月 -0.04%</div>
-            <div class="change neg">比年初 -0.68%</div>
+            <div class="price">9.08</div>
+            <div class="change neg">比上月 -0.01%</div>
+            <div class="change neg">比年初 -0.65%</div>
         </div>
 
         <div class="card">
@@ -872,19 +883,14 @@
     <div style="display: none;">丰哥·金融价格看板（金融市场价格实时报价）</div>
     <!-- 其余占位符均已出现 -->
 
-    <!-- ===== 右下角「刷新」浮动按钮：点击拉取实时行情并就地更新；失败则带时间戳重载 ===== -->
-    <button id="refreshBtn" class="refresh-btn" type="button" aria-label="刷新实时报价" title="点击刷新实时报价">
-        <span class="refresh-ico">🔄</span>
-    </button>
-    <div id="refreshTip" class="refresh-tip"></div>
-
     <script>
         // 构建脚本注入：可实时更新的品种清单（名称 / 分区 / 行情代码 / 静态价与基准涨跌幅）
-        var FIN_REALTIME = {"items": [{"n": "上证指数", "sec": "stockCards", "em": "1.000001", "tx": null, "p": 3934.4036, "y": -2.21, "m": null}, {"n": "深证成指", "sec": "stockCards", "em": "0.399001", "tx": null, "p": 13617.67, "y": -1.53, "m": null}, {"n": "创业板指", "sec": "stockCards", "em": "0.399006", "tx": null, "p": 3338.42, "y": 1.33, "m": null}, {"n": "科创50", "sec": "stockCards", "em": "1.000688", "tx": null, "p": 1569.2182, "y": 11.81, "m": null}, {"n": "沪深300", "sec": "stockCards", "em": "1.000300", "tx": null, "p": 4548.3898, "y": -3.59, "m": null}, {"n": "上证50", "sec": "stockCards", "em": "1.000016", "tx": null, "p": 2904.2931, "y": -6.31, "m": null}, {"n": "中证1000", "sec": "stockCards", "em": "1.000852", "tx": null, "p": 7587.7521, "y": -2.14, "m": null}, {"n": "道琼斯", "sec": "stockCards", "em": "100.DJIA", "tx": null, "p": 52104.4883, "y": 11.65, "m": null}, {"n": "标普500", "sec": "stockCards", "em": "100.SPX", "tx": null, "p": 7599.9502, "y": 12.94, "m": null}, {"n": "纳斯达克", "sec": "stockCards", "em": "100.NDX", "tx": null, "p": 26132.5393, "y": 13.35, "m": null}, {"n": "英国富时100", "sec": "stockCards", "em": "100.FTSE", "tx": null, "p": 10609.69, "y": 8.02, "m": null}, {"n": "德国DAX", "sec": "stockCards", "em": "100.GDAXI", "tx": null, "p": 25391.33, "y": 6.69, "m": null}, {"n": "法国CAC40", "sec": "stockCards", "em": "100.FCHI", "tx": null, "p": 8115.2397, "y": 4.42, "m": null}, {"n": "日经225", "sec": "stockCards", "em": "100.N225", "tx": null, "p": 65270.88, "y": 29.77, "m": null}, {"n": "韩国KOSPI", "sec": "stockCards", "em": "100.KS11", "tx": null, "p": 7033.92, "y": 53.56, "m": null}, {"n": "美元/离岸", "sec": "fxCards", "em": "133.USDCNH", "tx": null, "p": 6.7105, "y": -0.44, "m": 0.04}, {"n": "欧元/人民币", "sec": "fxCards", "em": "133.EURCNH", "tx": null, "p": 7.7979, "y": -0.26, "m": 0.06}, {"n": "英镑/人民币", "sec": "fxCards", "em": "133.GBPCNH", "tx": null, "p": 9.0736, "y": -0.68, "m": -0.04}, {"n": "港元/人民币", "sec": "fxCards", "em": "133.HKDCNH", "tx": null, "p": 0.8554, "y": -0.46, "m": -0.08}, {"n": "沪金", "sec": "metalCards", "em": "113.aum", "tx": null, "p": 946.54, "y": -4.87, "m": null}, {"n": "沪银", "sec": "metalCards", "em": "113.agm", "tx": null, "p": 15736.0, "y": -13.76, "m": null}, {"n": "COMEX黄金", "sec": "metalCards", "em": "101.GC00Y", "tx": null, "p": 4394.429, "y": null, "m": null}, {"n": "COMEX白银", "sec": "metalCards", "em": "101.SI00Y", "tx": null, "p": 64.869, "y": null, "m": null}, {"n": "沪铜", "sec": "commodityCards", "em": "113.cum", "tx": null, "p": 108590.0, "y": 7.14, "m": null}, {"n": "原油(SC)", "sec": "commodityCards", "em": "142.scm", "tx": null, "p": 797.8, "y": 89.19, "m": null}, {"n": "螺纹钢", "sec": "commodityCards", "em": "113.rbm", "tx": null, "p": 3139.0, "y": 1.13, "m": null}, {"n": "铁矿石", "sec": "commodityCards", "em": "114.im", "tx": null, "p": 722.5, "y": -9.35, "m": null}, {"n": "WTI原油", "sec": "commodityCards", "em": null, "tx": "hf_CL", "p": 100.17, "y": null, "m": null}, {"n": "布伦特原油", "sec": "commodityCards", "em": null, "tx": "hf_OIL", "p": 105.54, "y": null, "m": null}, {"n": "COMEX铜", "sec": "commodityCards", "em": null, "tx": "hf_HG", "p": 654.643, "y": null, "m": null}]};
+        var FIN_REALTIME = {"items": [{"n": "上证指数", "sec": "stockCards", "em": "1.000001", "tx": null, "p": 3934.4036, "y": -2.21, "m": null}, {"n": "深证成指", "sec": "stockCards", "em": "0.399001", "tx": null, "p": 13617.67, "y": -1.53, "m": null}, {"n": "创业板指", "sec": "stockCards", "em": "0.399006", "tx": null, "p": 3338.42, "y": 1.33, "m": null}, {"n": "科创50", "sec": "stockCards", "em": "1.000688", "tx": null, "p": 1569.2182, "y": 11.81, "m": null}, {"n": "沪深300", "sec": "stockCards", "em": "1.000300", "tx": null, "p": 4548.3898, "y": -3.59, "m": null}, {"n": "上证50", "sec": "stockCards", "em": "1.000016", "tx": null, "p": 2904.2931, "y": -6.31, "m": null}, {"n": "中证1000", "sec": "stockCards", "em": "1.000852", "tx": null, "p": 7587.7521, "y": -2.14, "m": null}, {"n": "道琼斯", "sec": "stockCards", "em": "100.DJIA", "tx": null, "p": 52151.0117, "y": 11.65, "m": null}, {"n": "标普500", "sec": "stockCards", "em": "100.SPX", "tx": null, "p": 7603.48, "y": 12.94, "m": null}, {"n": "纳斯达克", "sec": "stockCards", "em": "100.NDX", "tx": null, "p": 26124.2631, "y": 13.35, "m": null}, {"n": "英国富时100", "sec": "stockCards", "em": "100.FTSE", "tx": null, "p": 10616.73, "y": 8.02, "m": null}, {"n": "德国DAX", "sec": "stockCards", "em": "100.GDAXI", "tx": null, "p": 25394.84, "y": 6.69, "m": null}, {"n": "法国CAC40", "sec": "stockCards", "em": "100.FCHI", "tx": null, "p": 8117.74, "y": 4.42, "m": null}, {"n": "日经225", "sec": "stockCards", "em": "100.N225", "tx": null, "p": 65270.88, "y": 29.77, "m": null}, {"n": "韩国KOSPI", "sec": "stockCards", "em": "100.KS11", "tx": null, "p": 7033.92, "y": 53.56, "m": null}, {"n": "美元/离岸", "sec": "fxCards", "em": "133.USDCNH", "tx": null, "p": 6.7113, "y": -0.43, "m": 0.05}, {"n": "欧元/人民币", "sec": "fxCards", "em": "133.EURCNH", "tx": null, "p": 7.7979, "y": -0.26, "m": 0.06}, {"n": "英镑/人民币", "sec": "fxCards", "em": "133.GBPCNH", "tx": null, "p": 9.0761, "y": -0.65, "m": -0.01}, {"n": "港元/人民币", "sec": "fxCards", "em": "133.HKDCNH", "tx": null, "p": 0.8554, "y": -0.46, "m": -0.08}, {"n": "沪金", "sec": "metalCards", "em": "113.aum", "tx": null, "p": 948.22, "y": -4.7, "m": null}, {"n": "沪银", "sec": "metalCards", "em": "113.agm", "tx": null, "p": 15755.0, "y": -13.66, "m": null}, {"n": "COMEX黄金", "sec": "metalCards", "em": "101.GC00Y", "tx": null, "p": 4400.32, "y": null, "m": null}, {"n": "COMEX白银", "sec": "metalCards", "em": "101.SI00Y", "tx": null, "p": 65.008, "y": null, "m": null}, {"n": "沪铜", "sec": "commodityCards", "em": "113.cum", "tx": null, "p": 108480.0, "y": 7.04, "m": null}, {"n": "原油(SC)", "sec": "commodityCards", "em": "142.scm", "tx": null, "p": 801.3, "y": 90.02, "m": null}, {"n": "螺纹钢", "sec": "commodityCards", "em": "113.rbm", "tx": null, "p": 3139.0, "y": 1.13, "m": null}, {"n": "铁矿石", "sec": "commodityCards", "em": "114.im", "tx": null, "p": 722.5, "y": -9.35, "m": null}, {"n": "WTI原油", "sec": "commodityCards", "em": null, "tx": "hf_CL", "p": 100.466, "y": null, "m": null}, {"n": "布伦特原油", "sec": "commodityCards", "em": null, "tx": "hf_OIL", "p": 105.723, "y": null, "m": null}, {"n": "COMEX铜", "sec": "commodityCards", "em": null, "tx": "hf_HG", "p": 653.732, "y": null, "m": null}]};
 
         (function () {
             var btn = document.getElementById('refreshBtn');
             var tip = document.getElementById('refreshTip');
+            var btnTxt = btn.querySelector('.refresh-txt');
             var tipTimer = null;
             var REALTIME_BY_NAME = {};
 
@@ -915,6 +921,17 @@
                 var d = new Date();
                 return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' '
                     + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
+            }
+
+            // 按钮忙碌态：图标旋转 + 文案切换
+            function setBusy(on) {
+                if (on) {
+                    btn.classList.add('busy');
+                    if (btnTxt) btnTxt.textContent = '刷新中';
+                } else {
+                    btn.classList.remove('busy');
+                    if (btnTxt) btnTxt.textContent = '刷新';
+                }
             }
 
             // 提示气泡
@@ -1057,7 +1074,7 @@
                 var items = (FIN_REALTIME && FIN_REALTIME.items) || [];
                 if (!items.length) { reloadPage(); return; }
 
-                btn.classList.add('busy');
+                setBusy(true);
                 showTip('刷新中…', 0);
 
                 var emItems = items.filter(function (it) { return it.em; });
@@ -1088,7 +1105,7 @@
                     // 记录本轮最新价，作为下次刷新的基准
                     items.forEach(function (it) { if (it.updated) it.cur = it.price; });
 
-                    btn.classList.remove('busy');
+                    setBusy(false);
                     showTip('✅ 已更新 ' + hit + ' 项 · ' + stamp().slice(11));
                 }).catch(function () {
                     // 实时源不可用：降级为强制重载（带时间戳绕缓存）
@@ -1108,9 +1125,9 @@
             btn.addEventListener('click', doRefresh);
             // 切回前台/页面恢复时，确保按钮可用
             document.addEventListener('visibilitychange', function () {
-                if (!document.hidden) btn.classList.remove('busy');
+                if (!document.hidden) setBusy(false);
             });
-            window.addEventListener('pageshow', function () { btn.classList.remove('busy'); });
+            window.addEventListener('pageshow', function () { setBusy(false); });
         })();
     </script>
 </body>
