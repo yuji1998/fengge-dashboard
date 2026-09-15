@@ -1,0 +1,208 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>每日要闻 · 2026-09-16</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+ --paper:#fff1e5;--paper2:#fdf6ef;--ink:#1a1a1a;--ink2:#5c5a57;--ink3:#8b8680;
+ --rule:#d9cfc4;--accent:#9e2f2f;--link:#0d5c63;--mark:#e8ded1;--shadow:rgba(60,40,20,.10);
+}
+@media (prefers-color-scheme:dark){:root{
+ --paper:#1a1714;--paper2:#221e1a;--ink:#f2ece4;--ink2:#c3bab0;--ink3:#8d857c;
+ --rule:#3a332c;--accent:#e07a6a;--link:#7ec7c9;--mark:#2b2621;--shadow:rgba(0,0,0,.5);
+}}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+ font-family:FinancierDisplay,"Songti SC","Noto Serif SC",Georgia,"Times New Roman",serif;
+ font-size:17px;line-height:1.5;padding:0 0 40px;
+ transition:background .25s,color .25s}
+a{color:inherit;text-decoration:none}
+
+/* 报头 */
+.masthead{padding:18px 16px 10px;border-bottom:3px double var(--rule);position:relative}
+.brand{font-size:13px;letter-spacing:.22em;color:var(--ink3);
+ font-family:"Helvetica Neue",Arial,sans-serif;text-transform:uppercase}
+.title{font-size:29px;font-weight:700;letter-spacing:-.4px;margin:3px 0 4px}
+.sub{font-size:12.5px;color:var(--ink3);font-family:"Helvetica Neue",Arial,sans-serif;
+ display:flex;justify-content:space-between;align-items:center;gap:8px}
+.btn{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;letter-spacing:.02em;
+ background:transparent;color:var(--accent);border:1px solid var(--accent);
+ border-radius:99px;padding:5px 13px;cursor:pointer;white-space:nowrap}
+.btn:active{background:var(--accent);color:var(--paper)}
+.btn[disabled]{opacity:.5;cursor:default}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;z-index:99;
+ background:var(--ink);color:var(--paper);font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;
+ font-size:13.5px;padding:9px 18px;border-radius:99px;opacity:0;pointer-events:none;
+ transition:opacity .25s;box-shadow:0 6px 22px var(--shadow);max-width:88vw;text-align:center}
+.toast.on{opacity:1}
+
+/* 板块 */
+section{padding:16px 16px 4px}
+h2{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
+ font-family:"Helvetica Neue",Arial,sans-serif;font-weight:600;
+ border-bottom:1px solid var(--rule);padding-bottom:6px;
+ display:flex;justify-content:space-between;align-items:baseline}
+h2 .cn{letter-spacing:.1em}
+.lead{font-size:15.5px;color:var(--ink2);margin:10px 0 2px;font-style:italic}
+article{padding:12px 0 11px;border-bottom:1px solid var(--rule);
+ display:grid;grid-template-columns:1fr;gap:3px}
+article:last-child{border-bottom:none}
+h3{font-size:18px;font-weight:700;line-height:1.34;letter-spacing:-.15px}
+.note{font-size:15px;color:var(--ink2);line-height:1.45}
+.src{font-size:11.5px;color:var(--ink3);letter-spacing:.06em;
+ font-family:"Helvetica Neue",Arial,sans-serif;margin-top:1px}
+
+/* 行情表 */
+table.mkt{width:100%;border-collapse:collapse;font-family:"Helvetica Neue",Arial,sans-serif}
+table.mkt td{padding:7px 0;border-bottom:1px solid var(--rule);font-size:15px}
+table.mkt tr:last-child td{border-bottom:none}
+.mk-name{color:var(--ink2)}
+.mk-v{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.up{color:#c0392b}.down{color:#1e7a4e}.flat{color:var(--ink3)}
+@media (prefers-color-scheme:dark){.up{color:#ff8272}.down{color:#5fd39b}}
+
+/* 底部：凌晨任务 */
+.tasks{padding:16px 16px 4px}
+.tasks .lead{margin-bottom:8px}
+.tsk{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;
+ padding:6px 0;border-bottom:1px dotted var(--rule);color:var(--ink2)}
+.tsk:last-child{border-bottom:none}
+.tsk .ok{color:#1e7a4e;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px}
+@media (prefers-color-scheme:dark){.tsk .ok{color:#5fd39b}}
+footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
+ font-size:12px;color:var(--ink3);font-family:"Helvetica Neue",Arial,sans-serif;line-height:1.7}
+@media (min-width:640px){
+ body{max-width:680px;margin:0 auto;box-shadow:0 0 40px var(--shadow);min-height:100vh}
+ .title{font-size:34px}
+}
+</style></head><body>
+<header class="masthead">
+<div class="brand">Daily Briefing</div>
+<h1 class="title">每日要闻</h1>
+<div class="sub"><span>2026-09-16 星期三 · 生成 2026-09-16 07:10</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
+</header>
+<section><h2><span class="cn">全球市场</span><span>Global Markets</span></h2>
+<table class="mkt">
+<tr><td class="mk-name" colspan="2">🔴 道琼斯  52,093   -0.63%</td></tr>
+<tr><td class="mk-name" colspan="2">🔴 纳斯达克  25,982   -0.78%</td></tr>
+<tr><td class="mk-name" colspan="2">🌍 美元/人民币  6.7698</td></tr>
+<tr><td class="mk-name" colspan="2">🌍 美元/日元  154.426</td></tr>
+<tr><td class="mk-name" colspan="2">🌍 欧元/美元  1.1549</td></tr>
+<tr><td class="mk-name" colspan="2">🥇 沪金主连  ¥929.76/克  -1.55%</td></tr>
+<tr><td class="mk-name" colspan="2">🖋 原油主连  ¥893.8/桶  +5.76%</td></tr>
+<tr><td class="mk-name" colspan="2">🔴 上证指数  3864.28   -0.54%</td></tr>
+<tr><td class="mk-name" colspan="2">🔴 深证成指  13287.97   -0.72%</td></tr>
+</table></section>
+<section><h2><span class="cn">金融财经</span><span>Finance</span></h2>
+<article>
+<h3>金融强国建设擘画新蓝图 到2030年形成中国特色现代金融体系</h3>
+</article>
+<article>
+<h3>人民银行公布最新金融数据</h3>
+</article>
+<article>
+<h3>新信号！央行重要数据发布</h3>
+</article>
+<article>
+<h3>曹媛媛已任中国人民银行金融市场司司长</h3>
+</article>
+<article>
+<h3>【热点资讯】一文看懂国新办新闻发布会，央行等部门最新发声！</h3>
+</article>
+<article>
+<h3>李庚南：如何从金融生态重塑视角看四部门监管“组合拳”？</h3>
+</article>
+<article>
+<h3>“十五五”时期将加大促消费领域金融支持</h3>
+</article>
+<article>
+<h3>加快建设金融强国 服务经济高质量发展</h3>
+</article>
+</section>
+<section><h2><span class="cn">领导动态</span><span>Leadership</span></h2>
+<article>
+<h3>范波分别主持召开市级机关和市属国企座谈会</h3>
+<div class="src">苏州市要闻</div>
+</article>
+</section>
+<section><h2><span class="cn">苏州要闻</span><span>Suzhou</span></h2>
+<article>
+<h3>苏州市委常委会召开会议</h3>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<h3>圆通速递苏州城市服务中心项目落户吴中</h3>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<h3>16家苏企跻身“科创未来之星”</h3>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<h3>埃及媒体代表团来访苏州 感受智慧农业与绿色发展生动实践</h3>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<h3>苏州市新就业群体志愿服务总队成立</h3>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<h3>生态文体相融 活力狮山赋能美好生活</h3>
+<div class="src">区县快讯</div>
+</article>
+<article>
+<h3>2026年相城区“全国科普月”活动正式开幕</h3>
+<div class="src">区县快讯</div>
+</article>
+<article>
+<h3>张家港原创AI漫剧《西游网安录》上线，2分钟一集干货满满</h3>
+<div class="src">区县快讯</div>
+</article>
+<article>
+<h3>2026苏州湾荧光欢乐跑在吴江鸣枪开跑</h3>
+<div class="src">区县快讯</div>
+</article>
+<article>
+<h3>相城区联合夜查行动 全方位守护“深夜食堂”</h3>
+<div class="src">区县快讯</div>
+</article>
+</section>
+<footer>生成时间 2026-09-16 07:10 ｜ 数据源 同花顺 iFinD · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
+<div class="toast" id="toast"></div>
+<script>
+var S=''; // 当前刷新状态
+function toast(t,ms){var e=document.getElementById('toast');e.textContent=t;e.classList.add('on');
+ clearTimeout(window._tt);window._tt=setTimeout(function(){e.classList.remove('on')},ms||4200);}
+function setBusy(b){var k=document.getElementById('rf');
+ if(b){k.disabled=true;k.textContent='刷新中…';}else{k.disabled=false;k.textContent='↻ 刷新';}}
+async function probe(){ // 找活着的中转服务
+ var hs=['http://127.0.0.1:8707','http://100.121.209.120:8707','http://192.168.2.61:8707'];
+ for(var i=0;i<hs.length;i++){
+   try{var c=new AbortController();var t=setTimeout(function(){c.abort()},2500);
+     var r=await fetch(hs[i]+'/status',{signal:c.signal});clearTimeout(t);
+     if(r.ok){window._host=hs[i];return true;}}catch(e){}
+ }
+ return false;
+}
+async function refresh(){
+ setBusy(true);toast('正在重新采集并重新生成，约 1-3 分钟…');
+ var ok=await probe();
+ if(!ok){setBusy(false);toast('⚠ 电脑上的刷新服务未运行，请确认电脑开机（或稍后再试）');return;}
+ try{
+   await fetch(window._host+'/news_refresh?t='+Date.now(),{method:'POST'});
+   var n=0,iv=setInterval(async function(){
+     n++;
+     try{var r=await fetch(window._host+'/news_status?t='+Date.now());var j=await r.json();
+       if(!j.running){clearInterval(iv);setBusy(false);
+         if(j.ok){toast('✅ 已更新，正在重新载入…',2600);setTimeout(function(){location.reload()},1400);}
+         else{toast('刷新失败：'+(j.msg||'未知原因'),6000);}
+       }else if(n>150){clearInterval(iv);setBusy(false);toast('刷新超时，请稍后再试');}
+     }catch(e){}
+   },4000);
+ }catch(e){setBusy(false);toast('调用刷新服务失败，请稍后再试');}
+}
+window.addEventListener('load',function(){setBusy(false);probe();});
+</script>
+</body></html>
