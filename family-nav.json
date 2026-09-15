@@ -1,27 +1,32 @@
 [
-  {
-    "title": "家庭相册",
-    "url": "http://100.121.209.120:5000",
-    "emoji": "📸"
-  },
-  {
-    "title": "投资看板",
-    "url": "https://yuji1998.github.io/fengge-dashboard/?v=20260820",
-    "emoji": "📈"
-  },
-  {
-    "title": "报价看板",
-    "url": "https://yuji1998.github.io/fengge-dashboard/finprice.html?v=20260820",
-    "emoji": "💰"
-  },
-  {
-    "title": "Token 看板",
-    "url": "https://yuji1998.github.io/fengge-dashboard/token.html?v=20260907",
-    "emoji": "🪙"
-  },
-  {
-    "title": "行程演示",
-    "url": "https://yuji1998.github.io/fengge-pages/suzhou-trip.html",
-    "emoji": "🗺️"
-  }
+ {
+  "title": "家庭相册",
+  "url": "http://100.121.209.120:5000",
+  "emoji": "📸"
+ },
+ {
+  "title": "投资看板",
+  "url": "https://yuji1998.github.io/fengge-dashboard/?v=20260820",
+  "emoji": "📈"
+ },
+ {
+  "title": "报价看板",
+  "url": "https://yuji1998.github.io/fengge-dashboard/finprice.html?v=20260820",
+  "emoji": "💰"
+ },
+ {
+  "title": "每日要闻",
+  "url": "https://yuji1998.github.io/fengge-dashboard/news.html?v=20260916",
+  "emoji": "📰"
+ },
+ {
+  "title": "Token 看板",
+  "url": "https://yuji1998.github.io/fengge-dashboard/token.html?v=20260907",
+  "emoji": "🪙"
+ },
+ {
+  "title": "行程演示",
+  "url": "https://yuji1998.github.io/fengge-pages/suzhou-trip.html",
+  "emoji": "🗺️"
+ }
 ]
