@@ -71,6 +71,10 @@ table.mkt tr:last-child td{border-bottom:none}
 .tsk:last-child{border-bottom:none}
 .tsk .ok{color:#1e7a4e;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px}
 @media (prefers-color-scheme:dark){.tsk .ok{color:#5fd39b}}
+.persons{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 10px}
+.pn{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12.5px;color:var(--ink2);
+ background:var(--mark);border-radius:4px;padding:3px 9px}
+.pn b{color:var(--accent);font-weight:700}
 footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
  font-size:12px;color:var(--ink3);font-family:"Helvetica Neue",Arial,sans-serif;line-height:1.7}
 @media (min-width:640px){
@@ -81,7 +85,7 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <header class="masthead">
 <div class="brand">Daily Briefing</div>
 <h1 class="title">每日要闻</h1>
-<div class="sub"><span>2026-09-16 星期三 · 生成 2026-09-16 07:23</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
+<div class="sub"><span>2026-09-16 星期三 · 生成 2026-09-16 07:32</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
 </header>
 <section><h2><span class="cn">全球市场</span><span>Global Markets</span></h2>
 <table class="mkt">
@@ -96,26 +100,25 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <tr><td class="mk-name" colspan="2">🔴 深证成指  13287.97   -0.72%</td></tr>
 </table></section>
 <section><h2><span class="cn">金融财经</span><span>Finance</span></h2>
-<p class="lead">央行发布最新金融数据，</p>
 <article>
 <h3>金融强国建设擘画新蓝图 到2030年形成中国特色现代金融体系</h3>
-<div class="note">四部门指央行、金融监管总局、证监会及外汇局</div>
+<div class="note">针对影子银行、跨境资金流动等灰色地带，强化穿透式监管</div>
 </article>
 <article>
 <h3>人民银行公布最新金融数据</h3>
-<div class="note">规划期覆盖2026至2030年，侧重住房、汽车等大宗消费信贷</div>
+<div class="note">重点指向服务消费与绿色消费，配套贴息及信贷额度倾斜政策</div>
 </article>
 <article>
 <h3>新信号！央行重要数据发布</h3>
-<div class="note">系中央金融工作会议确立目标，涵盖五篇大文章</div>
+<div class="note">以科技金融、绿色金融、普惠金融为三大抓手，对标国际金融中心</div>
 </article>
 <article>
 <h3>曹媛媛已任中国人民银行金融市场司司长</h3>
-<div class="note">该司主管银行间债券、外汇及衍生品市场，此前由李斌担任</div>
+<div class="note">该司主管银行间市场、外汇市场及金融基础设施</div>
 </article>
 <article>
 <h3>【热点资讯】一文看懂国新办新闻发布会，央行等部门最新发声！</h3>
-<div class="note">央行、金融监管总局、证监会联合出席，涉及信贷及资本市场政策</div>
+<div class="note">央行、金融监管总局、证监会三部门联合出席</div>
 </article>
 <article>
 <h3>李庚南：如何从金融生态重塑视角看四部门监管“组合拳”？</h3>
@@ -130,34 +133,34 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <section><h2><span class="cn">领导动态</span><span>Leadership</span></h2>
 <article>
 <h3>范波分别主持召开市级机关和市属国企座谈会</h3>
-<div class="note">围绕年度经济目标冲刺，分线部署机关效能与国企考核任务</div>
+<div class="note">两场分设意在区分行政与经营条线，多对应经济调度或专项部署</div>
 <div class="src">苏州市要闻</div>
 </article>
 </section>
 <section><h2><span class="cn">苏州要闻</span><span>Suzhou</span></h2>
 <article>
 <h3>苏州市委常委会召开会议</h3>
-<div class="note">狮山镇以文体设施配套拉动片区居住人口导入，服务产城融合目标</div>
+<div class="note">狮山镇依托太湖生态廊道布局全年文体赛事矩阵</div>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
 <h3>圆通速递苏州城市服务中心项目落户吴中</h3>
-<div class="note">区科协牵头组织，覆盖中小学及社区，侧重人工智能与航天主题</div>
+<div class="note">活动覆盖全区12个镇街，联动高校及企业设展逾百场</div>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
 <h3>16家苏企跻身“科创未来之星”</h3>
-<div class="note">由区网信办与公安联合出品，面向青少年群体普及反诈与数据安全知识</div>
+<div class="note">由张家港公安联合网信部门出品，面向青少年反诈宣传</div>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
 <h3>埃及媒体代表团来访苏州 感受智慧农业与绿色发展生动实践</h3>
-<div class="note">约三千名跑者参与，赛事带动苏州湾片区夜间餐饮及住宿消费</div>
+<div class="note">设5公里及10公里两赛道，吸引逾三千名跑者参与</div>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
 <h3>苏州市新就业群体志愿服务总队成立</h3>
-<div class="note">市场监管、城管、公安三部门联动，重点排查无证经营及消防隐患</div>
+<div class="note">市场监管、消防、城管三部门联动，聚焦燃气及消防隐患</div>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
@@ -181,7 +184,30 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <div class="src">区县快讯</div>
 </article>
 </section>
-<footer>生成时间 2026-09-16 07:23 ｜ 数据源 同花顺 iFinD · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
+<div class="tasks"><h2><span class="cn">凌晨任务</span><span>Nightly</span></h2>
+<p class="lead">人物观点采集：昨日新增 10 篇，累计 405 篇</p>
+<div class="persons">
+<span class="pn">范波 <b>3</b>/184</span>
+<span class="pn">王维 <b>1</b>/62</span>
+<span class="pn">廖林 <b>4</b>/78</span>
+<span class="pn">刘珺 <b>2</b>/81</span>
+</div>
+<p class="lead">其他任务 成功执行 13 项</p>
+<div class="tsk"><span>系统整体备份</span><span class="ok">02:00 ✅</span></div>
+<div class="tsk"><span>知识库语义索引刷新</span><span class="ok">02:30 ✅</span></div>
+<div class="tsk"><span>百度网盘备份</span><span class="ok">03:00 ✅</span></div>
+<div class="tsk"><span>飞书对话备份</span><span class="ok">04:00 ✅</span></div>
+<div class="tsk"><span>人物观点采集</span><span class="ok">04:30 ✅</span></div>
+<div class="tsk"><span>配置库同步</span><span class="ok">04:31 ✅</span></div>
+<div class="tsk"><span>每日自动监测报告</span><span class="ok">06:20 ✅</span></div>
+<div class="tsk"><span>持仓异动信号监测</span><span class="ok">06:30 ✅</span></div>
+<div class="tsk"><span>每日新闻简报</span><span class="ok">06:30 ✅</span></div>
+<div class="tsk"><span>经济数据采集</span><span class="ok">06:55 ✅</span></div>
+<div class="tsk"><span>Token看板重建</span><span class="ok">07:00 ✅</span></div>
+<div class="tsk"><span>Token记账自检</span><span class="ok">07:00 ✅</span></div>
+<div class="tsk"><span>每日规定动作晨报</span><span class="ok">07:00 ✅</span></div>
+</div>
+<footer>生成时间 2026-09-16 07:32 ｜ 数据源 同花顺 iFinD · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
 <div class="toast" id="toast"></div>
 <script>
 var S=''; // 当前刷新状态
