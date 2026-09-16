@@ -64,6 +64,13 @@ h2{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accen
  display:flex;justify-content:space-between;align-items:baseline}
 h2 .cn{letter-spacing:.1em}
 .lead{font-size:15.5px;color:var(--ink2);margin:10px 0 2px;font-style:italic}
+/* 条目可点：整块可点 + 右侧箭头 */
+a.ilink{display:block;color:inherit;text-decoration:none;cursor:pointer;}
+a.ilink h3{position:relative;padding-right:18px;}
+a.ilink h3:after{content:'A';position:absolute;right:2px;top:1px;
+  font-size:17px;font-weight:400;color:#c9a227;opacity:.75;}
+a.ilink:active{opacity:.62;}
+a.ilink:active h3{color:#9e2f2f;}
 article{padding:12px 0 11px;border-bottom:1px solid var(--rule);
  display:grid;grid-template-columns:1fr;gap:3px}
 article:last-child{border-bottom:none}
@@ -103,7 +110,7 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <header class="masthead">
 <div class="brand">Daily Briefing</div>
 <h1 class="title">每日要闻</h1>
-<div class="sub"><span>2026-09-16 星期三 · 生成 2026-09-16 12:46</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
+<div class="sub"><span>2026-09-16 星期三 · 生成 2026-09-16 15:51</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
 </header>
 <nav class="nav">
 <a href="https://www.chineseft.net/" target="_blank" rel="noopener">FT中文网</a>
@@ -118,10 +125,10 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <tr><td class="mk-name" colspan="2">🌍 美元/人民币  6.7670</td></tr>
 <tr><td class="mk-name" colspan="2">🌍 美元/日元  155.103</td></tr>
 <tr><td class="mk-name" colspan="2">🌍 欧元/美元  1.1542</td></tr>
-<tr><td class="mk-name" colspan="2">🥇 沪金主连  ¥929.76/克  -1.55%</td></tr>
-<tr><td class="mk-name" colspan="2">🖋 原油主连  ¥893.8/桶  +5.76%</td></tr>
-<tr><td class="mk-name" colspan="2">🔴 上证指数  3864.28   -0.54%</td></tr>
-<tr><td class="mk-name" colspan="2">🔴 深证成指  13287.97   -0.72%</td></tr>
+<tr><td class="mk-name" colspan="2">🥇 沪金主连  ¥937.74/克  +1.00%</td></tr>
+<tr><td class="mk-name" colspan="2">🖋 原油主连  ¥827.0/桶  -1.10%</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 上证指数  3891.60   +0.71%</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 深证成指  13454.74   +1.25%</td></tr>
 </table></section>
 <section><h2><span class="cn">金融财经</span><span>Finance</span></h2>
 <article>
@@ -134,10 +141,10 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <h3>新信号！央行重要数据发布</h3>
 </article>
 <article>
-<h3>人民银行公布最新金融数据</h3>
+<h3>一文看懂国新办新闻发布会 央行、证监会等最新发声</h3>
 </article>
 <article>
-<h3>一文看懂国新办新闻发布会 央行、证监会等最新发声</h3>
+<h3>人民银行公布最新金融数据</h3>
 </article>
 <article>
 <h3>李庚南：如何从金融生态重塑视角看四部门监管“组合拳”？</h3>
@@ -151,49 +158,49 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 </section>
 <section><h2><span class="cn">领导动态</span><span>Leadership</span></h2>
 <article>
-<h3>范波分别主持召开市级机关和市属国企座谈会</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202609/dbe8753fdc4c464c824990da53d93862.shtml" target="_blank" rel="noopener"><h3>范波分别主持召开市级机关和市属国企座谈会</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
 </section>
 <section><h2><span class="cn">苏州要闻</span><span>Suzhou</span></h2>
 <article>
-<h3>苏州市委常委会召开会议</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202609/9693832279584e0ebf4572604cd0c4e1.shtml" target="_blank" rel="noopener"><h3>苏州市委常委会召开会议</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
-<h3><span class="area">吴中</span>圆通速递苏州城市服务中心项目落户吴中</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202609/a229636ab0ca415482f56a92a99baef8.shtml" target="_blank" rel="noopener"><h3><span class="area">吴中</span>圆通速递苏州城市服务中心项目落户吴中</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
-<h3>16家苏企跻身“科创未来之星”</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202609/25a60ca7f2ad40d28e1805cc81d833e9.shtml" target="_blank" rel="noopener"><h3>16家苏企跻身“科创未来之星”</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
-<h3>埃及媒体代表团来访苏州 感受智慧农业与绿色发展生动实践</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202609/99cbfa4d4ec949edb452e801114a2121.shtml" target="_blank" rel="noopener"><h3>埃及媒体代表团来访苏州 感受智慧农业与绿色发展生动实践</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
-<h3>苏州市新就业群体志愿服务总队成立</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202609/16abf1c4a48a4f41bf2541ffc39c7377.shtml" target="_blank" rel="noopener"><h3>苏州市新就业群体志愿服务总队成立</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
 <article>
-<h3><span class="area">张家港</span>专家学者齐聚江苏科技大学张家港校区 纵论人文经济与城市精神</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/qxkx/202609/35dea3e31a6f4e7a8bf9996f3dc83841.shtml" target="_blank" rel="noopener"><h3><span class="area">昆山市</span>昆山市“百校千企引才计划”北京专场启幕</h3></a>
 <div class="src">区县快讯</div>
 </article>
 <article>
-<h3><span class="area">相城</span>2026“蟹逅阳澄 万事相城”金秋文旅消费季暨“潮生街区”主理人技能大赛在度假区（阳澄湖镇）启幕</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/qxkx/202609/045c7867cd5644c0934f30269ab5d9a2.shtml" target="_blank" rel="noopener"><h3><span class="area">相城</span>相城金秋文旅消费季启幕</h3></a>
 <div class="src">区县快讯</div>
 </article>
 <article>
-<h3><span class="area">狮山</span>生态文体相融 活力狮山赋能美好生活</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/qxkx/202609/2bbe9c7c43c0460d90f28be8f9b5b374.shtml" target="_blank" rel="noopener"><h3><span class="area">太仓</span>近80名马切拉塔师生来太 沉浸式感受太仓文旅魅力</h3></a>
 <div class="src">区县快讯</div>
 </article>
 <article>
-<h3><span class="area">相城区</span>2026年相城区“全国科普月”活动正式开幕</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/qxkx/202609/42337b58cb0a40c5b3114cc819a291fa.shtml" target="_blank" rel="noopener"><h3><span class="area">太仓</span>太仓开启校地企协同育人新实践</h3></a>
 <div class="src">区县快讯</div>
 </article>
 <article>
-<h3><span class="area">张家港</span>张家港原创AI漫剧《西游网安录》上线，2分钟一集干货满满</h3>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/qxkx/202609/f2ecf176322c40be8ebc7c0a5eb5bb72.shtml" target="_blank" rel="noopener"><h3><span class="area">张家港</span>专家学者齐聚江苏科技大学张家港校区 纵论人文经济与城市精神</h3></a>
 <div class="src">区县快讯</div>
 </article>
 </section>
@@ -220,7 +227,7 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <div class="tsk"><span>Token记账自检</span><span class="ok">07:00 ✅</span></div>
 <div class="tsk"><span>每日规定动作晨报</span><span class="ok">07:00 ✅</span></div>
 </div>
-<footer>生成时间 2026-09-16 12:46 ｜ 数据源 同花顺 iFinD · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
+<footer>生成时间 2026-09-16 15:51 ｜ 数据源 同花顺 iFinD · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
 <div class="toast" id="toast"></div>
 <script>
 var S=''; // 当前刷新状态
