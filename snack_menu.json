@@ -1,0 +1,86 @@
+{
+  "categories": [
+    {
+      "id": "baozi",
+      "name": "包子馒头",
+      "icon": "🥟",
+      "items": [
+        {
+          "name": "豆沙包",
+          "spec": "只",
+          "price": 2.0,
+          "stock": 36,
+          "sales": 0,
+          "tags": []
+        },
+        {
+          "name": "刀切馒头",
+          "spec": "只",
+          "price": 1.0,
+          "stock": 45,
+          "sales": 0,
+          "tags": []
+        },
+        {
+          "name": "菜包",
+          "spec": "只",
+          "price": 3.0,
+          "stock": 4,
+          "sales": 0,
+          "tags": [
+            "库存紧张"
+          ]
+        },
+        {
+          "name": "花卷",
+          "spec": "只",
+          "price": 1.0,
+          "stock": 25,
+          "sales": 0,
+          "tags": []
+        },
+        {
+          "name": "肉包",
+          "spec": "只",
+          "price": 3.0,
+          "stock": 70,
+          "sales": 0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "shengxian",
+      "name": "生鲜面食",
+      "icon": "🥬",
+      "items": [
+        {
+          "name": "菜肉水饺（生）",
+          "spec": "15只/盒",
+          "price": 12.0,
+          "stock": 14,
+          "sales": 0,
+          "tags": [
+            "库存紧张"
+          ]
+        },
+        {
+          "name": "菜肉馄饨（生）",
+          "spec": "15只/盒",
+          "price": 12.0,
+          "stock": 12,
+          "sales": 0,
+          "tags": [
+            "库存紧张"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lucai",
+      "name": "卤菜",
+      "icon": "🍗",
+      "items": []
+    }
+  ]
+}
