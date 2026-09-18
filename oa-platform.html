@@ -2398,7 +2398,7 @@ function submitCoffee(pageId){
     cat:   isSnack(pageId) ? '面点卤菜预订' : '咖啡预订',
     summary: (isSnack(pageId) ? '面点卤菜' : '咖啡西点') + ' · 共' + s.qty + '件 ¥' + s.amount.toFixed(2) +
              ' · 取餐 ' + BOOK[pageId].pick + ' · ' + names.slice(0,3).join('、'),
-    user: u.name, dept: u.dept, badge: u.badge, status: '待取餐'
+    user: u.name, dept: u.dept, badge: u.badge, status: 'submitted'
   });
   CART[pageId] = {};
   closePicker();
@@ -3135,7 +3135,7 @@ function renderMyBookings(screen){
   } else {
     h += '<div class="list">';
     rows.forEach(function(r){
-      h += '<div class="row" style="align-items:flex-start">' +
+      h += '<div class="row" style="align-items:flex-start;cursor:pointer" onclick="if(window.showOrderDetail&&r._kind===\'orders\')showOrderDetail(\'' + r.id + '\')">' +
         '<div class="ri" style="background:#FFEDEC;color:#C7000B">' + SVG_ICON.row_cal + '</div>' +
         '<div class="rb"><div class="rt">' + esc(r.title) + '</div>' +
         '<div class="rs">' + esc(r.date) + '　' + esc(r.slot) + '</div>' +
@@ -3205,7 +3205,7 @@ function renderMyApplies(screen){
              : r._kind === 'orders' ? 'background:#E9F6EF;color:#0F8A5F'
              : r._kind === 'evals' ? 'background:#F0EDFA;color:#6D4AA8'
              : 'background:#E9F0FA;color:#1E5AA8';
-      h += '<div class="row" style="align-items:flex-start">' +
+      h += '<div class="row" style="align-items:flex-start;cursor:pointer" onclick="if(window.showOrderDetail&&r._kind===\'orders\')showOrderDetail(\'' + r.id + '\')">' +
         '<div class="ri" style="' + bg + '">' + ico + '</div>' +
         '<div class="rb"><div class="rt">' + esc(r.title || r.cat || '业务申请') + '</div>' +
         '<div class="rs">' + esc(r.date ? (r.date + '　' + (r.slot||'')) : (r.summary || '')) + '</div>' +
@@ -3890,6 +3890,501 @@ loadMenus();
   if(ROUTE === '#/mine'){ hist = []; }
   render();
 });
+
+
+// ============ P0-2: 取餐核销码 ============
+function genPickupCode() {
+    // 生成4位数字核销码（1000-9999）
+    var used = JSON.parse(localStorage.getItem('icbc_used_codes') || '[]');
+    var code;
+    do {
+        code = Math.floor(1000 + Math.random() * 9000);
+    } while (used.includes(code));
+    used.push(code);
+    // 只保留最近100个，防止无限增长
+    if (used.length > 100) used = used.slice(-100);
+    localStorage.setItem('icbc_used_codes', JSON.stringify(used));
+    return code;
+}
+
+function getOrderPickupCode(orderId) {
+    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
+    var order = orders.find(function(o) { return o.id === orderId; });
+    return order ? order.pickup_code : null;
+}
+
+function fulfillOrder(orderId, code) {
+    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
+    var order = orders.find(function(o) { return o.id === orderId; });
+    if (!order) return { ok: false, msg: '订单不存在' };
+    if (order.status !== 'approved') return { ok: false, msg: '订单状态不正确' };
+    if (order.pickup_code !== code) return { ok: false, msg: '核销码错误' };
+    
+    order.status = 'fulfilled';
+    order.fulfilled_at = Date.now();
+    localStorage.setItem('icbc_oa_orders', JSON.stringify(orders));
+    return { ok: true, msg: '取餐成功' };
+}
+
+function renderPickupCode(order) {
+    if (order.status !== 'approved' || !order.pickup_code) return '';
+    return '<div style="background:#fff;border-radius:12px;padding:20px;margin:14px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08)">' +
+        '<div style="font-size:12px;color:#999;margin-bottom:8px">取餐码</div>' +
+        '<div style="font-size:42px;font-weight:700;color:#C7000B;letter-spacing:8px;font-family:monospace">' + order.pickup_code + '</div>' +
+        '<div style="font-size:11px;color:#999;margin-top:8px">请向食堂工作人员出示此码</div>' +
+        '</div>';
+}
+
+function renderFulfillUI(order) {
+    if (order.status !== 'approved') return '';
+    return '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">' +
+        '<div style="font-size:13px;font-weight:600;margin-bottom:12px;color:#333">模拟核销（食堂工作人员操作）</div>' +
+        '<div style="display:flex;gap:10px;align-items:center">' +
+        '<input type="text" id="fulfill_code_' + order.id + '" maxlength="4" placeholder="输入4位核销码" ' +
+        'style="flex:1;padding:12px;border:2px solid #E8E8E8;border-radius:8px;font-size:16px;text-align:center;letter-spacing:4px;font-family:monospace;outline:none">' +
+        '<button onclick="doFulfill(\'' + order.id + '\')" ' +
+        'style="padding:12px 24px;background:#C7000B;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">确认取餐</button>' +
+        '</div>' +
+        '<div id="fulfill_msg_' + order.id + '" style="margin-top:10px;font-size:12px;display:none"></div>' +
+        '</div>';
+}
+
+function doFulfill(orderId) {
+    var input = document.getElementById('fulfill_code_' + orderId);
+    var msg = document.getElementById('fulfill_msg_' + orderId);
+    var code = input.value.trim();
+    
+    if (!code || code.length !== 4) {
+        msg.style.display = 'block';
+        msg.style.color = '#C7000B';
+        msg.textContent = '请输入4位数字核销码';
+        return;
+    }
+    
+    var result = fulfillOrder(orderId, parseInt(code));
+    msg.style.display = 'block';
+    
+    if (result.ok) {
+        msg.style.color = '#0F8A5F';
+        msg.textContent = '✓ ' + result.msg;
+        setTimeout(function() { render(); }, 1500);
+    } else {
+        msg.style.color = '#C7000B';
+        msg.textContent = '✗ ' + result.msg;
+    }
+}
+// ============ P0-2 END ============
+
+// ============ P0-1: 签约状态机 ============
+const ORDER_STATES = {
+    draft:       { name: '草稿',   color: '#999', next: ['submitted'] },
+    submitted:   { name: '已提交', color: '#1E5AA8', next: ['under_review', 'cancelled'] },
+    under_review:{ name: '审核中', color: '#B45309', next: ['approved', 'rejected'] },
+    approved:    { name: '已通过', color: '#0F8A5F', next: ['fulfilled', 'cancelled'] },
+    fulfilled:   { name: '已履约', color: '#6D4AA8', next: ['completed'] },
+    completed:   { name: '已完成', color: '#0A6847', next: [] },
+    rejected:    { name: '已拒绝', color: '#C7000B', next: [] },
+    cancelled:   { name: '已取消', color: '#999', next: [] }
+};
+
+function canTransition(fromState, toState) {
+    var state = ORDER_STATES[fromState];
+    return state && state.next.includes(toState);
+}
+
+function transitionOrder(orderId, toState, by) {
+    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
+    var order = orders.find(function(o) { return o.id === orderId; });
+    if (!order) return { ok: false, msg: '订单不存在' };
+    if (!canTransition(order.status, toState)) {
+        return { ok: false, msg: '非法状态流转: ' + order.status + ' → ' + toState };
+    }
+    
+    var fromState = order.status;
+    order.status = toState;
+    order.status_history = order.status_history || [];
+    order.status_history.push({
+        from: fromState,
+        to: toState,
+        at: Date.now(),
+        by: by || 'system'
+    });
+    
+    // P0-2: 如果进入 approved 状态，生成核销码
+    if (toState === 'approved' && !order.pickup_code) {
+        order.pickup_code = genPickupCode();
+    }
+    
+    localStorage.setItem('icbc_oa_orders', JSON.stringify(orders));
+    return { ok: true, msg: '状态已更新', from: fromState, to: toState };
+}
+
+function getStateBadge(status) {
+    var state = ORDER_STATES[status];
+    if (!state) return '<span class="tag gray">未知</span>';
+    var style = 'background:' + state.color + '1A;color:' + state.color;
+    return '<span class="tag" style="' + style + '">' + state.name + '</span>';
+}
+
+function renderStateTimeline(order) {
+    if (!order.status_history || order.status_history.length === 0) return '';
+    
+    var h = '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">';
+    h += '<div style="font-size:13px;font-weight:600;margin-bottom:16px;color:#333">状态流转记录</div>';
+    h += '<div style="position:relative;padding-left:20px">';
+    
+    // 时间线竖线
+    h += '<div style="position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:#E8E8E8"></div>';
+    
+    order.status_history.forEach(function(log, i) {
+        var isLast = i === order.status_history.length - 1;
+        var dotColor = isLast ? ORDER_STATES[log.to].color : '#0F8A5F';
+        var dotIcon = isLast ? '●' : '✓';
+        
+        h += '<div style="position:relative;margin-bottom:14px">';
+        h += '<div style="position:absolute;left:-18px;top:2px;width:12px;height:12px;border-radius:50%;background:' + dotColor + ';color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center">' + dotIcon + '</div>';
+        h += '<div style="font-size:12px;font-weight:600;color:' + (isLast ? ORDER_STATES[log.to].color : '#333') + '">' + 
+             ORDER_STATES[log.from].name + ' → ' + ORDER_STATES[log.to].name + '</div>';
+        h += '<div style="font-size:11px;color:#999;margin-top:2px">' + new Date(log.at).toLocaleString('zh-CN') + ' · 操作人: ' + (log.by || 'system') + '</div>';
+        h += '</div>';
+    });
+    
+    h += '</div></div>';
+    return h;
+}
+
+function renderOrderActions(order) {
+    var h = '';
+    var status = order.status;
+    
+    // 根据状态显示操作按钮
+    if (status === 'submitted') {
+        h += '<button onclick="doTransition(\'' + order.id + '\',\'cancelled\',\'user\')" ' +
+             'style="width:calc(100% - 28px);margin:14px;padding:12px;background:#fff;color:#C7000B;border:1px solid #C7000B;border-radius:8px;font-size:14px;cursor:pointer">取消订单</button>';
+    }
+    
+    if (status === 'approved') {
+        h += renderPickupCode(order);
+        h += renderFulfillUI(order);
+    }
+    
+    if (status === 'fulfilled') {
+        // P0-3: 检查是否在48小时内
+        var hoursLeft = getReviewHoursLeft(order);
+        if (hoursLeft > 0) {
+            h += '<button onclick="openReview(\'' + order.id + '\')" ' +
+                 'style="width:calc(100% - 28px);margin:14px;padding:12px;background:#C7000B;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">评价订单（剩余' + hoursLeft + '小时）</button>';
+        } else {
+            h += '<div style="margin:14px;padding:12px;background:#F5F5F5;border-radius:8px;text-align:center;color:#999;font-size:13px">已超时，无法评价</div>';
+        }
+    }
+    
+    if (status === 'completed' && order.rating) {
+        h += '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">';
+        h += '<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:#333">我的评价</div>';
+        h += '<div style="font-size:16px;color:#C9A227;margin-bottom:8px">' + '★'.repeat(order.rating) + '☆'.repeat(5 - order.rating) + '</div>';
+        if (order.review) {
+            h += '<div style="font-size:13px;color:#666;line-height:1.6">' + esc(order.review) + '</div>';
+        }
+        h += '<div style="font-size:11px;color:#999;margin-top:8px">评价时间: ' + new Date(order.reviewed_at).toLocaleString('zh-CN') + '</div>';
+        h += '</div>';
+    }
+    
+    if (status === 'rejected') {
+        h += '<div style="margin:14px;padding:12px;background:#FDECEC;border-radius:8px;color:#C7000B;font-size:13px">';
+        h += '拒绝原因: ' + (order.reject_reason || '未填写') + '</div>';
+    }
+    
+    return h;
+}
+
+function doTransition(orderId, toState, by) {
+    var result = transitionOrder(orderId, toState, by);
+    if (result.ok) {
+        toast('状态已更新: ' + ORDER_STATES[result.from].name + ' → ' + ORDER_STATES[result.to].name);
+        setTimeout(function() { render(); }, 1000);
+    } else {
+        toast(result.msg);
+    }
+}
+// ============ P0-1 END ============
+
+// ============ P0-3: 评价限制（48小时+已取餐） ============
+const REVIEW_WINDOW_HOURS = 48;
+
+function getReviewHoursLeft(order) {
+    if (!order.fulfilled_at) return 0;
+    var elapsed = Date.now() - order.fulfilled_at;
+    var hoursLeft = REVIEW_WINDOW_HOURS - (elapsed / (1000 * 60 * 60));
+    return Math.max(0, Math.floor(hoursLeft));
+}
+
+function canReview(order) {
+    // 只有已履约的订单才能评价
+    if (order.status !== 'fulfilled') return false;
+    // 48小时内
+    return getReviewHoursLeft(order) > 0;
+}
+
+function submitReview(orderId, rating, reviewText) {
+    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
+    var order = orders.find(function(o) { return o.id === orderId; });
+    if (!order) return { ok: false, msg: '订单不存在' };
+    if (!canReview(order)) return { ok: false, msg: '无法评价（已超时或状态不正确）' };
+    if (order.rating) return { ok: false, msg: '已评价过，不能重复评价' };
+    
+    order.rating = rating;
+    order.review = reviewText || '';
+    order.reviewed_at = Date.now();
+    order.status = 'completed';
+    order.status_history = order.status_history || [];
+    order.status_history.push({
+        from: 'fulfilled',
+        to: 'completed',
+        at: Date.now(),
+        by: 'user',
+        note: '提交评价'
+    });
+    
+    localStorage.setItem('icbc_oa_orders', JSON.stringify(orders));
+    return { ok: true, msg: '评价成功' };
+}
+
+function renderReviewForm(order) {
+    if (!canReview(order)) return '';
+    
+    var h = '<div id="review_form_' + order.id + '" style="display:none;margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">';
+    h += '<div style="font-size:13px;font-weight:600;margin-bottom:12px;color:#333">订单评价</div>';
+    
+    // 星级选择
+    h += '<div style="margin-bottom:14px">';
+    h += '<div style="font-size:12px;color:#666;margin-bottom:8px">整体评分</div>';
+    h += '<div style="display:flex;gap:8px;justify-content:center" id="star_container_' + order.id + '">';
+    for (var i = 1; i <= 5; i++) {
+        h += '<span onclick="setStar(' + i + ',\'' + order.id + '\')" ' +
+             'id="star_' + order.id + '_' + i + '" ' +
+             'style="font-size:32px;cursor:pointer;color:#DDD;transition:color .15s">★</span>';
+    }
+    h += '</div>';
+    h += '<div style="text-align:center;font-size:11px;color:#999;margin-top:4px" id="star_hint_' + order.id + '">点击星星评分</div>';
+    h += '</div>';
+    
+    // 文字评价
+    h += '<div style="margin-bottom:14px">';
+    h += '<div style="font-size:12px;color:#666;margin-bottom:6px">评价内容（选填）</div>';
+    h += '<textarea id="review_text_' + order.id + '" rows="3" ' +
+         'style="width:100%;padding:10px;border:1px solid #E8E8E8;border-radius:8px;font-size:13px;resize:vertical;outline:none" ' +
+         'placeholder="说说菜品质量、服务态度..."></textarea>';
+    h += '</div>';
+    
+    // 提交按钮
+    h += '<button onclick="doSubmitReview(\'' + order.id + '\')" ' +
+         'style="width:100%;padding:12px;background:#C7000B;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">提交评价</button>';
+    
+    h += '<div id="review_msg_' + order.id + '" style="margin-top:10px;font-size:12px;display:none;text-align:center"></div>';
+    h += '</div>';
+    
+    return h;
+}
+
+var _currentRating = {};
+
+function setStar(n, orderId) {
+    _currentRating[orderId] = n;
+    for (var i = 1; i <= 5; i++) {
+        var star = document.getElementById('star_' + orderId + '_' + i);
+        if (star) {
+            star.style.color = i <= n ? '#C9A227' : '#DDD';
+        }
+    }
+    var hint = document.getElementById('star_hint_' + orderId);
+    if (hint) {
+        var labels = ['', '很差', '一般', '还行', '不错', '非常好'];
+        hint.textContent = labels[n] || '';
+    }
+}
+
+function openReview(orderId) {
+    var form = document.getElementById('review_form_' + orderId);
+    if (form) {
+        form.style.display = 'block';
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+function doSubmitReview(orderId) {
+    var rating = _currentRating[orderId] || 0;
+    var text = document.getElementById('review_text_' + orderId).value.trim();
+    var msg = document.getElementById('review_msg_' + orderId);
+    
+    if (!rating) {
+        msg.style.display = 'block';
+        msg.style.color = '#C7000B';
+        msg.textContent = '请先选择星级';
+        return;
+    }
+    
+    var result = submitReview(orderId, rating, text);
+    msg.style.display = 'block';
+    
+    if (result.ok) {
+        msg.style.color = '#0F8A5F';
+        msg.textContent = '✓ ' + result.msg;
+        setTimeout(function() { render(); }, 1500);
+    } else {
+        msg.style.color = '#C7000B';
+        msg.textContent = '✗ ' + result.msg;
+    }
+}
+
+// 在订单详情页渲染评价表单
+function renderReviewSection(order) {
+    var h = '';
+    
+    // 已评价 - 显示评价内容
+    if (order.status === 'completed' && order.rating) {
+        h += '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">';
+        h += '<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:#333">我的评价</div>';
+        h += '<div style="font-size:18px;color:#C9A227;margin-bottom:8px;letter-spacing:2px">' + 
+             '★'.repeat(order.rating) + '<span style="color:#DDD">' + '★'.repeat(5 - order.rating) + '</span></div>';
+        if (order.review) {
+            h += '<div style="font-size:13px;color:#666;line-height:1.6;padding:10px;background:#F8F8F8;border-radius:6px">' + 
+                 esc(order.review) + '</div>';
+        }
+        h += '<div style="font-size:11px;color:#999;margin-top:10px">评价于 ' + 
+             new Date(order.reviewed_at).toLocaleString('zh-CN') + '</div>';
+        h += '</div>';
+    }
+    
+    // 未评价 - 显示评价入口
+    if (order.status === 'fulfilled') {
+        var hoursLeft = getReviewHoursLeft(order);
+        if (hoursLeft > 0) {
+            h += '<button onclick="openReview(\'' + order.id + '\')" ' +
+                 'style="width:calc(100% - 28px);margin:14px;padding:13px;background:#C7000B;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">' +
+                 '评价订单（剩余 ' + hoursLeft + ' 小时）</button>';
+            h += renderReviewForm(order);
+        } else {
+            h += '<div style="margin:14px;padding:12px;background:#F5F5F5;border-radius:8px;text-align:center;color:#999;font-size:13px">' +
+                 '订单已超时（超过48小时），无法评价</div>';
+        }
+    }
+    
+    return h;
+}
+// ============ P0-3 END ============
+
+// ============ P0-4: 订单详情页状态机展示 ============
+function renderOrderDetail(orderId) {
+    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
+    var order = orders.find(function(o) { return o.id === orderId; });
+    if (!order) return '<div class="empty">订单不存在</div>';
+    
+    var C = P.colors['餐饮服务'];
+    var h = '';
+    
+    // 头部：订单状态
+    h += '<div style="background:' + C + ';color:#fff;padding:20px;margin:0 0 14px;border-radius:0 0 16px 16px">';
+    h += '<div style="font-size:12px;opacity:.85;margin-bottom:6px">订单号: ' + order.id + '</div>';
+    h += '<div style="display:flex;align-items:center;gap:10px">';
+    h += '<div style="font-size:24px;font-weight:600">' + (ORDER_STATES[order.status]?.name || order.status) + '</div>';
+    h += '</div>';
+    h += '<div style="font-size:12px;opacity:.85;margin-top:6px">' + esc(order.title) + '</div>';
+    h += '</div>';
+    
+    // 订单信息卡片
+    h += '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">';
+    h += '<div style="font-size:13px;font-weight:600;margin-bottom:12px;color:#333">订单信息</div>';
+    h += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F5F5F5">';
+    h += '<span style="color:#999;font-size:12px">商品</span><span style="font-size:12px;color:#333">' + esc(order.summary || '') + '</span></div>';
+    h += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F5F5F5">';
+    h += '<span style="color:#999;font-size:12px">下单人</span><span style="font-size:12px;color:#333">' + esc(order.user || '') + '</span></div>';
+    h += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F5F5F5">';
+    h += '<span style="color:#999;font-size:12px">部门</span><span style="font-size:12px;color:#333">' + esc(order.dept || '') + '</span></div>';
+    h += '<div style="display:flex;justify-content:space-between;padding:8px 0">';
+    h += '<span style="color:#999;font-size:12px">下单时间</span><span style="font-size:12px;color:#333">' + new Date(order.ts).toLocaleString('zh-CN') + '</span></div>';
+    h += '</div>';
+    
+    // 状态流转时间线（P0-1 + P0-4）
+    if (order.status_history && order.status_history.length > 0) {
+        h += '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">';
+        h += '<div style="font-size:13px;font-weight:600;margin-bottom:16px;color:#333">处理进度</div>';
+        h += '<div style="position:relative;padding-left:24px">';
+        
+        // 时间线竖线
+        h += '<div style="position:absolute;left:7px;top:10px;bottom:10px;width:2px;background:linear-gradient(to bottom,#0F8A5F 0%,#E8E8E8 100%)"></div>';
+        
+        order.status_history.forEach(function(log, i) {
+            var isLast = i === order.status_history.length - 1;
+            var isCurrent = isLast && order.status === log.to;
+            var dotColor = isLast ? (ORDER_STATES[log.to]?.color || '#0F8A5F') : '#0F8A5F';
+            var bgColor = isLast ? dotColor + '20' : '#E8F5EE';
+            
+            h += '<div style="position:relative;margin-bottom:16px">';
+            // 圆点
+            h += '<div style="position:absolute;left:-24px;top:0;width:16px;height:16px;border-radius:50%;' +
+                 'background:' + dotColor + ';color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;' +
+                 'box-shadow:0 0 0 3px ' + bgColor + '">' + (isLast && !isCurrent ? '✓' : '●') + '</div>';
+            
+            // 内容
+            h += '<div style="font-size:13px;font-weight:' + (isLast ? '600' : '400') + ';color:' + 
+                 (isLast ? (ORDER_STATES[log.to]?.color || '#333') : '#333') + '">' +
+                 ORDER_STATES[log.from]?.name + ' → ' + ORDER_STATES[log.to]?.name + '</div>';
+            h += '<div style="font-size:11px;color:#999;margin-top:3px">' + 
+                 new Date(log.at).toLocaleString('zh-CN') + ' · ' + (log.by === 'user' ? '本人操作' : log.by === 'admin' ? '管理员' : '系统') + '</div>';
+            
+            if (log.note) {
+                h += '<div style="font-size:11px;color:#666;margin-top:4px;padding:6px 10px;background:#F8F8F8;border-radius:4px">' + 
+                     esc(log.note) + '</div>';
+            }
+            h += '</div>';
+        });
+        
+        // 当前状态提示
+        if (order.status === 'approved') {
+            h += '<div style="margin-top:8px;padding:10px;background:#E8F5EE;border-radius:6px;font-size:12px;color:#0F8A5F">';
+            h += '✓ 订单已审核通过，请凭取餐码到食堂取餐</div>';
+        } else if (order.status === 'fulfilled') {
+            var hoursLeft = getReviewHoursLeft(order);
+            if (hoursLeft > 0) {
+                h += '<div style="margin-top:8px;padding:10px;background:#E9F0FA;border-radius:6px;font-size:12px;color:#1E5AA8">';
+                h += 'ℹ 订单已履约，可在 ' + hoursLeft + ' 小时内进行评价</div>';
+            }
+        }
+        
+        h += '</div></div>';
+    }
+    
+    // 操作区域
+    h += '<div style="margin:14px 0">';
+    h += renderOrderActions(order);
+    h += renderReviewSection(order);
+    h += '</div>';
+    
+    //  if (status === 'rejected') 显示拒绝原因
+    if (order.status === 'rejected' && order.reject_reason) {
+        h += '<div style="margin:14px;padding:12px;background:#FDECEC;border-radius:8px;color:#C7000B;font-size:13px">';
+        h += '<strong>拒绝原因:</strong> ' + esc(order.reject_reason) + '</div>';
+    }
+    
+    return h;
+}
+
+// 渲染订单详情页的完整视图
+function showOrderDetail(orderId) {
+    var detailHTML = renderOrderDetail(orderId);
+    var screen = document.getElementById('screen');
+    if (screen) {
+        screen.innerHTML = detailHTML;
+        screen.scrollTop = 0;
+    }
+    // 更新导航
+    renderNav({title: '订单详情', back: true, icbc: false});
+}
+// ============ P0-4 END ============
+
+
+
 
 </script>
 </body>
