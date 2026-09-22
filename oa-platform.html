@@ -69,6 +69,40 @@ body{
   width:34px;height:34px;display:flex;align-items:center;justify-content:center;
   font-size:17px;cursor:pointer;letter-spacing:1px;color:inherit;
 }
+/* P3-③：导航栏铃铛 + 未读角标 */
+#nav .bell{
+  position:absolute;right:52px;top:50%;transform:translateY(-50%);
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;cursor:pointer;color:inherit;
+}
+#nav .bell .bdg{
+  position:absolute;top:2px;right:1px;min-width:15px;height:15px;padding:0 4px;
+  border-radius:8px;background:#FF3B30;color:#fff;font-size:10px;font-weight:600;
+  line-height:15px;text-align:center;box-sizing:border-box;font-family:inherit;
+}
+/* P3-④：消息中心未读高亮 */
+.msg-row{display:flex;gap:11px;padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer;position:relative;}
+.msg-row:last-child{border-bottom:none;}
+.msg-row:active{background:#FAFAFA;}
+.msg-row.unread{background:#FFF7F7;border-left:3px solid #C7000B;padding-left:12px;}
+.msg-row .mi{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 34px;}
+.msg-row .mb{flex:1;min-width:0;}
+.msg-row .mt{font-size:14px;font-weight:600;color:#1A1A1A;display:flex;align-items:center;gap:6px;}
+.msg-row .ms{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.55;}
+.msg-row .mtime{font-size:11px;color:#B0B0B0;margin-top:5px;}
+.msg-row .dot{width:7px;height:7px;border-radius:50%;background:#C7000B;flex:0 0 7px;}
+/* P3-⑦：我的申请状态标签 + 审批链 */
+.chain{background:#FAFAFA;border-radius:8px;padding:12px 14px 4px;margin:2px 0 4px;}
+.chain .cnode{display:flex;gap:10px;position:relative;padding-bottom:14px;}
+.chain .cnode:last-child{padding-bottom:6px;}
+.chain .cdot{width:16px;height:16px;border-radius:50%;flex:0 0 16px;margin-top:2px;
+  display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;}
+.chain .cline{position:absolute;left:7.5px;top:18px;bottom:0;width:1px;background:#E0E0E0;}
+.chain .cnode:last-child .cline{display:none;}
+.chain .cbody{flex:1;min-width:0;}
+.chain .cnm{font-size:13px;font-weight:500;color:#1A1A1A;}
+.chain .cmeta{font-size:11px;color:#999;margin-top:3px;line-height:1.5;}
+.chain .copt{font-size:11.5px;color:#666;margin-top:4px;background:#F2F2F2;border-radius:4px;padding:5px 8px;line-height:1.5;}
 #screen{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
 #screen::-webkit-scrollbar{display:none;}
 #screen.hasTab{padding-bottom:0;}
@@ -479,7 +513,7 @@ window.OA_DATA = {
             "正常",
             "异常"
           ],
-          "note": "通行记录全程可追溯、安全可控",
+          "note": "管理端功能，安保部审计用，不对普通用户开放；通行记录全程可追溯、安全可控",
           "module": "access_control",
           "module_name": "门禁访客",
           "color": "#1E5AA8",
@@ -854,6 +888,9 @@ window.OA_DATA = {
       "priority": "一期/二期",
       "functions": [
         "理发预约",
+        "洗衣预约",
+        "保洁预约",
+        "场馆预约",
         "医务室预约",
         "健身房预约",
         "阅览室预约",
@@ -1129,6 +1166,138 @@ window.OA_DATA = {
           "audience": ""
         },
         {
+          "id": "life_laundry",
+          "title": "洗衣预约",
+          "route": "#/life/laundry",
+          "type": "form",
+          "service_target": "分行本部、辖内各行及劳服公司员工",
+          "departments": "劳服公司",
+          "priority": "一期",
+          "deps": "",
+          "systems": "",
+          "fields": [
+            {
+              "label": "提示",
+              "type": "alert",
+              "text": "请选择取送日期与时段，脏衣袋请于约定时间放至服务点。"
+            },
+            {
+              "label": "日期",
+              "type": "date",
+              "value": "9月19日 周六",
+              "action": "click_to_switch"
+            },
+            {
+              "label": "选择时段",
+              "type": "grid_select",
+              "options": ["08:30","09:30","10:30","13:30","14:30","15:30"],
+              "selected": "09:30"
+            },
+            {
+              "label": "预约人",
+              "type": "user_info",
+              "name": "张三",
+              "dept": "金融科技部",
+              "mode": "current_account"
+            }
+          ],
+          "status": ["已预约","已取消"],
+          "note": "洗衣取送在线预约，预约成功后生成凭证（编号 BK-YYYYMMDD-### + 二维码）",
+          "module": "life_reservation",
+          "module_name": "生活预约",
+          "color": "#0F8A5F",
+          "owner": "劳服公司",
+          "audience": ""
+        },
+        {
+          "id": "life_cleaning",
+          "title": "保洁预约",
+          "route": "#/life/cleaning",
+          "type": "form",
+          "service_target": "分行本部、辖内各行及劳服公司员工",
+          "departments": "劳服公司",
+          "priority": "一期",
+          "deps": "",
+          "systems": "",
+          "fields": [
+            {
+              "label": "提示",
+              "type": "alert",
+              "text": "请选择上门保洁日期与时段，保洁范围为办公工位及会议区。"
+            },
+            {
+              "label": "日期",
+              "type": "date",
+              "value": "9月19日 周六",
+              "action": "click_to_switch"
+            },
+            {
+              "label": "选择时段",
+              "type": "grid_select",
+              "options": ["08:00","09:00","10:00","14:00","15:00","16:00"],
+              "selected": "10:00"
+            },
+            {
+              "label": "预约人",
+              "type": "user_info",
+              "name": "张三",
+              "dept": "金融科技部",
+              "mode": "current_account"
+            }
+          ],
+          "status": ["已预约","已取消"],
+          "note": "办公区域保洁上门服务在线预约，预约成功后生成凭证（编号 BK-YYYYMMDD-### + 二维码）",
+          "module": "life_reservation",
+          "module_name": "生活预约",
+          "color": "#0F8A5F",
+          "owner": "劳服公司",
+          "audience": ""
+        },
+        {
+          "id": "life_venue",
+          "title": "场馆预约",
+          "route": "#/life/venue",
+          "type": "form",
+          "service_target": "分行本部、辖内各行及劳服公司员工",
+          "departments": "劳服公司",
+          "priority": "一期",
+          "deps": "",
+          "systems": "",
+          "fields": [
+            {
+              "label": "提示",
+              "type": "alert",
+              "text": "请选择场馆使用日期与场次，凭预约凭证入场。"
+            },
+            {
+              "label": "日期",
+              "type": "date",
+              "value": "9月19日 周六",
+              "action": "click_to_switch"
+            },
+            {
+              "label": "选择时段",
+              "type": "grid_select",
+              "options": ["09:00–11:00","13:00–15:00","15:00–17:00","18:00–20:00"],
+              "selected": "13:00–15:00"
+            },
+            {
+              "label": "预约人",
+              "type": "user_info",
+              "name": "张三",
+              "dept": "金融科技部",
+              "mode": "current_account"
+            }
+          ],
+          "status": ["已预约","已取消"],
+          "note": "职工场馆（羽毛球/乒乓球）在线预约，预约成功后生成凭证（编号 BK-YYYYMMDD-### + 二维码）",
+          "module": "life_reservation",
+          "module_name": "生活预约",
+          "color": "#0F8A5F",
+          "owner": "劳服公司",
+          "audience": ""
+        },
+        {
           "id": "life_parking",
           "title": "临时免费停车登记",
           "route": "#/life/parking",
@@ -1176,7 +1345,7 @@ window.OA_DATA = {
       "key": "office_support",
       "name": "办公保障",
       "color": "#0E7490",
-      "owner": "办公室、劳服公司",
+      "owner": "办公室",
       "priority": "二期",
       "functions": [
         "物品申请",
@@ -1184,7 +1353,6 @@ window.OA_DATA = {
         "接待申请",
         "会议室申请",
         "加班申请",
-        "办公电话申请",
         "科技维修",
         "物业维修"
       ],
@@ -1195,7 +1363,7 @@ window.OA_DATA = {
           "route": "#/office",
           "type": "home",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "对接现有系统，现有系统需改造",
           "systems": "现有OA系统",
@@ -1207,7 +1375,7 @@ window.OA_DATA = {
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1222,9 +1390,25 @@ window.OA_DATA = {
           "systems": "现有OA系统",
           "fields": [
             {
+              "label": "申请类型",
+              "type": "select",
+              "options": [
+                "办公用品",
+                "办公电话",
+                "其他"
+              ],
+              "required": true
+            },
+            {
               "label": "物品名称",
               "type": "text",
               "required": true
+            },
+            {
+              "label": "号码用途",
+              "type": "text",
+              "placeholder": "申请类型选「办公电话」时填写（选填）",
+              "required": false
             },
             {
               "label": "数量",
@@ -1247,11 +1431,11 @@ window.OA_DATA = {
             "已通过",
             "已驳回"
           ],
-          "note": "物品申请线上提交与审批",
+          "note": "物品/办公电话申请线上提交与审批，由办公室归口审批；状态流转：已提交→已接单→处理中→已完成",
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1260,7 +1444,7 @@ window.OA_DATA = {
           "route": "#/office/car-apply",
           "type": "form",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "对接现有系统",
           "systems": "现有OA系统",
@@ -1300,7 +1484,7 @@ window.OA_DATA = {
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1309,7 +1493,7 @@ window.OA_DATA = {
           "route": "#/office/reception-apply",
           "type": "form",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "",
           "systems": "",
@@ -1354,7 +1538,7 @@ window.OA_DATA = {
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1363,7 +1547,7 @@ window.OA_DATA = {
           "route": "#/office/meeting-apply",
           "type": "form",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "链接至总行会议系统",
           "systems": "总行会议系统",
@@ -1408,7 +1592,7 @@ window.OA_DATA = {
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1417,7 +1601,7 @@ window.OA_DATA = {
           "route": "#/office/overtime-apply",
           "type": "form",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "",
           "systems": "",
@@ -1453,7 +1637,7 @@ window.OA_DATA = {
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1461,8 +1645,9 @@ window.OA_DATA = {
           "title": "办公电话申请",
           "route": "#/office/phone-apply",
           "type": "form",
+          "hidden": true,
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "合并至物品领用模块",
           "systems": "",
@@ -1497,7 +1682,7 @@ window.OA_DATA = {
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1506,7 +1691,7 @@ window.OA_DATA = {
           "route": "#/office/tech-repair",
           "type": "form",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "",
           "systems": "",
@@ -1538,15 +1723,16 @@ window.OA_DATA = {
             }
           ],
           "status": [
-            "待处理",
+            "已提交",
+            "已接单",
             "处理中",
             "已完成"
           ],
-          "note": "科技维修申请线上提交与审批",
+          "note": "科技维修申请线上提交与审批；状态流转：已提交→已接单→处理中→已完成",
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1555,7 +1741,7 @@ window.OA_DATA = {
           "route": "#/office/property-repair",
           "type": "form",
           "service_target": "分行本部各部室",
-          "departments": "办公室、劳服公司",
+          "departments": "办公室",
           "priority": "二期",
           "deps": "",
           "systems": "",
@@ -1592,15 +1778,16 @@ window.OA_DATA = {
             }
           ],
           "status": [
-            "待处理",
+            "已提交",
+            "已接单",
             "处理中",
             "已完成"
           ],
-          "note": "物业维修申请线上提交与审批",
+          "note": "物业维修申请线上提交与审批；状态流转：已提交→已接单→处理中→已完成",
           "module": "office_support",
           "module_name": "办公保障",
           "color": "#0E7490",
-          "owner": "办公室、劳服公司",
+          "owner": "办公室",
           "audience": ""
         }
       ]
@@ -1609,7 +1796,7 @@ window.OA_DATA = {
       "key": "data_collection",
       "name": "数据采集",
       "color": "#6D4AA8",
-      "owner": "分行管理",
+      "owner": "办公室",
       "priority": "一期/三期",
       "functions": [
         "绑定卡",
@@ -1627,7 +1814,7 @@ window.OA_DATA = {
           "route": "#/data",
           "type": "home",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "一期",
           "deps": "需先对接总行接智慧餐饮",
           "systems": "总行智慧餐饮, 人力资源系统",
@@ -1640,7 +1827,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1649,7 +1836,7 @@ window.OA_DATA = {
           "route": "#/data/bind-card",
           "type": "form",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "一期",
           "deps": "需先对接总行接智慧餐饮",
           "systems": "总行智慧餐饮",
@@ -1683,7 +1870,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1692,7 +1879,7 @@ window.OA_DATA = {
           "route": "#/data/e-pay",
           "type": "detail",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "一期",
           "deps": "需先对接总行接智慧餐饮",
           "systems": "总行智慧餐饮",
@@ -1715,7 +1902,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1724,7 +1911,7 @@ window.OA_DATA = {
           "route": "#/data/digital-rmb",
           "type": "detail",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "一期",
           "deps": "需先对接总行接智慧餐饮",
           "systems": "总行智慧餐饮",
@@ -1747,7 +1934,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1756,7 +1943,7 @@ window.OA_DATA = {
           "route": "#/data/feedback",
           "type": "form",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "一期",
           "deps": "",
           "systems": "",
@@ -1791,7 +1978,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1800,7 +1987,7 @@ window.OA_DATA = {
           "route": "#/data/parking-mgmt",
           "type": "list",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "三期",
           "deps": "规划中",
           "systems": "",
@@ -1827,7 +2014,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1836,7 +2023,7 @@ window.OA_DATA = {
           "route": "#/data/health-check",
           "type": "form",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "三期",
           "deps": "",
           "systems": "",
@@ -1869,7 +2056,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         },
         {
@@ -1878,7 +2065,7 @@ window.OA_DATA = {
           "route": "#/data/hr-sync",
           "type": "detail",
           "service_target": "全体员工",
-          "departments": "分行管理",
+          "departments": "办公室",
           "priority": "一期",
           "deps": "同步人力资源系统",
           "systems": "人力资源系统",
@@ -1901,7 +2088,7 @@ window.OA_DATA = {
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
-          "owner": "分行管理",
+          "owner": "办公室",
           "audience": ""
         }
       ]
@@ -1910,9 +2097,10 @@ window.OA_DATA = {
       "key": "platform_mgmt",
       "name": "平台管理",
       "color": "#B45309",
-      "owner": "平台管理",
+      "owner": "办公室 / 物业公司",
       "priority": "全周期/三期",
       "functions": [
+        "状态看板",
         "数据统计分析",
         "后勤人员考勤",
         "物业巡检管理",
@@ -1925,7 +2113,7 @@ window.OA_DATA = {
           "route": "#/mgmt",
           "type": "home",
           "service_target": "平台管理员",
-          "departments": "平台管理",
+          "departments": "办公室 / 物业公司",
           "priority": "全周期",
           "deps": "",
           "systems": "",
@@ -1937,7 +2125,7 @@ window.OA_DATA = {
           "module": "platform_mgmt",
           "module_name": "平台管理",
           "color": "#B45309",
-          "owner": "平台管理",
+          "owner": "办公室 / 物业公司",
           "audience": ""
         },
         {
@@ -1946,7 +2134,7 @@ window.OA_DATA = {
           "route": "#/mgmt/stats",
           "type": "detail",
           "service_target": "平台管理员",
-          "departments": "平台管理",
+          "departments": "办公室 / 物业公司",
           "priority": "全周期",
           "deps": "",
           "systems": "",
@@ -1979,7 +2167,7 @@ window.OA_DATA = {
           "module": "platform_mgmt",
           "module_name": "平台管理",
           "color": "#B45309",
-          "owner": "平台管理",
+          "owner": "办公室 / 物业公司",
           "audience": ""
         },
         {
@@ -1988,7 +2176,7 @@ window.OA_DATA = {
           "route": "#/mgmt/attendance",
           "type": "list",
           "service_target": "后勤人员",
-          "departments": "平台管理",
+          "departments": "办公室 / 物业公司",
           "priority": "三期",
           "deps": "",
           "systems": "",
@@ -2022,7 +2210,7 @@ window.OA_DATA = {
           "module": "platform_mgmt",
           "module_name": "平台管理",
           "color": "#B45309",
-          "owner": "平台管理",
+          "owner": "办公室 / 物业公司",
           "audience": ""
         },
         {
@@ -2031,7 +2219,7 @@ window.OA_DATA = {
           "route": "#/mgmt/inspection",
           "type": "list",
           "service_target": "物业人员",
-          "departments": "平台管理",
+          "departments": "办公室 / 物业公司",
           "priority": "三期",
           "deps": "",
           "systems": "",
@@ -2066,7 +2254,7 @@ window.OA_DATA = {
           "module": "platform_mgmt",
           "module_name": "平台管理",
           "color": "#B45309",
-          "owner": "平台管理",
+          "owner": "办公室 / 物业公司",
           "audience": ""
         },
         {
@@ -2075,7 +2263,7 @@ window.OA_DATA = {
           "route": "#/mgmt/push",
           "type": "form",
           "service_target": "全体员工",
-          "departments": "平台管理",
+          "departments": "办公室 / 物业公司",
           "priority": "一期",
           "deps": "",
           "systems": "",
@@ -2114,7 +2302,7 @@ window.OA_DATA = {
           "module": "platform_mgmt",
           "module_name": "平台管理",
           "color": "#B45309",
-          "owner": "平台管理",
+          "owner": "办公室 / 物业公司",
           "audience": ""
         }
       ]
@@ -2200,31 +2388,31 @@ const T = window.OA_TOKENS;
 
 const SVG_ICON = {
   canteen_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10L12 3L21 10V20H3V10Z\"/><path d=\"M9 20V14H15V20\"/></svg>",
-  canteen_menu: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><line x1=\"9\" y1=\"8\" x2=\"15\" y2=\"8\"/><line x1=\"9\" y1=\"12\" x2=\"15\" y2=\"12\"/><line x1=\"9\" y1=\"16\" x2=\"13\" y2=\"16\"/></svg>",
+  canteen_menu: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"16\" rx=\"2.5\"/><path d=\"M8 3v3M16 3v3M3.5 9.5h17\"/><path d=\"M8 13.5h3M8 17h3M14.5 13.5h1.5M14.5 17h1.5\"/></svg>",
   canteen_dining: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 2V22\"/><path d=\"M5 2V7C5 9 7 10 8 10C9 10 11 9 11 7V2\"/><path d=\"M16 2V22\"/><path d=\"M16 2C19 2 21 4 21 7C21 10 19 12 16 12\"/></svg>",
   canteen_weekend_order: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"/><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"/><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"/><path d=\"M9 16L11 18L15 14\"/></svg>",
-  canteen_snack_order: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2C12 2 18 8 18 14C18 18 15 22 12 22C9 22 6 18 6 14C6 8 12 2 12 2Z\"/><path d=\"M12 22V14\"/><path d=\"M12 14C12 14 15 12 15 9\"/></svg>",
-  canteen_coffee_order: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 8H20C21.1 8 22 8.9 22 10V12C22 13.1 21.1 14 20 14H18\"/><path d=\"M4 8H18V14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14V8Z\"/><path d=\"M8 2V4\"/><path d=\"M12 2V4\"/><path d=\"M16 2V4\"/></svg>",
+  canteen_snack_order: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 13h16c0 3.5-2 6-5 6H9c-3 0-5-2.5-5-6z\"/><path d=\"M3 13h18\"/><path d=\"M7 9c0-1.5 1.5-2.5 2.5-1.5M12 8.5c0-1.5 1.5-2.5 2.5-1.5\"/><path d=\"M12 19v2\"/></svg>",
+  canteen_coffee_order: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 8.5h12v5.5a5 5 0 01-5 5h-2a5 5 0 01-5-5V8.5z\"/><path d=\"M16.5 9.5h1.8a2.2 2.2 0 010 4.4h-1.8\"/><path d=\"M7.5 3v2.5M11 3v2.5\"/><path d=\"M3.5 21.5h14\"/></svg>",
   canteen_evaluation: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z\"/></svg>",
   life_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9L12 2L21 9V22H3V9Z\"/><path d=\"M9 22V12H15V22\"/></svg>",
-  life_haircut: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 4 L20 10 L16 14 L10 8 Z\" /><path d=\"M10 8 L4 14 L8 18 L14 12\" /><path d=\"M4 20 L8 16\" /></svg>",
+  life_haircut: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"6.5\" cy=\"18.5\" r=\"2.8\"/><circle cx=\"17.5\" cy=\"18.5\" r=\"2.8\"/><path d=\"M8.6 16.4L18 4.5M15.4 16.4L6 4.5\"/></svg>",
   life_medical: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"4\" /><path d=\"M12 8 V 16\" /><path d=\"M8 12 H 16\" /></svg>",
   life_gym: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 8 V 16\" /><path d=\"M18 8 V 16\" /><path d=\"M3 12 H 21\" /><path d=\"M9 12 H 15\" /></svg>",
   life_library: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 19.5 A 2.5 2.5 0 0 1 6.5 17 H 20\" /><path d=\"M6.5 2 H 20 V 17 H 6.5 A 2.5 2.5 0 0 0 4 19.5\" /><path d=\"M10 6 H 16\" /><path d=\"M10 10 H 16\" /></svg>",
   life_parking: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"4\" /><path d=\"M9 17 V 7 H 13 A 3 3 0 0 1 13 13 H 9\" /></svg>",
   access_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10 L12 3 L21 10\" /><path d=\"M5 10 V 21 H 19 V 10\" /><path d=\"M9 21 V 14 H 15 V 21\" /></svg>",
-  visitor_register: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"8\" r=\"4\" /><path d=\"M4 21 V 19 A 8 8 0 0 1 20 19 V 21\" /><path d=\"M12 14 V 18\" /><path d=\"M10 16 H 14\" /></svg>",
+  visitor_register: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"3.5\" width=\"16\" height=\"17\" rx=\"2.5\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/><path d=\"M7 17.5c0-2.2 2.2-3.5 5-3.5s5 1.3 5 3.5\"/></svg>",
   visitor_list: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"7\" r=\"3\" /><path d=\"M2 21 V 19 A 6 6 0 0 1 14 19 V 21\" /><path d=\"M16 4 H 22\" /><path d=\"M16 10 H 22\" /><path d=\"M16 16 H 22\" /></svg>",
   access_log: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"/><path d=\"M8 10h8M8 14h8\"/></svg>",
   office_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10l9-7 9 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2z\"/><path d=\"M9 22V12h6v10\"/></svg>",
-  office_item_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 8l-9-5-9 5v8l9 5 9-5V8z\"/><path d=\"M3.3 8.7L12 13l8.7-4.3\"/><path d=\"M12 13v9\"/></svg>",
-  office_car_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 17h14l-2-5H7l-2 5z\"/><path d=\"M3 17h18\"/><circle cx=\"7\" cy=\"17\" r=\"2\"/><circle cx=\"17\" cy=\"17\" r=\"2\"/></svg>",
+  office_item_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5v-9z\"/><path d=\"M3.7 7.6L12 12l8.3-4.4M12 12v9\"/><path d=\"M16.5 11.2l1.5 1.5 3-3\"/></svg>",
+  office_car_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 16.5v-4l2-4.5h11l2 4.5v4\"/><path d=\"M3.5 16.5h17\"/><circle cx=\"7.5\" cy=\"16.5\" r=\"2\"/><circle cx=\"16.5\" cy=\"16.5\" r=\"2\"/><path d=\"M6.5 12h11\"/></svg>",
   office_reception_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M4 21v-2a8 8 0 0116 0v2\"/></svg>",
   office_meeting_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M16 2v4M8 2v4\"/><path d=\"M3 10h18\"/></svg>",
   office_overtime_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 3\"/></svg>",
   office_phone_apply: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z\"/></svg>",
   office_tech_repair: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><line x1=\"9\" y1=\"20\" x2=\"15\" y2=\"20\"/><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"20\"/><path d=\"M12 8v4\"/><path d=\"M10 10h4\"/></svg>",
-  office_property_repair: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 21h18\"/><path d=\"M5 21V7l7-4 7 4v14\"/><path d=\"M9 12h6\"/><path d=\"M12 9v6\"/></svg>",
+  office_property_repair: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.7 6.3a4 4 0 015.4 5.4l-8.6 8.6a2.4 2.4 0 01-3.4-3.4l8.6-8.6z\"/><path d=\"M14.7 6.3l3 3\"/><path d=\"M3 21h5\"/></svg>",
   data_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/><polyline points=\"9 22 9 12 15 12 15 22\"/></svg>",
   data_bind_card: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><line x1=\"2\" y1=\"10\" x2=\"22\" y2=\"10\"/><path d=\"M16 14h4\"/></svg>",
   data_e_pay: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><line x1=\"2\" y1=\"10\" x2=\"22\" y2=\"10\"/><path d=\"M12 14v2\"/><path d=\"M10 14h4\"/></svg>",
@@ -2398,8 +2586,20 @@ function submitCoffee(pageId){
     cat:   isSnack(pageId) ? '面点卤菜预订' : '咖啡预订',
     summary: (isSnack(pageId) ? '面点卤菜' : '咖啡西点') + ' · 共' + s.qty + '件 ¥' + s.amount.toFixed(2) +
              ' · 取餐 ' + BOOK[pageId].pick + ' · ' + names.slice(0,3).join('、'),
-    user: u.name, dept: u.dept, badge: u.badge, status: 'submitted'
+    user: u.name, dept: u.dept, badge: u.badge, status: 'submitted',
+    pickup_code: genPickupCode(),       // P2-6：6 位数字核销码
+    payAmount: s.amount,
+    ts: Date.now()
   });
+  // P2-7：扣款失败提示（余额不足不静默失败）
+  var pay = Payment.checkBalance(pageId, s.amount);
+  if(!pay.ok){
+    STORE.data.orders = STORE.data.orders.filter(function(x){ return x.id !== r.id; });
+    STORE.save();
+    Payment.showInsufficient(pay);
+    return;
+  }
+  Wallet.spend('餐饮 · ' + (isSnack(pageId) ? '面点卤菜' : '咖啡西点'), s.amount, r.id);
   CART[pageId] = {};
   closePicker();
   toast('下单成功 · 单号 ' + r.id);
@@ -2841,10 +3041,31 @@ function renderNav(cfg){
   n.innerHTML =
     (cfg.back ? '<div class="back" onclick="back()">‹</div>' : '') +
     '<span>' + esc(cfg.title) + '</span>' +
+    renderBell() +          // P3-③：全局铃铛 + 未读角标
     '<div class="more">⋯</div>';
   // 状态栏配色：红头白字 / 白色导航黑字
   const sb = document.getElementById('statusbar');
   if(sb) sb.className = cfg.icbc ? '' : 'dark';
+}
+
+// ============ P3-③：导航栏铃铛（全部带导航页面统一渲染）============
+function renderBell(){
+  const n = MSG ? MSG.unreadCount() : 0;
+  return '<div class="bell" onclick="go(\'#/msg_center\')" title="消息中心">🔔' +
+    (n > 0 ? '<span class="bdg">' + (n > 99 ? '99+' : n) + '</span>' : '') +
+    '</div>';
+}
+// 只刷新铃铛角标，不重绘页面（标记已读后实时变化）
+function refreshBell(){
+  try{
+    const nav = document.getElementById('nav');
+    if(!nav || !nav.querySelector) return;
+    const old = nav.querySelector('.bell');
+    if(!old || !old.parentNode || !old.parentNode.replaceChild) return;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = renderBell();
+    if(wrap.firstChild) old.parentNode.replaceChild(wrap.firstChild, old);
+  }catch(e){}
 }
 
 function shade(hex, pct){
@@ -2926,6 +3147,9 @@ const SLOT_LIB = {
   life_library:  ['09:00–10:30','10:30–12:00','12:00–13:30','14:00–15:30','15:30–17:00'],
   office_meeting_apply:   ['08:30–10:00','10:00–11:30','13:30–15:00','15:00–16:30','16:30–18:00'],
   office_car_apply:       ['全天用车','上午用车（08:00–12:00）','下午用车（13:00–18:00）'],
+  life_laundry:  ['08:30–09:00','09:30–10:00','10:30–11:00','13:30–14:00','14:30–15:00','15:30–16:00'],
+  life_cleaning: ['08:00–09:00','09:00–10:00','10:00–11:00','14:00–15:00','15:00–16:00','16:00–17:00'],
+  life_venue:    ['09:00–11:00','13:00–15:00','15:00–17:00','18:00–20:00'],
   office_reception_apply: ['午餐接待（11:30–13:00）','晚餐接待（17:30–19:30）','座谈交流（15:00–16:30）'],
   office_overtime_apply:  ['17:30–19:00','18:00–20:00','19:00–21:00','周末全天'],
   office_dining:          ['早餐（07:00–08:30）','午餐（11:30–12:30）','晚餐（17:30–18:30）']
@@ -2971,6 +3195,32 @@ function pickItem(val){
   const it = PICKER.items.find(x => x.val === val);
   if(it && it.dis) return;
   if(PICKER.type === 'dept'){ pickDept(val); return; }
+  // P2-四：改期流程（第一步选日期 -> 第二步选时段 -> 提交）
+  if(PICKER.type === 'reschedule'){
+    var _bid = PICKER.bookingId, _pid2 = PICKER.pageId;
+    BOOK[_pid2] = BOOK[_pid2] || {};
+    BOOK[_pid2].date = val;
+    var _slots = SLOT_LIB[_pid2] || ['09:00–10:00','10:00–11:00','14:00–15:00','15:00–16:00'];
+    PICKER = {
+      type: 'reschedule_slot',
+      pageId: _pid2,
+      bookingId: _bid,
+      title: '改期 · 选择新时段',
+      items: _slots.map(function(x, i){
+        return { val: x, lb: x, sub: (i === 1 || i === 4) ? '已约满' : '', dis: (i === 1 || i === 4) };
+      })
+    };
+    renderPicker();
+    return;
+  }
+  if(PICKER.type === 'reschedule_slot'){
+    var _bid2 = PICKER.bookingId, _pid3 = PICKER.pageId;
+    BOOK[_pid3] = BOOK[_pid3] || {};
+    BOOK[_pid3].slot = val;
+    closePicker();
+    doReschedule(_bid2, BOOK[_pid3].date, val);
+    return;
+  }
   // 点单页取餐时间：选定后直接下单
   if(PICKER.type === 'pick'){
     const _pid = PICKER.pageId;
@@ -3051,23 +3301,56 @@ function bookVal(pageId, kind){
   return b[kind] || '';
 }
 
-// 预约提交
+// 各预约页应付金额（演示口径）
+function payAmountOf(pageId){
+  var M = {
+    life_haircut:  20.00,
+    life_medical:   5.00,
+    life_gym:      15.00,
+    life_library:   0.00,
+    life_laundry:  25.00,
+    life_cleaning: 35.00,
+    life_venue:    10.00,
+    office_car_apply: 0.00
+  };
+  return M[pageId] != null ? M[pageId] : 0;
+}
+
+// P2-3：5 个需展示凭证卡的预约页
+var VOUCHER_PAGES = ['life_haircut','life_laundry','life_cleaning','life_venue','office_car_apply'];
+
+// 预约提交（P2-3 凭证 / P2-7 扣款校验 / P2-8 统一编号）
 function submitBook(pageId){
   const b = BOOK[pageId] || {};
   const p = pageById(pageId);
   if(!b.date){ toast('请先选择预约日期'); return; }
   if(!b.slot){ toast('请选择预约时段'); return; }
+
+  // P2-7：余额不足 -> 明确提示 + 跳转钱包，不静默失败
+  var amt = payAmountOf(pageId);
+  var pay = Payment.checkBalance(pageId, amt);
+  if(!pay.ok){ Payment.showInsufficient(pay); return; }
+
+  // P2-3 + P2-8：生成预约凭证 BK-YYYYMMDD-###
+  var v = Voucher.issue(p ? p.title : '预约', b.date, b.slot, pageId);
+
   const r = STORE.add('bookings', {
     pageId: pageId,
     title: p ? p.title : '预约',
     date: b.date,
     slot: b.slot,
     user: getProfile().name,
-    status: '预约成功'
+    status: '预约成功',
+    voucherNo: v.no,
+    payAmount: amt
   });
+
+  if(amt > 0) Wallet.spend('预约 · ' + (p ? p.title : ''), amt, r.id);
+
   closePicker();
-  toast('预约成功 · 单号 ' + r.id);
-  setTimeout(function(){ go('#/my_bookings'); }, 1200);
+  toast('预约成功 · 凭证 ' + v.no);
+  // P2-3：预约成功后展示凭证卡片
+  setTimeout(function(){ go(VOUCHER_PAGES.indexOf(pageId) >= 0 ? '#/voucher/' + r.id : '#/my_bookings'); }, 1100);
 }
 
 // ============ 通用提交（申请 / 报备 / 评价 / 登记）============
@@ -3110,6 +3393,8 @@ function submitGeneric(pageId){
     }
   });
   var summary = m.sum + ' · ' + dd + (extra.length ? ' · ' + extra.slice(0,3).join('，') : '');
+  // P2-1：维修请求 / 物品申领 共用四态跟踪
+  var isWorkTicket = (m.kind === 'repairs') || (pageId === 'office_item_apply');
   var r = STORE.add(m.kind, {
     pageId: pageId,
     title: (p ? p.title : m.cat),
@@ -3118,11 +3403,13 @@ function submitGeneric(pageId){
     user: u.name,
     dept: u.dept,
     badge: u.badge,
-    status: '待审批'
+    status: isWorkTicket ? '已提交' : '待审批'
   });
+  if(isWorkTicket){ TicketLog.init(r.id); }
   closePicker();
-  toast('提交成功 · 单号 ' + r.id);
-  setTimeout(function(){ go('#/my_applies'); }, 1200);
+  // P2-1：提交成功后提示"已提交，等待接单"
+  toast(isWorkTicket ? '已提交，等待接单 · 单号 ' + r.id : '提交成功 · 单号 ' + r.id);
+  setTimeout(function(){ go('#/my_applies'); }, 1300);
 }
 
 // ============ 我的预约 ============
@@ -3135,12 +3422,26 @@ function renderMyBookings(screen){
   } else {
     h += '<div class="list">';
     rows.forEach(function(r){
-      h += '<div class="row" style="align-items:flex-start;cursor:pointer" onclick="if(window.showOrderDetail&&r._kind===\'orders\')showOrderDetail(\'' + r.id + '\')">' +
+      // P2-4：已取消的预约不再显示取消/改期按钮
+      var cancelled = (r.status === '已取消');
+      h += '<div style="border-bottom:1px solid var(--line)">';
+      h += '<div class="row" style="align-items:flex-start;border-bottom:none">' +
         '<div class="ri" style="background:#FFEDEC;color:#C7000B">' + SVG_ICON.row_cal + '</div>' +
         '<div class="rb"><div class="rt">' + esc(r.title) + '</div>' +
         '<div class="rs">' + esc(r.date) + '　' + esc(r.slot) + '</div>' +
-        '<div class="rs" style="color:#999;font-size:11.5px">单号 ' + esc(r.id) + ' · ' + esc(r.createdStr) + '</div></div>' +
-        '<span class="tag green">' + esc(r.status) + '</span></div>';
+        '<div class="rs" style="color:#999;font-size:11.5px">单号 ' + esc(r.id) +
+          (r.voucherNo ? '　凭证 ' + esc(r.voucherNo) : '') +
+          ' · ' + esc(r.createdStr) + '</div></div>' +
+        '<span class="tag ' + (cancelled ? 'gray' : 'green') + '">' + esc(r.status) + '</span></div>';
+      h += '<div style="display:flex;gap:9px;padding:0 15px 13px 59px">';
+      if(!cancelled){
+        h += '<button onclick="go(\'#/voucher/' + r.id + '\')" style="flex:1;padding:7px 0;border:1px solid #C7000B;background:#fff;color:#C7000B;border-radius:7px;font-size:12.5px;cursor:pointer;font-family:inherit">出示凭证</button>';
+        h += '<button onclick="askRescheduleBooking(\'' + r.id + '\')" style="flex:1;padding:7px 0;border:1px solid #D8D8D8;background:#fff;color:#555;border-radius:7px;font-size:12.5px;cursor:pointer;font-family:inherit">改期</button>';
+        h += '<button onclick="askCancelBooking(\'' + r.id + '\')" style="flex:1;padding:7px 0;border:1px solid #D8D8D8;background:#fff;color:#999;border-radius:7px;font-size:12.5px;cursor:pointer;font-family:inherit">取消</button>';
+      } else {
+        h += '<div style="font-size:11.5px;color:#B8B8B8;line-height:2">该预约已取消，不可再取消或改期</div>';
+      }
+      h += '</div></div>';
     });
     h += '</div>';
   }
@@ -3164,6 +3465,9 @@ function allRecords(){
 }
 function setApplyTab(k){ APPLY_TAB = k; render(); }
 
+var TICKET_TAB = 'all';   // P2-1：工单状态筛选
+function setTicketTab(k){ TICKET_TAB = k; render(); }
+
 function renderMyApplies(screen){
   renderNav({title:'我的申请', back:true, icbc:true});
   var all = allRecords();
@@ -3186,7 +3490,23 @@ function renderMyApplies(screen){
   });
   h += '</div>';
 
+  // P2-1：维修/物品工单按状态筛选（全部/已提交/已接单/处理中/已完成）
+  var showTicketFilter = (APPLY_TAB === 'all' || APPLY_TAB === 'repairs' || APPLY_TAB === 'applies');
+  if(showTicketFilter){
+    h += '<div style="display:flex;gap:7px;margin:-4px 0 12px;overflow-x:auto;padding-bottom:2px">';
+    TICKET_STATES.forEach(function(st){
+      var on = TICKET_TAB === st.key;
+      h += '<div onclick="setTicketTab(\'' + st.key + '\')" style="flex:0 0 auto;padding:5px 12px;border-radius:14px;font-size:11.5px;cursor:pointer;' +
+        (on ? 'background:#0E7490;color:#fff' : 'background:#fff;color:#777;border:1px solid #E8E8E8') + '">' +
+        esc(st.label) + '</div>';
+    });
+    h += '</div>';
+  }
+
   var rows = APPLY_TAB === 'all' ? all : all.filter(function(r){ return r._kind === APPLY_TAB; });
+  if(showTicketFilter && TICKET_TAB !== 'all'){
+    rows = rows.filter(function(r){ return isTicket(r) && TicketLog.get(r.id) === TICKET_TAB; });
+  }
   if(!rows.length){
     h += '<div class="empty"><div class="ei">📄</div>暂无记录<br><span style="font-size:12px;color:#999">提交申请/报修/订餐后可在此查看</span></div>';
   } else {
@@ -3205,12 +3525,38 @@ function renderMyApplies(screen){
              : r._kind === 'orders' ? 'background:#E9F6EF;color:#0F8A5F'
              : r._kind === 'evals' ? 'background:#F0EDFA;color:#6D4AA8'
              : 'background:#E9F0FA;color:#1E5AA8';
-      h += '<div class="row" style="align-items:flex-start;cursor:pointer" onclick="if(window.showOrderDetail&&r._kind===\'orders\')showOrderDetail(\'' + r.id + '\')">' +
+      // P3-⑦：统一状态标签（已提交/审批中/已通过/已驳回）
+      var stKey = APPLY_STATE.keyOf(st, r);
+      var stLb  = APPLY_STATE.label(stKey);
+      var stCol = APPLY_STATE.color(stKey);
+      // P2-1：维修/物品工单 -> 四态徽标 + 点击进工单详情（时间轴 + 评价）
+      if(isTicket(r)){
+        var tstate = TicketLog.get(r.id);
+        h += '<div class="row" style="align-items:flex-start;cursor:pointer" onclick="go(\'#/ticket/' + r._kind + '/' + r.id + '\')">' +
+          '<div class="ri" style="' + bg + '">' + ico + '</div>' +
+          '<div class="rb"><div class="rt">' + esc(r.title || r.cat || '业务申请') + '</div>' +
+          '<div class="rs">' + esc(r.summary || '') + '</div>' +
+          '<div class="rs" style="color:#999;font-size:11.5px">单号 ' + esc(r.id) + ' · ' + esc(r.createdStr || '') + '</div></div>' +
+          '<span class="tag" style="background:' + TicketLog.color(tstate) + '1A;color:' + TicketLog.color(tstate) + '">' +
+            esc(TicketLog.label(tstate)) + '</span></div>';
+        return;
+      }
+      // P3-⑦：可展开审批链（申请类记录）
+      var expandable = APPLY_STATE.canChain(r);
+      var open = APPLY_OPEN[r.id];
+      h += '<div style="border-bottom:1px solid var(--line)">';
+      h += '<div class="row" style="align-items:flex-start;cursor:pointer;border-bottom:none" onclick="' +
+        (expandable ? 'toggleApplyChain(\'' + r.id + '\')' : 'if(window.showOrderDetail&&r._kind===\'orders\')showOrderDetail(\'' + r.id + '\')') + '">' +
         '<div class="ri" style="' + bg + '">' + ico + '</div>' +
         '<div class="rb"><div class="rt">' + esc(r.title || r.cat || '业务申请') + '</div>' +
         '<div class="rs">' + esc(r.date ? (r.date + '　' + (r.slot||'')) : (r.summary || '')) + '</div>' +
-        '<div class="rs" style="color:#999;font-size:11.5px">单号 ' + esc(r.id) + ' · ' + esc(r.createdStr || '') + '</div></div>' +
-        '<span class="tag ' + tc + '">' + esc(st) + '</span></div>';
+        '<div class="rs" style="color:#999;font-size:11.5px">单号 ' + esc(r.id) + ' · ' + esc(r.createdStr || '') +
+          (expandable ? '　<span style="color:#1E5AA8">' + (open ? '收起审批链 ▲' : '查看审批链 ▼') + '</span>' : '') + '</div></div>' +
+        '<span class="tag" style="background:' + stCol + '1A;color:' + stCol + '">' + esc(stLb) + '</span></div>';
+      if(open && expandable){
+        h += renderApplyChain(r, stKey);
+      }
+      h += '</div>';
     });
     h += '</div>';
   }
@@ -3280,6 +3626,32 @@ const STORE = {
     return obj;
   },
   list(kind){ return this.data[kind] || []; },
+  // P2-四：取消预约（状态 -> 已取消）
+  cancelBooking(id){
+    var b = null;
+    (this.data.bookings || []).forEach(function(r){ if(r.id === id) b = r; });
+    if(!b) return { ok: false, msg: '预约不存在' };
+    if(b.status === '已取消') return { ok: false, msg: '该预约已取消' };
+    b.status = '已取消';
+    b.cancelledAt = this.nowStr();
+    this.save();
+    return { ok: true, booking: b };
+  },
+  // P2-四：改期（更新预约日期 / 时段）
+  rescheduleBooking(id, newDate, newSlot){
+    var b = null;
+    (this.data.bookings || []).forEach(function(r){ if(r.id === id) b = r; });
+    if(!b) return { ok: false, msg: '预约不存在' };
+    if(b.status === '已取消') return { ok: false, msg: '该预约已取消，不可改期' };
+    if(!newDate) return { ok: false, msg: '请选择新日期' };
+    b.date = newDate;
+    if(newSlot) b.slot = newSlot;
+    b.status = '预约成功';
+    b.rescheduledAt = this.nowStr();
+    b.rescheduleCount = (b.rescheduleCount || 0) + 1;
+    this.save();
+    return { ok: true, booking: b };
+  },
   nowStr(){
     const d = new Date();
     const p = n => (n<10?'0':'')+n;
@@ -3290,8 +3662,8 @@ const STORE = {
 
 // ==================== 个人信息 PROFILE ====================
 const PROFILE_DEFAULT = {
-  name: '朱陈康',
-  avatar: '朱',
+  name: '张三',
+  avatar: '张',
   dept: '金融科技部',
   post: '业务经理',
   cert: '110205005',        // 统一认证号
@@ -3299,7 +3671,7 @@ const PROFILE_DEFAULT = {
   plate: '苏EB88888',       // 车牌号码
   stall: 'F315',            // 车位
   phone: '138****8888',
-  email: 'zhuck_sz@js.icbc.com.cn',
+  email: 'zhangsan_sz@js.icbc.com.cn',
   ext: '8303 转 333',
   office: '分行本部 12F',
   joinDate: '2019-07-01',
@@ -3397,6 +3769,12 @@ function render(){
   if(key === 'my_bookings'){ renderMyBookings(screen); return; }
   if(key === 'my_applies'){ renderMyApplies(screen); return; }
   if(key === 'profile'){ renderProfilePage(screen); return; }
+  if(key === 'wallet'){ renderWalletPage(screen); return; }                       // P2-5：我的钱包
+  if(key === 'voucher'){ renderVoucherPage(screen, parts[1]); return; }           // P2-3/8：预约凭证
+  if(key === 'ticket'){ renderTicketDetail(screen, parts[1], parts[2]); return; } // P2-1/2/9：工单四态+评价
+  if(key === 'mgmt_dashboard'){ renderMgmtDashboard(screen); return; }            // P2-10：管理端看板
+  if(key === 'msg_center'){ renderMsgCenter(screen); return; }                    // P3-④：消息中心
+  if(key === 'mgmt_auth_config'){ renderMgmtAuthConfig(screen); return; }         // P3-⑥：用户授权配置
   if(key === 'service'){ renderTab('service'); renderService(screen); return; }
   if(!key){ renderTab('home'); renderHome(screen); return; }
   var p = pageById(key);
@@ -3421,14 +3799,14 @@ function render(){
 function renderHome(screen){
   renderNav({title:'办公室综合服务平台', back:false, icbc:true});
   const KK = [
-    {id:'canteen_menu',          lb:'餐单',     ic:SVG_ICON.canteen_menu, bg:'#FFEDEC', fg:'#C7000B'},
-    {id:'canteen_coffee_order',  lb:'西点',     ic:SVG_ICON.canteen_coffee_order, bg:'#FFF1E8', fg:'#B45309'},
-    {id:'canteen_snack_order',   lb:'卤菜',     ic:SVG_ICON.canteen_snack_order, bg:'#FDF0E4', fg:'#A16207'},
-    {id:'life_haircut',          lb:'理发',     ic:SVG_ICON.life_haircut, bg:'#E9F6EF', fg:'#0F8A5F'},
-    {id:'life_library',          lb:'阅览室',   ic:SVG_ICON.life_library, bg:'#E9F0FA', fg:'#1E5AA8'},
-    {id:'office_tech_repair',    lb:'维修',     ic:SVG_ICON.office_tech_repair, bg:'#FFF7E6', fg:'#B45309'},
-    {id:'canteen_dining',        lb:'食堂用餐', ic:SVG_ICON.canteen_dining, bg:'#FFF3E6', fg:'#C96A00'},
-    {id:'data_feedback',         lb:'建议',     ic:SVG_ICON.data_feedback, bg:'#FDECEC', fg:'#C7000B'}
+    {id:'canteen_menu',          lb:'每周餐单', ic:SVG_ICON.canteen_menu, bg:'#FFEDEC', fg:'#C7000B'},
+    {id:'canteen_coffee_order',  lb:'西点咖啡', ic:SVG_ICON.canteen_coffee_order, bg:'#FFF1E8', fg:'#B45309'},
+    {id:'canteen_snack_order',   lb:'面点卤菜', ic:SVG_ICON.canteen_snack_order, bg:'#FDF0E4', fg:'#A16207'},
+    {id:'office_car_apply',      lb:'用车申请', ic:SVG_ICON.office_car_apply, bg:'#E9F6EF', fg:'#0F8A5F'},
+    {id:'life_haircut',          lb:'理发预约', ic:SVG_ICON.life_haircut, bg:'#F0EBFA', fg:'#6D3BBF'},
+    {id:'office_property_repair',lb:'物业维修', ic:SVG_ICON.office_property_repair, bg:'#FFF7E6', fg:'#B45309'},
+    {id:'office_item_apply',     lb:'物品申请', ic:SVG_ICON.office_item_apply, bg:'#EAF2FB', fg:'#1E5AA8'},
+    {id:'visitor_register',      lb:'访客登记', ic:SVG_ICON.visitor_register, bg:'#FDECEC', fg:'#C7000B'}
   ];
   let h = '';
   h += '<div class="icbc-hero">' +
@@ -3469,7 +3847,7 @@ function renderHome(screen){
 
   // 模块列表
   h += '<div class="sect-hd"><div class="t"><i></i>服务模块</div>' +
-       '<div class="m">' + P.modules.length + ' 个模块 / 32 项功能</div></div>';
+       '<div class="m">' + P.modules.length + ' 个模块 / ' + P.modules.reduce(function(a,m){return a + m.functions.length;},0) + ' 项功能</div></div>';
   h += '<div class="modlist">';
   P.modules.forEach(m => {
     const st = (m.priority||'');
@@ -3495,14 +3873,14 @@ function renderService(screen){
   renderNav({title:'服务', back:false, icbc:true});
   const GRP = [
     {t:'日常餐饮',   ids:['canteen_menu','canteen_weekend_order','canteen_snack_order','canteen_coffee_order','canteen_dining','canteen_evaluation']},
-    {t:'生活预约',   ids:['life_haircut','life_medical','life_gym','life_library','life_parking']},
+    {t:'生活预约',   ids:['life_haircut','life_laundry','life_cleaning','life_venue','life_medical','life_gym','life_library','life_parking']},
     {t:'门禁访客',   ids:['access_home','visitor_register','visitor_list','access_log']},
-    {t:'办公保障',   ids:['office_item_apply','office_car_apply','office_reception_apply','office_meeting_apply','office_overtime_apply','office_phone_apply','office_tech_repair','office_property_repair']},
+    {t:'办公保障',   ids:['office_item_apply','office_car_apply','office_reception_apply','office_meeting_apply','office_overtime_apply','office_tech_repair','office_property_repair']},
     {t:'信息与数据', ids:['data_bind_card','data_e_pay','data_digital_rmb','data_feedback','data_health_check','data_parking_mgmt','data_hr_sync']},
     {t:'平台管理',   ids:['mgmt_stats','mgmt_attendance','mgmt_inspection','mgmt_push']}
   ];
   let h = '<div class="banner" style="background:var(--brand-grad)">' +
-    '<h1>全部服务</h1><p>六大模块 · 32 项功能 · 统一入口</p></div>';
+    '<h1>全部服务</h1><p>六大模块 · ' + P.modules.reduce(function(a,m){return a + m.functions.length;},0) + ' 项功能 · 统一入口</p></div>';
 
   GRP.forEach(g => {
     const ps = g.ids.map(id => pageById(id)).filter(Boolean);
@@ -3513,6 +3891,15 @@ function renderService(screen){
     ps.forEach(p => { h += cardHtml(p, p._mod); });
     h += '</div></div>';
   });
+
+  // P2-5：我的钱包入口（生活预约区域）
+  h += '<div class="sect-hd"><div class="t"><i></i>我的服务</div></div>' +
+       '<div class="wrap"><div class="list">' +
+       '<div class="row" onclick="go(\'#/wallet\')"><div class="ri" style="background:#E9F6EF;color:#0F8A5F">' + SVG_ICON.row_wallet + '</div>' +
+       '<div class="rb"><div class="rt">我的钱包</div><div class="rs">余额 / 充值·消费·退款流水 / 扣费协议状态</div></div>' +
+       '<span class="tag ' + (Wallet.agreement().signed ? 'green' : 'orange') + '">' +
+         (Wallet.agreement().signed ? '已签署' : '未签署') + '</span><span class="arrow">›</span></div>' +
+       '</div></div>';
 
   h += '<div class="copyright">办公室综合服务平台 · 手机端原型 v0.3</div>';
   screen.innerHTML = h;
@@ -3532,8 +3919,10 @@ function renderMine(screen){
     '<div class="row" onclick="go(\'#/my_applies\')"><div class="ri" style="background:#E9F0FA;color:#1E5AA8">' + SVG_ICON.row_doc + '</div>' +
       '<div class="rb"><div class="rt">我的申请</div><div class="rs">办公保障类申请与审批状态</div></div>' +
       (na ? '<span class="tag red">' + na + '</span>' : '') + '<span class="arrow">›</span></div>' +
-    '<div class="row" onclick="go(\'#/data_e_pay\')"><div class="ri" style="background:#E9F6EF;color:#0F8A5F">' + SVG_ICON.row_wallet + '</div>' +
-      '<div class="rb"><div class="rt">我的钱包</div><div class="rs">e支付 / 数币 · 绑定卡</div></div><span class="arrow">›</span></div>' +
+    '<div class="row" onclick="go(\'#/wallet\')"><div class="ri" style="background:#E9F6EF;color:#0F8A5F">' + SVG_ICON.row_wallet + '</div>' +
+      '<div class="rb"><div class="rt">我的钱包</div><div class="rs">余额 · 流水明细 · 扣费协议</div></div>' +
+      '<span class="tag ' + (Wallet.agreement().signed ? 'green' : 'orange') + '">' +
+        (Wallet.agreement().signed ? '已签协议' : '未签协议') + '</span><span class="arrow">›</span></div>' +
     '<div class="row" onclick="go(\'#/data_health_check\')"><div class="ri" style="background:#F0EDFA;color:#6D4AA8">' + SVG_ICON.row_health + '</div>' +
       '<div class="rb"><div class="rt">健康打卡</div><div class="rs">每日健康状态记录</div></div><span class="arrow">›</span></div>' +
   '</div></div>';
@@ -3579,8 +3968,25 @@ function renderTab(active){
 function renderModHome(screen, m, p){
   let h = '<div class="banner" style="background:var(--brand-grad)">' +
     '<h1>' + esc(m.name) + '</h1><p>' + esc(m.functions.slice(0,3).join(' · ')) + '</p></div>';
+
+  // P2-10：管理端首页状态看板（今日新增/待处理/已完成/平均处理时长）
+  if(m.key === 'platform_mgmt'){
+    h += renderMgmtBoard();
+    // P3-⑤：用户授权配置（角色权限矩阵与批量导入）
+    h += '<div class="wrap" style="margin-top:12px"><div class="list">' +
+      '<div class="row" onclick="go(\'#/mgmt_auth_config\')"><div class="ri" style="background:#F0EDFA;color:#6D4AA8">' +
+      SVG_ICON.row_user + '</div><div class="rb"><div class="rt">用户授权配置</div>' +
+      '<div class="rs">角色权限矩阵与批量导入</div></div><span class="arrow">›</span></div>' +
+      '</div></div>';
+    h += '<div class="wrap" style="margin-top:12px"><div class="list">' +
+      '<div class="row" onclick="go(\'#/mgmt_dashboard\')"><div class="ri" style="background:#FFF4E5;color:#B45309">' +
+      SVG_ICON.mgmt_stats + '</div><div class="rb"><div class="rt">维修工单状态看板</div>' +
+      '<div class="rs">今日新增 / 待处理 / 已完成 / 平均处理时长</div></div><span class="arrow">›</span></div>' +
+      '</div></div>';
+  }
+
   h += '<div class="sect-t">功能服务</div><div class="wrap"><div class="grid">';
-  m.pages.filter(x => x.type !== 'home').forEach(x => { h += cardHtml(x, m); });
+  m.pages.filter(x => x.type !== 'home' && !x.hidden).forEach(x => { h += cardHtml(x, m); });
   h += '</div></div>';
   h += '<div class="copyright">' + esc(m.name) + ' · 由' + esc(m.owner) + '负责</div>';
   screen.innerHTML = h;
@@ -3597,11 +4003,11 @@ function tipFor(p){
     life_library:'预约阅览室座位使用时段，凭预约记录入座。',
     visitor_register:'请填写访客信息，审批通过后凭二维码通行。',
     office_item_apply:'物品申请提交后由办公室审批，对接现有系统。',
-    office_car_apply:'公车申请提交后由办公室审批，对接现有系统。',
+    office_car_apply:'公车申请提交后由办公室审批；提交成功后生成用车凭证（编号 BK-YYYYMMDD-### + 二维码），请提前 5 分钟到达上车点。',
     office_meeting_apply:'会议室申请将链接至总行会议系统。',
-    office_tech_repair:'科技维修提交后由金融科技部处理，可实时查看进度。',
-    office_property_repair:'物业维修提交后由物业公司处理，可实时查看进度。',
-    data_feedback:'您的建议将直达分行管理部门，可查看回复。',
+    office_tech_repair:'科技维修提交后由科技部处理，可实时查看进度。',
+    office_property_repair:'物业维修提交后由劳服公司处理，可实时查看进度。',
+    data_feedback:'您的建议将直达办公室，可查看回复。',
     data_health_check:'每日健康打卡，记录个人健康状态。',
     data_bind_card:'绑定卡用于餐饮、门禁等场景的身份识别（需先对接总行智慧餐饮）。',
     mgmt_push:'推送内容将定向发送至指定范围员工。'
@@ -3679,7 +4085,7 @@ function renderForm(screen, p, m){
 
   // 我的预约入口已移入页面统一处理，避免与表单区重复
 
-  const BOOK_PAGES = ['life_haircut','life_medical','life_gym','life_library',
+  const BOOK_PAGES = ['life_haircut','life_laundry','life_cleaning','life_venue','life_medical','life_gym','life_library',
                       'office_meeting_apply','office_car_apply','office_reception_apply',
                       'office_overtime_apply','office_dining'];
   const isBook = BOOK_PAGES.indexOf(p.id) >= 0;
@@ -3695,7 +4101,7 @@ function renderForm(screen, p, m){
   h += '</div></div>';
 
   // ===== 预约选择（点击弹出日期/时段）=====
-  const NEED_BOOK = ['life_haircut','life_medical','life_gym','life_library',
+  const NEED_BOOK = ['life_haircut','life_laundry','life_cleaning','life_venue','life_medical','life_gym','life_library',
                      'office_meeting_apply','office_car_apply','office_reception_apply',
                      'office_overtime_apply','office_dining'];
   if(NEED_BOOK.indexOf(p.id) >= 0){
@@ -3712,6 +4118,13 @@ function renderForm(screen, p, m){
     h += '</div></div>';
   }
 
+
+  if(p.id === 'visitor_register'){
+    // P3-①：生成邀请按钮（生成邀请码 + 二维码占位）
+    h += '<div class="wrap"><button onclick="genVisitorInvite()" style="width:100%;padding:12px;border:1px solid #C7000B;' +
+         'background:#fff;color:#C7000B;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit">生成邀请</button></div>';
+    h += renderVisitorInvite();   // P3-①：生成邀请 + 二维码
+  }
 
   if(p.id === 'canteen_evaluation'){
     h += '<div class="sect-t">餐品评分</div><div class="wrap"><div class="form">';
@@ -3739,7 +4152,7 @@ function renderForm(screen, p, m){
     : p.id.startsWith('life_') ? '提交预约'
     : p.id === 'visitor_register' ? '提交登记' : '提交申请';
   const disabled = (p.status||[]).includes('待上线') || (p.status||[]).includes('规划中');
-  const isBookPage = ['life_haircut','life_medical','life_gym','life_library',
+  const isBookPage = ['life_haircut','life_laundry','life_cleaning','life_venue','life_medical','life_gym','life_library',
                       'office_meeting_apply','office_car_apply','office_reception_apply',
                       'office_overtime_apply','office_dining'].indexOf(p.id) >= 0;
   const act = isBookPage
@@ -3752,6 +4165,14 @@ function renderForm(screen, p, m){
 
 function renderList(screen, p, m){
   let h = '<div class="wrap">';
+  // P3-②：访客登记审批筛选标签（全部 | 待审批 | 预登记 | 已通过 | 已驳回）
+  if(p.id === 'visitor_list'){
+    h += renderVisitorFilter();
+    h += renderVisitorApprovalList();
+    h += '</div><div class="copyright">' + esc(m.name) + ' · 由' + esc(m.owner) + '负责</div>';
+    screen.innerHTML = h;
+    return;
+  }
   const sts = p.status || [];
   if(sts.length){
     h += '<div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto">';
@@ -3763,6 +4184,7 @@ function renderList(screen, p, m){
     h += '</div>';
   }
   if(p.id === 'mgmt_stats'){
+    h += renderMgmtBoard();   // P2-10：状态看板
     h += '<div class="stat-row">' +
       '<div class="stat"><div class="n">32</div><div class="l">功能点</div></div>' +
       '<div class="stat"><div class="n">1,286</div><div class="l">本月服务人次</div></div>' +
@@ -3830,7 +4252,7 @@ function renderDetail(screen, p, m){
       row2('👥','组织架构','已同步 · 24个部门','已同步','green') +
       row2('👥','人员信息','已同步 · 386人','已同步','green') +
       row2('👥','用户授权体系','按部门/角色配置功能可见范围','已同步','green') + '</div>' +
-      '<div style="font-size:11.5px;color:#8A8A8A;padding:10px 4px">说明：面向分行管理，据各功能模块建立清晰的用户授权体系。</div>';
+      '<div style="font-size:11.5px;color:#8A8A8A;padding:10px 4px">说明：面向办公室，据各功能模块建立清晰的用户授权体系。</div>';
   } else if(p.id === 'mgmt_stats'){ renderList(screen, p, m); return; }
   else {
     h += '<div class="empty"><div class="ei">' + (SVG_ICON[p.id]||SVG_ICON.canteen_menu) + '</div>页面开发中</div>';
@@ -3855,7 +4277,7 @@ function openSpec(){
     box.innerHTML = '<h3>📘 平台规格</h3>' +
       kv('平台', P.platform.name) + kv('单位', P.platform.org) +
       kv('入口渠道', P.platform.endpoints.join('、')) +
-      kv('模块数', P.modules.length + ' 个') + kv('功能点', '32 项') +
+      kv('模块数', P.modules.length + ' 个') + kv('功能点', P.modules.reduce(function(a,m){return a + m.functions.length;},0) + ' 项') +
       kv('原型页面', allPages().length + ' 页');
   } else {
     const m = p._mod;
@@ -3884,20 +4306,906 @@ document.addEventListener('DOMContentLoaded', () => {
   STORE.load();
 loadMenus();
   if(typeof loadFormDraft === 'function') loadFormDraft();
+  // P2：铺开已有工单的四态数据，便于管理端看板与四态跟踪演示
+  try{ if(typeof seedTicketProgress === 'function') seedTicketProgress(); }catch(e){}
   ROUTE = location.hash || '#/';
   if(ROUTE === '#/mine'){ hist = []; }
   render();
 });
 
 
+
+
+// ============================================================
+// P2 改造模块（2026-09-19）· 十项改动全部落在此段之后
+// 一 四态跟踪 / 二 维修评价 / 三 5预约凭证 / 四 取消改期
+// 五 我的钱包 / 六 核销码 / 七 扣款失败 / 八 统一编号
+// 九 不可重复评价 / 十 管理端看板
+// ============================================================
+// ============================================================
+// P2 改造模块 A（2026-09-19）
+// 八、凭证编号 BK-YYYYMMDD-###  |  三/六、二维码 |  五、我的钱包
+// 纯前端实现，无外部依赖
+// ============================================================
+
+// ============ P2-八：凭证编号统一规则 BK-YYYYMMDD-### ============
+// 同一用户同一天多个预约，序号递增
+const Voucher = {
+  KEY: 'icbc_p2_voucher_seq',
+  todayKey(){
+    var d = new Date();
+    var p = n => (n < 10 ? '0' : '') + n;
+    return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+  },
+  nextNo(){
+    var ymd = this.todayKey();
+    var seq = {};
+    try{ seq = JSON.parse(localStorage.getItem(this.KEY) || '{}'); }catch(e){ seq = {}; }
+    seq[ymd] = (seq[ymd] || 0) + 1;
+    try{ localStorage.setItem(this.KEY, JSON.stringify(seq)); }catch(e){}
+    // P2-八：BK-YYYYMMDD-###（### 为当日序号，3 位补零）
+    return 'BK-' + ymd + '-' + (seq[ymd] < 10 ? '00' : (seq[ymd] < 100 ? '0' : '')) + seq[ymd];
+  },
+  // 生成凭证并落盘
+  issue(title, date, slot, pageId){
+    var no = this.nextNo();
+    var list = [];
+    try{ list = JSON.parse(localStorage.getItem('icbc_p2_vouchers') || '[]'); }catch(e){ list = []; }
+    var v = { no: no, title: title, date: date, slot: slot, pageId: pageId, at: Date.now() };
+    list.unshift(v);
+    if(list.length > 200) list = list.slice(0, 200);
+    try{ localStorage.setItem('icbc_p2_vouchers', JSON.stringify(list)); }catch(e){}
+    return v;
+  },
+  // 查已生成凭证（无则补生成，保证老数据也有凭证）
+  ensure(booking){
+    var list = [];
+    try{ list = JSON.parse(localStorage.getItem('icbc_p2_vouchers') || '[]'); }catch(e){ list = []; }
+    var hit = list.filter(function(v){
+      return v.title === booking.title && v.date === booking.date && v.slot === booking.slot;
+    })[0];
+    if(hit) return hit;
+    return this.issue(booking.title, booking.date, booking.slot, booking.pageId);
+  }
+};
+
+// ============ P2-三/六：二维码（CSS 绘制示意，不依赖任何库）============
+// 用确定性伪随机根据字符串生成 21×21 点阵，纯 CSS box-shadow 渲染
+function qrPayload(str){
+  var h = 5381;
+  for(var i = 0; i < String(str).length; i++){
+    h = ((h << 5) + h + String(str).charCodeAt(i)) >>> 0;
+  }
+  return h;
+}
+function renderQRCodeCSS(text){
+  var h = qrPayload(text);
+  var N = 21, cell = 4, dots = [];
+  for(var y = 0; y < N; y++){
+    for(var x = 0; x < N; x++){
+      // 三个定位角（左上 / 右上 / 左下）
+      var inFinder = (x < 7 && y < 7) || (x > N - 8 && y < 7) || (x < 7 && y > N - 8);
+      var posFinder = ((x === 0 || x === 6) && y < 7) || ((y === 0 || y === 6) && x < 7)
+                   || ((x === N-1 || x === N-7) && y < 7) || ((y === 0 || y === 6) && x > N-8)
+                   || ((x === 0 || x === 6) && y > N-8) || ((y === N-1 || y === N-7) && x < 7)
+                   || (x >= 2 && x <= 4 && y >= 2 && y <= 4)
+                   || (x >= N-5 && x <= N-3 && y >= 2 && y <= 4)
+                   || (x >= 2 && x <= 4 && y >= N-5 && y <= N-3);
+      var on = inFinder ? posFinder : (((h >> ((x * 3 + y) % 31)) ^ (h + x * 7 + y * 13)) & 1) === 1;
+      if(on) dots.push((x * cell) + 'px ' + (y * cell) + 'px 0 0 #111');
+    }
+  }
+  var size = N * cell;
+  return '<div style="width:' + size + 'px;height:' + size + 'px;margin:0 auto;position:relative;background:#fff;border-radius:4px">' +
+    '<div style="position:absolute;left:0;top:0;width:' + cell + 'px;height:' + cell + 'px;box-shadow:' +
+      dots.join(',') + '"></div></div>';
+}
+
+
+// ============ P2-五：我的钱包（余额 / 流水 / 扣费协议）============
+const Wallet = {
+  KEY: 'icbc_p2_wallet',
+  DEFAULT: {
+    balance: 328.50,
+    agreement: { signed: true, signedAt: '2026-08-15', status: '已签署' },
+    flow: [
+      { time: '2026-09-16 12:03', type: '消费', title: '食堂消费', amount: -18.00, status: '成功' },
+      { time: '2026-09-15 15:20', type: '消费', title: '咖啡西点', amount: -22.00, status: '成功' },
+      { time: '2026-09-10 09:00', type: '充值', title: '账户充值', amount: 500.00, status: '成功' },
+      { time: '2026-09-08 14:12', type: '退款', title: '预约取消退回', amount: 20.00, status: '成功' },
+      { time: '2026-09-05 11:30', type: '消费', title: '理发预约', amount: -20.00, status: '成功' }
+    ]
+  },
+  load(){
+    try{
+      var d = JSON.parse(localStorage.getItem(this.KEY) || 'null');
+      if(d && typeof d.balance === 'number') return d;
+    }catch(e){}
+    this.save(this.DEFAULT);
+    return JSON.parse(JSON.stringify(this.DEFAULT));
+  },
+  save(d){
+    try{ localStorage.setItem(this.KEY, JSON.stringify(d)); }catch(e){}
+  },
+  agreement(){
+    var d = this.load();
+    return d.agreement || { signed: false, signedAt: '', status: '未签署' };
+  },
+  signAgreement(){
+    var d = this.load();
+    var p = n => (n < 10 ? '0' : '') + n;
+    var t = new Date();
+    d.agreement = {
+      signed: true,
+      signedAt: t.getFullYear() + '-' + p(t.getMonth() + 1) + '-' + p(t.getDate()),
+      status: '已签署'
+    };
+    this.save(d);
+  },
+  // 消费（记流水 + 扣余额）
+  spend(title, amount, refId){
+    var d = this.load();
+    d.balance = Math.round((d.balance - amount) * 100) / 100;
+    d.flow.unshift({
+      time: STORE.nowStr(), type: '消费', title: title,
+      amount: -Math.abs(amount), status: '成功', ref: refId || ''
+    });
+    if(d.flow.length > 50) d.flow = d.flow.slice(0, 50);
+    this.save(d);
+  },
+  // 退款（取消预约时调用）
+  refund(title, amount, refId){
+    var d = this.load();
+    d.balance = Math.round((d.balance + amount) * 100) / 100;
+    d.flow.unshift({
+      time: STORE.nowStr(), type: '退款', title: title,
+      amount: Math.abs(amount), status: '成功', ref: refId || ''
+    });
+    if(d.flow.length > 50) d.flow = d.flow.slice(0, 50);
+    this.save(d);
+  },
+  recharge(amount){
+    var d = this.load();
+    d.balance = Math.round((d.balance + amount) * 100) / 100;
+    d.flow.unshift({
+      time: STORE.nowStr(), type: '充值', title: '账户充值',
+      amount: Math.abs(amount), status: '成功'
+    });
+    if(d.flow.length > 50) d.flow = d.flow.slice(0, 50);
+    this.save(d);
+  },
+  recent(n){ return this.load().flow.slice(0, n || 5); }
+};
+
+// ============ P2-七：扣款失败提示 ============
+const Payment = {
+  // 校验余额是否足够（0 元项目直接通过）
+  checkBalance(pageId, amount){
+    if(!amount || amount <= 0) return { ok: true, amount: 0 };
+    var d = Wallet.load();
+    if(d.balance < amount){
+      return {
+        ok: false, need: amount, balance: d.balance,
+        shortfall: Math.round((amount - d.balance) * 100) / 100
+      };
+    }
+    return { ok: true, balance: d.balance, amount: amount };
+  },
+  // P2-七：显示"余额不足，请先充值" + 跳转钱包按钮（不静默失败）
+  showInsufficient(info){
+    var old = document.getElementById('payfail');
+    if(old) old.remove();
+    var el = document.createElement('div');
+    el.id = 'payfail';
+    el.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:150;' +
+      'display:flex;align-items:center;justify-content:center;padding:0 34px';
+    el.onclick = function(e){ if(e.target === el) el.remove(); };
+    var h = '<div style="width:100%;background:#fff;border-radius:14px;padding:22px 20px 18px;text-align:center">';
+    h += '<div style="font-size:30px;line-height:1;margin-bottom:10px">⚠️</div>';
+    h += '<div style="font-size:16px;font-weight:600;color:#1A1A1A;margin-bottom:8px">余额不足，请先充值</div>';
+    h += '<div style="font-size:12.5px;color:#8A8A8A;line-height:1.7;margin-bottom:14px">';
+    h += '本次应付 <b style="color:#C7000B">¥' + Number(info.need).toFixed(2) + '</b>，';
+    h += '当前余额 <b>¥' + Number(info.balance).toFixed(2) + '</b><br>';
+    h += '还差 ¥' + Number(info.shortfall).toFixed(2) + '，充值后可继续提交';
+    h += '</div>';
+    h += '<button id="payfail_go" style="width:100%;padding:12px;border:0;border-radius:9px;' +
+      'background:var(--brand-grad);color:#fff;font-size:14.5px;font-weight:500;cursor:pointer;' +
+      'font-family:inherit;margin-bottom:9px">去钱包充值</button>';
+    h += '<button id="payfail_cancel" style="width:100%;padding:11px;border:0;border-radius:9px;' +
+      'background:#F3F3F3;color:#666;font-size:14px;cursor:pointer;font-family:inherit">取消</button>';
+    h += '</div>';
+    el.innerHTML = h;
+    document.getElementById('phone').appendChild(el);
+    document.getElementById('payfail_go').onclick = function(){
+      el.remove(); go('#/wallet');
+    };
+    document.getElementById('payfail_cancel').onclick = function(){ el.remove(); };
+  }
+};
+
+
+// ============ P2-一/二/九：维修&物品工单四态跟踪 + 评价 ============
+const TICKET_STATES = [
+  { key: 'all',        label: '全部',   color: '#666666' },
+  { key: 'submitted',  label: '已提交', color: '#1E5AA8' },
+  { key: 'accepted',   label: '已接单', color: '#B45309' },
+  { key: 'processing', label: '处理中', color: '#0E7490' },
+  { key: 'done',       label: '已完成', color: '#0F8A5F' }
+];
+const TICKET_FLOW = ['submitted', 'accepted', 'processing', 'done'];
+
+// 判定是否属于"维修/物品工单"（P2-一：维修请求 / 物品申领共用）
+function isTicket(r){
+  if(!r) return false;
+  if(r._kind === 'repairs') return true;
+  if(r._kind === 'applies' && r.pageId === 'office_item_apply') return true;
+  return false;
+}
+
+const TicketLog = {
+  KEY: 'icbc_p2_tickets',
+  all(){
+    try{ return JSON.parse(localStorage.getItem(this.KEY) || '{}'); }catch(e){ return {}; }
+  },
+  save(d){ try{ localStorage.setItem(this.KEY, JSON.stringify(d)); }catch(e){} },
+  // 新建工单默认"已提交"
+  init(id){
+    var d = this.all();
+    if(d[id]) return d[id];
+    d[id] = {
+      state: 'submitted',
+      history: [{ state: 'submitted', at: Date.now(), by: '本人', note: '工单已提交，等待接单' }],
+      assignee: '', eta: '', rated: false, rating: 0, review: '', ratedAt: 0
+    };
+    this.save(d);
+    return d[id];
+  },
+  // 状态推进（已提交 → 已接单 → 处理中 → 已完成）
+  advance(id){
+    var d = this.all();
+    if(!d[id]) this.init(id);
+    var t = d[id];
+    var idx = TICKET_FLOW.indexOf(t.state);
+    if(idx < 0 || idx >= TICKET_FLOW.length - 1) return { ok: false, msg: '工单已完成，无法继续推进' };
+    var next = TICKET_FLOW[idx + 1];
+    t.state = next;
+    t.history.push({
+      state: next, at: Date.now(),
+      by: (next === 'accepted' || next === 'processing') ? '受理人' : '系统',
+      note: ({
+        accepted: '工单已被接单，受理人已确认',
+        processing: '工程师开始处理',
+        done: '工单已完成'
+      })[next]
+    });
+    if(next === 'accepted'){
+      t.assignee = t.assignee || '王工（科技部）';
+      t.eta = t.eta || '预计 2 小时内完成';
+    }
+    this.save(d);
+    return { ok: true, to: next };
+  },
+  get(id){ var d = this.all(); return d[id] ? d[id].state : 'submitted'; },
+  detail(id){ return this.all()[id]; },
+  label(k){
+    var s = TICKET_STATES.filter(function(x){ return x.key === k; })[0];
+    return s ? s.label : '已提交';
+  },
+  color(k){
+    var s = TICKET_STATES.filter(function(x){ return x.key === k; })[0];
+    return s ? s.color : '#1E5AA8';
+  },
+  // P2-二/九：评价 —— 仅"已完成"可评，且只能评一次
+  canRate(id){
+    var t = this.detail(id);
+    if(!t) return false;
+    return t.state === 'done' && !t.rated;    // P2-九：已评价过则不再显示入口
+  },
+  rate(id, stars, text){
+    var t = this.detail(id);
+    if(!t) return { ok: false, msg: '工单不存在' };
+    if(t.state !== 'done') return { ok: false, msg: '工单尚未完成，无法评价' };
+    if(t.rated) return { ok: false, msg: '已评价过，不能重复评价' };   // P2-九
+    t.rated = true; t.rating = stars; t.review = text || ''; t.ratedAt = Date.now();
+    var d = this.all(); d[id] = t; this.save(d);
+    return { ok: true, msg: '感谢您的评价' };
+  }
+};
+
+// 演示用：为已有工单铺开不同状态（仅首次执行，不回溯已有进度）
+function seedTicketProgress(){
+  // 只在第一次加载时播种一次，避免把用户推进过的状态重置
+  try{
+    if(localStorage.getItem('icbc_p2_seeded') === '1') return;
+    localStorage.setItem('icbc_p2_seeded', '1');
+  }catch(e){}
+  var d = TicketLog.all();
+  var ids = Object.keys(d);
+  if(ids.length < 2) return;
+  ids.forEach(function(id, i){
+    var t = d[id];
+    if(t.state !== 'submitted') return;
+    var want = TICKET_FLOW[Math.min(i % 4, 3)];
+    if(want === 'submitted') return;
+    var idx = TICKET_FLOW.indexOf(want);
+    for(var k = 1; k <= idx; k++){
+      var st = TICKET_FLOW[k];
+      if(!t.history.filter(function(x){ return x.state === st; }).length){
+        t.history.push({
+          state: st, at: Date.now() - (idx - k) * 3600000,
+          by: k <= 2 ? '受理人' : '系统',
+          note: ({
+            accepted: '工单已被接单，受理人已确认',
+            processing: '工程师开始处理',
+            done: '工单已完成'
+          })[st]
+        });
+      }
+    }
+    t.state = want;
+    if(idx >= 1){ t.assignee = t.assignee || '王工（科技部）'; t.eta = t.eta || '预计 2 小时内完成'; }
+  });
+  TicketLog.save(d);
+}
+
+
+// ============ P2-三/八：预约凭证卡片（编号 + 二维码 + 摘要）============
+function kvLine(k, v){
+  return '<div style="display:flex;justify-content:space-between;padding:7px 0;font-size:12.5px">' +
+    '<span style="color:#9A9A9A">' + esc(k) + '</span>' +
+    '<span style="color:#1A1A1A;font-weight:500;text-align:right;max-width:64%;word-break:break-all">' +
+      esc(v) + '</span></div>';
+}
+
+function renderVoucherCard(opts){
+  // opts: { no, title, date, slot, extra:[[k,v]], showHint }
+  var h = '';
+  h += '<div style="margin:14px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.09)">';
+  // 头部
+  h += '<div style="background:var(--brand-grad);color:#fff;padding:16px 18px">' +
+       '<div style="font-size:11.5px;opacity:.85;letter-spacing:.5px">预约凭证</div>' +
+       '<div style="font-size:17px;font-weight:600;margin-top:4px">' + esc(opts.title || '预约') + '</div>' +
+       '<div style="font-size:12px;opacity:.9;margin-top:8px;font-family:monospace;letter-spacing:1px">' +
+         esc(opts.no) + '</div>' +
+       '</div>';
+  // 二维码（CSS 绘制）
+  h += '<div style="padding:18px 18px 6px;text-align:center">' +
+       renderQRCodeCSS(opts.no + '|' + (opts.title || '') + '|' + (opts.date || '')) +
+       '<div style="font-size:11px;color:#9A9A9A;margin-top:9px">出示此二维码核销，或报凭证编号</div>' +
+       '</div>';
+  // 摘要
+  h += '<div style="padding:6px 18px 18px"><div style="border-top:1px dashed #ECECEC;padding-top:12px">';
+  h += kvLine('凭证编号', opts.no);
+  if(opts.date) h += kvLine('预约日期', opts.date);
+  if(opts.slot) h += kvLine('预约时段', opts.slot);
+  if(opts.extra){
+    opts.extra.forEach(function(x){ h += kvLine(x[0], x[1]); });
+  }
+  h += '</div></div>';
+  if(opts.showHint !== false){
+    h += '<div style="background:#FFF7F6;color:#A50008;font-size:11.5px;padding:11px 18px;line-height:1.65">' +
+         '📌 请提前 5 分钟到达，出示凭证核销。如需变更，可在「我的预约」中改期或取消。</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+// ============ P2-三：凭证独立页面 ============
+function renderVoucherPage(screen, bookingId){
+  renderNav({title:'预约凭证', back:true, icbc:true});
+  var bk = null;
+  STORE.list('bookings').forEach(function(r){ if(r.id === bookingId) bk = r; });
+  var h = '<div class="wrap">';
+  if(!bk){
+    h += '<div class="empty"><div class="ei">🎫</div>凭证不存在或已失效</div></div>';
+    screen.innerHTML = h; return;
+  }
+  if(bk.status === '已取消'){
+    h += '<div class="tip warn"><span class="ti">⚠️</span><div>该预约已取消，凭证已作废。</div></div>';
+    screen.innerHTML = h + '</div>'; return;
+  }
+  var no = bk.voucherNo || Voucher.ensure(bk).no;
+  h += renderVoucherCard({
+    no: no,
+    title: bk.title,
+    date: bk.date,
+    slot: bk.slot,
+    extra: [
+      ['预约人', bk.user || getProfile().name],
+      ['提交时间', bk.createdStr || ''],
+      ['状态', bk.status || '预约成功'],
+      ['应付金额', bk.payAmount ? ('¥' + Number(bk.payAmount).toFixed(2)) : '免费']
+    ]
+  });
+  h += '<div style="padding:0 14px 4px">';
+  h += '<button onclick="askRescheduleBooking(\'' + bk.id + '\')" style="width:100%;padding:12px;' +
+       'border:1px solid #C7000B;background:#fff;color:#C7000B;border-radius:9px;font-size:14px;' +
+       'cursor:pointer;font-family:inherit;margin-bottom:10px">改期</button>';
+  h += '<button onclick="askCancelBooking(\'' + bk.id + '\')" style="width:100%;padding:12px;' +
+       'border:1px solid #D8D8D8;background:#fff;color:#888;border-radius:9px;font-size:14px;' +
+       'cursor:pointer;font-family:inherit">取消预约</button>';
+  h += '</div></div>';
+  screen.innerHTML = h;
+}
+
+// 从列表打开凭证
+function openVoucher(bookingId){ go('#/voucher/' + bookingId); }
+
+// ============ P2-四：取消 / 改期 ============
+function askCancelBooking(id){
+  var bk = null;
+  STORE.list('bookings').forEach(function(r){ if(r.id === id) bk = r; });
+  if(!bk || bk.status === '已取消'){ toast('该预约已取消'); return; }
+  var old = document.getElementById('confirmbox'); if(old) old.remove();
+  var el = document.createElement('div');
+  el.id = 'confirmbox';
+  el.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:150;' +
+    'display:flex;align-items:center;justify-content:center;padding:0 34px';
+  el.onclick = function(e){ if(e.target === el) el.remove(); };
+  var h = '<div style="width:100%;background:#fff;border-radius:14px;padding:22px 20px 18px;text-align:center">';
+  h += '<div style="font-size:30px;line-height:1;margin-bottom:10px">🗓️</div>';
+  h += '<div style="font-size:16px;font-weight:600;color:#1A1A1A;margin-bottom:8px">确认取消预约？</div>';
+  h += '<div style="font-size:12.5px;color:#8A8A8A;line-height:1.7;margin-bottom:15px">';
+  h += esc(bk.title) + '<br>' + esc(bk.date) + '　' + esc(bk.slot);
+  if(bk.voucherNo) h += '<br>凭证 ' + esc(bk.voucherNo) + ' 将同时作废';
+  h += '</div>';
+  h += '<button id="cbox_ok" style="width:100%;padding:12px;border:0;border-radius:9px;' +
+       'background:#C7000B;color:#fff;font-size:14.5px;font-weight:500;cursor:pointer;' +
+       'font-family:inherit;margin-bottom:9px">确认取消</button>';
+  h += '<button id="cbox_no" style="width:100%;padding:11px;border:0;border-radius:9px;' +
+       'background:#F3F3F3;color:#666;font-size:14px;cursor:pointer;font-family:inherit">再想想</button>';
+  h += '</div>';
+  el.innerHTML = h;
+  document.getElementById('phone').appendChild(el);
+  document.getElementById('cbox_ok').onclick = function(){ doCancelBooking(id); };
+  document.getElementById('cbox_no').onclick = function(){ el.remove(); };
+}
+
+function doCancelBooking(id){
+  var box = document.getElementById('confirmbox'); if(box) box.remove();
+  var r = STORE.cancelBooking(id);          // 状态 -> 已取消
+  if(!r.ok){ toast(r.msg); return; }
+  // 已扣费则原路退款（写入钱包流水）
+  if(r.booking && r.booking.payAmount > 0){
+    Wallet.refund('预约取消退回 · ' + (r.booking.title || ''), r.booking.payAmount, id);
+  }
+  toast('已取消，状态更新为「已取消」');
+  setTimeout(function(){ render(); }, 900);
+}
+
+// P2-四：改期 —— 先选新日期，再选新时段
+function askRescheduleBooking(id){
+  var bk = null;
+  STORE.list('bookings').forEach(function(r){ if(r.id === id) bk = r; });
+  if(!bk || bk.status === '已取消'){ toast('该预约已取消，不可改期'); return; }
+  PICKER = {
+    type: 'reschedule',
+    pageId: bk.pageId,
+    bookingId: id,
+    title: '改期 · 选择新日期',
+    items: _dateList().map(function(x){
+      return { val: x.val, lb: x.lb, sub: x.sub, sel: bk.date === x.val };
+    })
+  };
+  renderPicker();
+}
+
+function doReschedule(id, newDate, newSlot){
+  var r = STORE.rescheduleBooking(id, newDate, newSlot);
+  if(!r.ok){ toast(r.msg); return; }
+  toast('改期成功 · 新时段 ' + newDate + ' ' + newSlot);
+  setTimeout(function(){ go('#/my_bookings'); }, 1100);
+}
+
+
+// ============ P2-五：我的钱包页面（余额 / 最近5笔流水 / 扣费协议）============
+function renderWalletPage(screen){
+  renderNav({title:'我的钱包', back:true, icbc:true});
+  var w = Wallet.load();
+  var ag = w.agreement || { signed: false, status: '未签署' };
+  var recent = Wallet.recent(5);
+  var h = '';
+
+  // 余额卡
+  h += '<div style="margin:14px;background:var(--brand-grad);color:#fff;border-radius:14px;' +
+       'padding:20px;box-shadow:0 4px 16px rgba(199,0,11,.22)">';
+  h += '<div style="font-size:11.5px;opacity:.85">账户余额（元）</div>';
+  h += '<div style="font-size:32px;font-weight:700;margin:8px 0 4px;letter-spacing:.5px">' +
+       Number(w.balance).toFixed(2) + '</div>';
+  h += '<div style="font-size:11px;opacity:.8">用于食堂 / 咖啡西点 / 生活预约扣费</div>';
+  h += '<div style="display:flex;gap:10px;margin-top:16px">';
+  h += '<button onclick="doRecharge()" style="flex:1;padding:9px 0;border:1px solid rgba(255,255,255,.6);' +
+       'background:rgba(255,255,255,.15);color:#fff;border-radius:8px;font-size:13px;cursor:pointer;' +
+       'font-family:inherit">充值</button>';
+  h += '<button onclick="go(\'#/my_applies\')" style="flex:1;padding:9px 0;border:1px solid rgba(255,255,255,.6);' +
+       'background:rgba(255,255,255,.15);color:#fff;border-radius:8px;font-size:13px;cursor:pointer;' +
+       'font-family:inherit">我的订单</button>';
+  h += '</div></div>';
+
+  // 扣费协议状态
+  h += '<div class="sect-hd"><div class="t"><i></i>扣费协议状态</div></div>' +
+       '<div class="wrap"><div class="form">';
+  h += '<div class="fitem"><div style="flex:1">' +
+       '<div style="font-size:13.5px;color:#1A1A1A;font-weight:500">自动扣费协议</div>' +
+       '<div style="font-size:11.5px;color:#999;margin-top:4px">' +
+         (ag.signed ? ('签署日期 ' + esc(ag.signedAt || '—')) : '未签署，下单时将引导签署') +
+       '</div></div>' +
+       '<span class="tag ' + (ag.signed ? 'green' : 'orange') + '">' +
+         esc(ag.status || (ag.signed ? '已签署' : '未签署')) + '</span></div>';
+  h += '<div class="fitem" style="justify-content:space-between">' +
+       '<div style="font-size:12.5px;color:#666">协议用途</div>' +
+       '<div style="font-size:12.5px;color:#333;text-align:right;max-width:62%">' +
+         '餐饮 / 预约费用自动扣款，可随时解约</div></div>';
+  if(!ag.signed){
+    h += '<div class="fitem" style="padding:0"><button onclick="doSignAgreement()" class="submit" ' +
+         'style="width:100%;margin:10px 0;box-shadow:none">立即签署扣费协议</button></div>';
+  }
+  h += '</div></div>';
+
+  // 最近 5 笔流水
+  h += '<div class="sect-hd"><div class="t"><i></i>最近 5 笔流水</div>' +
+       '<div class="m">共 ' + ((w.flow || []).length) + ' 笔</div></div>';
+  h += '<div class="wrap"><div class="list">';
+  if(!recent.length){
+    h += '<div class="empty"><div class="ei">💰</div>暂无流水记录</div>';
+  } else {
+    recent.forEach(function(f){
+      var isIn = f.amount > 0;
+      var tc = f.type === '充值' ? 'green' : (f.type === '退款' ? 'blue' : 'gray');
+      h += '<div class="row" style="cursor:default">' +
+        '<div class="ri" style="background:' + (isIn ? '#E9F6EF;color:#0F8A5F' : '#F3F3F3;color:#666') + '">' +
+          (isIn ? '＋' : '－') + '</div>' +
+        '<div class="rb"><div class="rt">' + esc(f.title) + '</div>' +
+        '<div class="rs">' + esc(f.time) + '</div></div>' +
+        '<div style="text-align:right">' +
+          '<div style="font-size:14px;font-weight:600;color:' + (isIn ? '#0F8A5F' : '#1A1A1A') + '">' +
+            (isIn ? '+' : '') + Number(f.amount).toFixed(2) + '</div>' +
+          '<span class="tag ' + tc + '" style="position:static;margin-top:3px;display:inline-block">' +
+            esc(f.type) + ' · ' + esc(f.status) + '</span>' +
+        '</div></div>';
+    });
+  }
+  h += '</div></div>';
+  h += '<div class="copyright">钱包数据为演示数据，实际对接总行智慧餐饮平台</div>';
+  screen.innerHTML = h;
+}
+
+function doRecharge(){
+  Wallet.recharge(500);
+  toast('充值成功 +500.00');
+  setTimeout(function(){ render(); }, 700);
+}
+function doSignAgreement(){
+  Wallet.signAgreement();
+  toast('扣费协议签署成功');
+  setTimeout(function(){ render(); }, 700);
+}
+
+// ============ P2-六：餐饮订单核销码（6 位数字 + 二维码）============
+function renderOrderPickupCode(order){
+  if(!order || !order.pickup_code) return '';
+  var done = (order.status === 'fulfilled' || order.status === 'completed');
+  var code = String(order.pickup_code);
+  var h = '';
+  h += '<div style="margin:14px;background:#fff;border-radius:14px;overflow:hidden;' +
+       'box-shadow:0 2px 14px rgba(0,0,0,.09)">';
+  h += '<div style="background:' + (done ? '#F3F3F3' : '#C7000B') + ';color:' + (done ? '#888' : '#fff') + ';' +
+       'padding:15px 18px;display:flex;align-items:center;justify-content:space-between">' +
+       '<div><div style="font-size:11.5px;opacity:.85">取餐核销码</div>' +
+       '<div style="font-size:15px;font-weight:600;margin-top:3px">' +
+         (done ? '已核销' : '待取餐核销') + '</div></div>' +
+       '<div style="font-size:22px">' + (done ? '✅' : '🎫') + '</div></div>';
+  h += '<div style="padding:18px;text-align:center">';
+  h += '<div style="font-size:38px;font-weight:700;letter-spacing:9px;font-family:monospace;color:' +
+       (done ? '#B0B0B0' : '#C7000B') + '">' + esc(code) + '</div>';
+  h += '<div style="margin-top:14px">' + renderQRCodeCSS('PICKUP-' + code) + '</div>';
+  h += '<div style="font-size:11px;color:#9A9A9A;margin-top:10px;line-height:1.6">' +
+       (done ? '该订单已完成核销，不可重复取餐' : '取餐时向食堂工作人员出示核销码或二维码') +
+       '</div>';
+  h += '</div></div>';
+  return h;
+}
+
+
+// ============ P2-一/二/九：工单详情页（四态时间轴 + 派单信息 + 评价）============
+function renderTicketDetail(screen, kind, ticketId){
+  renderNav({title:'工单详情', back:true, icbc:true});
+  var rec = null;
+  (STORE.list(kind) || []).forEach(function(r){ if(r.id === ticketId) rec = r; });
+  var h = '<div class="wrap">';
+  if(!rec){
+    h += '<div class="empty"><div class="ei">🔧</div>工单不存在</div></div>';
+    screen.innerHTML = h; return;
+  }
+  if(!TicketLog.detail(ticketId)) TicketLog.init(ticketId);
+  var t = TicketLog.detail(ticketId);
+  var curColor = TicketLog.color(t.state);
+
+  // 顶部状态头
+  h += '<div style="margin:0 -14px 12px;padding:18px 20px;background:' + curColor + ';color:#fff">' +
+       '<div style="font-size:11.5px;opacity:.85">当前状态</div>' +
+       '<div style="font-size:22px;font-weight:600;margin-top:4px">' + esc(TicketLog.label(t.state)) + '</div>' +
+       '<div style="font-size:11.5px;opacity:.85;margin-top:6px">单号 ' + esc(rec.id) + ' · ' + esc(rec.createdStr || '') + '</div>' +
+       '</div>';
+
+  // P2-一：四态时间轴（已提交 → 已接单 → 处理中 → 已完成）
+  h += '<div class="sect-t">处理进度（四态跟踪）</div>';
+  h += '<div class="form" style="padding:14px 15px">';
+  var curIdx = TICKET_FLOW.indexOf(t.state);
+  TICKET_FLOW.forEach(function(st, i){
+    var passed = i <= curIdx;
+    var isCur = i === curIdx;
+    var at = '';
+    t.history.forEach(function(x){ if(x.state === st) at = x.at; });
+    var col = passed ? TicketLog.color(st) : '#D8D8D8';
+    h += '<div style="display:flex;gap:11px;align-items:flex-start;position:relative;padding-bottom:' + (i < 3 ? '16px' : '0') + '">';
+    if(i < 3){
+      h += '<div style="position:absolute;left:8px;top:20px;width:2px;height:calc(100% - 6px);background:' +
+           (i < curIdx ? TicketLog.color(st) : '#EEE') + '"></div>';
+    }
+    h += '<div style="flex:0 0 18px;width:18px;height:18px;border-radius:50%;background:' + col +
+         ';color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:2px;z-index:1">' +
+         (passed ? '✓' : '') + '</div>';
+    h += '<div style="flex:1">' +
+         '<div style="font-size:13.5px;font-weight:' + (isCur ? '600' : '400') + ';color:' +
+           (passed ? '#1A1A1A' : '#B8B8B8') + '">' + esc(TicketLog.label(st)) +
+           (isCur ? '　<span class="tag" style="position:static;background:' + col + '1A;color:' + col + '">当前</span>' : '') +
+         '</div>';
+    h += '<div style="font-size:11.5px;color:#9A9A9A;margin-top:3px">' +
+         (at ? new Date(at).toLocaleString('zh-CN') : '—') + '</div>';
+    h += '</div></div>';
+  });
+  h += '</div>';
+
+  // P2-一：派单信息（受理人 + 预计完成时间）
+  if(t.assignee || t.eta){
+    h += '<div class="sect-t">派单信息</div><div class="form">' +
+         '<div class="fitem"><div style="flex:0 0 88px;font-size:13px;color:#666">受理人</div>' +
+         '<div style="flex:1;text-align:right;font-size:13.5px;font-weight:500">' + esc(t.assignee || '待分配') + '</div></div>' +
+         '<div class="fitem"><div style="flex:0 0 88px;font-size:13px;color:#666">预计完成</div>' +
+         '<div style="flex:1;text-align:right;font-size:13.5px;color:#333">' + esc(t.eta || '—') + '</div></div>' +
+         '</div>';
+  }
+
+  // 工单信息
+  h += '<div class="sect-t">工单信息</div><div class="form">';
+  h += '<div class="fitem"><div style="flex:0 0 88px;font-size:13px;color:#666">工单类型</div>' +
+       '<div style="flex:1;text-align:right;font-size:13.5px">' + esc(rec.title || rec.cat || '') + '</div></div>';
+  if(rec.summary) h += '<div class="fitem"><div style="flex:0 0 88px;font-size:13px;color:#666">内容</div>' +
+       '<div style="flex:1;text-align:right;font-size:12.5px;color:#333">' + esc(rec.summary) + '</div></div>';
+  h += '<div class="fitem"><div style="flex:0 0 88px;font-size:13px;color:#666">提交人</div>' +
+       '<div style="flex:1;text-align:right;font-size:13.5px">' + esc(rec.user || '') +
+       (rec.dept ? '（' + esc(rec.dept) + '）' : '') + '</div></div>';
+  h += '</div>';
+
+  // P2-二/九：评价区（仅已完成 + 未评价过）
+  h += renderTicketReviewSection(ticketId, t);
+
+  // 演示用：手动推进状态
+  if(t.state !== 'done'){
+    h += '<div style="padding:2px 0 6px"><button onclick="doAdvanceTicket(\'' + kind + '\',\'' + ticketId + '\')" ' +
+         'class="submit ghost" style="width:calc(100% - 28px);margin:10px 14px">模拟推进到下一状态</button></div>';
+  }
+  h += '<div class="copyright">状态流转：已提交 → 已接单 → 处理中 → 已完成</div>';
+  h += '</div>';
+  screen.innerHTML = h;
+}
+
+function doAdvanceTicket(kind, id){
+  var r = TicketLog.advance(id);
+  if(!r.ok){ toast(r.msg); return; }
+  toast('状态已更新：' + TicketLog.label(r.to));
+  setTimeout(function(){ render(); }, 900);
+}
+
+// P2-二：星级评价组件（1-5 星 + 可选文字）；P2-九：已评价不再显示入口
+function renderTicketReviewSection(ticketId, t){
+  var h = '';
+  if(t.rated){
+    h += '<div class="sect-t">我的评价</div><div class="form" style="padding:15px">';
+    h += '<div style="font-size:20px;color:#C9A227;letter-spacing:3px">' +
+         '★'.repeat(t.rating) + '<span style="color:#E0E0E0">' + '★'.repeat(5 - t.rating) + '</span></div>';
+    if(t.review) h += '<div style="font-size:12.5px;color:#555;line-height:1.7;margin-top:9px;' +
+         'background:#F8F8F8;border-radius:7px;padding:9px 11px">' + esc(t.review) + '</div>';
+    h += '<div style="font-size:11px;color:#9A9A9A;margin-top:9px">评价于 ' +
+         new Date(t.ratedAt).toLocaleString('zh-CN') + ' · 已评价，不可重复评价</div>';
+    h += '</div>';
+    return h;
+  }
+  if(t.state !== 'done'){
+    h += '<div class="tip info"><span class="ti">ℹ️</span><div>工单完成（当前为「' +
+         esc(TicketLog.label(t.state)) + '」）后可进行评价。</div></div>';
+    return h;
+  }
+  // 已完成且未评价 -> 显示评价入口
+  h += '<div class="sect-t">服务评价</div><div class="form" style="padding:15px">';
+  h += '<div style="font-size:13px;color:#333;margin-bottom:10px">请对本次维修服务打分</div>';
+  h += '<div style="display:flex;gap:9px;justify-content:center" id="tstars_' + ticketId + '">';
+  for(var i = 1; i <= 5; i++){
+    h += '<span onclick="setTicketStar(\'' + ticketId + '\',' + i + ')" id="tstar_' + ticketId + '_' + i + '" ' +
+         'style="font-size:32px;cursor:pointer;color:#DDD;transition:color .15s;line-height:1">★</span>';
+  }
+  h += '</div>';
+  h += '<div style="text-align:center;font-size:11.5px;color:#9A9A9A;margin-top:7px" id="thint_' + ticketId + '">点击星星评分</div>';
+  h += '<textarea id="treview_' + ticketId + '" rows="3" placeholder="补充说明（选填）" ' +
+       'style="width:100%;margin-top:13px;padding:10px;border:1px solid #E8E8E8;border-radius:8px;' +
+       'font-size:13px;resize:none;outline:none;font-family:inherit;background:#F7F7F9"></textarea>';
+  h += '<button onclick="submitTicketReview(\'' + ticketId + '\')" class="submit" ' +
+       'style="width:100%;margin:13px 0 0;box-shadow:none">提交评价</button>';
+  h += '<div id="trmsg_' + ticketId + '" style="font-size:12px;text-align:center;margin-top:9px;display:none"></div>';
+  h += '</div>';
+  return h;
+}
+
+var _ticketStars = {};
+function setTicketStar(ticketId, n){
+  _ticketStars[ticketId] = n;
+  for(var i = 1; i <= 5; i++){
+    var el = document.getElementById('tstar_' + ticketId + '_' + i);
+    if(el) el.style.color = i <= n ? '#C9A227' : '#DDD';
+  }
+  var hint = document.getElementById('thint_' + ticketId);
+  if(hint) hint.textContent = ['', '很不满意', '不满意', '一般', '满意', '非常满意'][n] || '';
+}
+
+function submitTicketReview(ticketId){
+  var stars = _ticketStars[ticketId] || 0;
+  var ta = document.getElementById('treview_' + ticketId);
+  var msg = document.getElementById('trmsg_' + ticketId);
+  if(!msg) return;
+  if(!stars){
+    msg.style.display = 'block';
+    msg.style.color = '#C7000B';
+    msg.textContent = '请先选择星级评分';
+    return;
+  }
+  var r = TicketLog.rate(ticketId, stars, ta ? ta.value.trim() : '');
+  msg.style.display = 'block';
+  if(r.ok){
+    msg.style.color = '#0F8A5F';
+    msg.textContent = '✓ ' + r.msg;          // P2-二："感谢您的评价"
+    setTimeout(function(){ render(); }, 1200);
+  } else {
+    msg.style.color = '#C7000B';
+    msg.textContent = '✗ ' + r.msg;
+  }
+}
+
+
+// ============ P2-十：管理端状态看板 ============
+// 指标：今日新增工单数 / 待处理数 / 已完成数 / 平均处理时长
+function boardStats(){
+  var todayStr = (function(){
+    var d = new Date(), p = n => (n < 10 ? '0' : '') + n;
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  })();
+
+  var tickets = [];
+  ['repairs', 'applies'].forEach(function(k){
+    (STORE.list(k) || []).forEach(function(r){
+      var c = Object.assign({}, r);
+      c._kind = k;
+      if(isTicket(c)) tickets.push(c);
+    });
+  });
+
+  // 演示兜底：若本地还没有工单，用看板基数，保证管理端看板有内容
+  var base = { today: 8, pending: 5, done: 12, avgHours: 3.6 };
+  var todayNew = 0, pending = 0, done = 0, durations = [];
+
+  tickets.forEach(function(r){
+    var st = TicketLog.get(r.id);
+    var created = (r.createdStr || '').slice(0, 10);
+    if(created === todayStr || !created) todayNew++;
+    if(st !== 'done') pending++;
+    if(st === 'done') done++;
+    var d = TicketLog.detail(r.id);
+    if(d && d.state === 'done'){
+      var t0 = (d.history && d.history[0] && d.history[0].at) || 0;
+      var t1 = (d.history && d.history[d.history.length - 1] && d.history[d.history.length - 1].at) || 0;
+      if(t1 > t0) durations.push((t1 - t0) / 3600000);
+    }
+  });
+
+  var avg = durations.length
+    ? Math.round((durations.reduce(function(a, b){ return a + b; }, 0) / durations.length) * 10) / 10
+    : base.avgHours;
+
+  return {
+    today: todayNew > 0 ? todayNew : base.today,
+    pending: pending > 0 ? pending : base.pending,
+    done: done > 0 ? done : base.done,
+    avgHours: avg
+  };
+}
+
+// 看板卡片（挂在管理端首页 + 数据统计分析页 + #/mgmt_dashboard）
+function renderMgmtBoard(compact){
+  var s = boardStats();
+  var h = '';
+  h += '<div class="sect-hd"><div class="t"><i></i>状态看板</div>' +
+       '<div class="m">维修 / 物品工单 · 今日</div></div>';
+  h += '<div class="wrap"><div class="stat-row" style="grid-template-columns:1fr 1fr;gap:10px">';
+  h += boardCard('今日新增工单', s.today, '件', '#C7000B');
+  h += boardCard('待处理', s.pending, '件', '#B45309');
+  h += boardCard('已完成', s.done, '件', '#0F8A5F');
+  h += boardCard('平均处理时长', s.avgHours, '小时', '#0E7490');
+  h += '</div>';
+  // 状态分布明细
+  h += '<div class="form" style="padding:8px 15px 12px">';
+  var dist = boardDistribution();
+  var total = dist.reduce(function(a, b){ return a + b.n; }, 0) || 1;
+  dist.forEach(function(x){
+    h += '<div class="bar-row"><div class="bl">' + esc(x.label) + '</div>' +
+         '<div class="bt"><div class="bf" style="width:' + Math.round(x.n / total * 100) + '%;background:' + x.color + '"></div></div>' +
+         '<div class="bv">' + x.n + ' 件</div></div>';
+  });
+  h += '</div>';
+  if(!compact){
+    h += '<div class="wrap" style="margin-top:10px"><div class="list">' +
+      '<div class="row" onclick="go(\'#/my_applies\')"><div class="ri" style="background:#E9F0FA;color:#1E5AA8">' +
+      SVG_ICON.row_doc + '</div><div class="rb"><div class="rt">工单明细</div>' +
+      '<div class="rs">按状态筛选查看全部维修 / 物品工单</div></div><span class="arrow">›</span></div>' +
+      '</div></div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function boardCard(label, num, unit, color){
+  return '<div class="stat" style="text-align:left;padding:14px 13px">' +
+    '<div class="n" style="color:' + color + ';font-size:24px">' + esc(num) +
+      '<span style="font-size:11px;font-weight:400;color:#999;margin-left:3px">' + esc(unit) + '</span></div>' +
+    '<div class="l" style="font-size:11px">' + esc(label) + '</div></div>';
+}
+
+function boardDistribution(){
+  var counts = { submitted: 0, accepted: 0, processing: 0, done: 0 };
+  var tickets = [];
+  ['repairs', 'applies'].forEach(function(k){
+    (STORE.list(k) || []).forEach(function(r){
+      var c = Object.assign({}, r); c._kind = k;
+      if(isTicket(c)) tickets.push(c);
+    });
+  });
+  if(tickets.length){
+    tickets.forEach(function(r){
+      var st = TicketLog.get(r.id);
+      if(counts[st] != null) counts[st]++;
+    });
+  } else {
+    // 演示基数
+    counts = { submitted: 4, accepted: 1, processing: 2, done: 12 };
+  }
+  return [
+    { label: '已提交', n: counts.submitted,  color: '#1E5AA8' },
+    { label: '已接单', n: counts.accepted,   color: '#B45309' },
+    { label: '处理中', n: counts.processing, color: '#0E7490' },
+    { label: '已完成', n: counts.done,       color: '#0F8A5F' }
+  ];
+}
+
+// 管理端独立看板页 #/mgmt_dashboard
+function renderMgmtDashboard(screen){
+  renderNav({title:'状态看板', back:true, icbc:true});
+  var h = '<div class="banner" style="background:var(--brand-grad)">' +
+    '<h1>维修工单状态看板</h1><p>今日新增 · 待处理 · 已完成 · 平均处理时长</p></div>';
+  h += renderMgmtBoard(true);
+  h += '<div class="copyright">数据口径：维修 / 物品申领工单（演示数据）</div>';
+  screen.innerHTML = h;
+}
+
+
 // ============ P0-2: 取餐核销码 ============
 function genPickupCode() {
-    // 生成4位数字核销码（1000-9999）
+    // P2-6：生成 6 位数字核销码（100000-999999）
     var used = JSON.parse(localStorage.getItem('icbc_used_codes') || '[]');
     var code;
+    var guard = 0;
     do {
-        code = Math.floor(1000 + Math.random() * 9000);
-    } while (used.includes(code));
+        code = Math.floor(100000 + Math.random() * 900000);
+        guard++;
+    } while (used.includes(code) && guard < 500);
     used.push(code);
     // 只保留最近100个，防止无限增长
     if (used.length > 100) used = used.slice(-100);
@@ -3906,21 +5214,21 @@ function genPickupCode() {
 }
 
 function getOrderPickupCode(orderId) {
-    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
-    var order = orders.find(function(o) { return o.id === orderId; });
+    var order = p2GetOrder(orderId);
     return order ? order.pickup_code : null;
 }
 
 function fulfillOrder(orderId, code) {
-    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
-    var order = orders.find(function(o) { return o.id === orderId; });
+    // P2 修复：核销改为在 STORE 上操作（与订单详情/列表同源）
+    var order = p2GetOrder(orderId);
     if (!order) return { ok: false, msg: '订单不存在' };
-    if (order.status !== 'approved') return { ok: false, msg: '订单状态不正确' };
-    if (order.pickup_code !== code) return { ok: false, msg: '核销码错误' };
-    
+    var allowed = ['submitted','under_review','approved'];
+    if (allowed.indexOf(order.status) < 0) return { ok: false, msg: '订单状态不支持核销' };
+    if (String(order.pickup_code) !== String(code)) return { ok: false, msg: '核销码错误' };
+
     order.status = 'fulfilled';
     order.fulfilled_at = Date.now();
-    localStorage.setItem('icbc_oa_orders', JSON.stringify(orders));
+    STORE.save();
     return { ok: true, msg: '取餐成功' };
 }
 
@@ -3938,7 +5246,7 @@ function renderFulfillUI(order) {
     return '<div style="margin:14px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">' +
         '<div style="font-size:13px;font-weight:600;margin-bottom:12px;color:#333">模拟核销（食堂工作人员操作）</div>' +
         '<div style="display:flex;gap:10px;align-items:center">' +
-        '<input type="text" id="fulfill_code_' + order.id + '" maxlength="4" placeholder="输入4位核销码" ' +
+        '<input type="text" id="fulfill_code_' + order.id + '" maxlength="6" placeholder="输入6位核销码" ' +
         'style="flex:1;padding:12px;border:2px solid #E8E8E8;border-radius:8px;font-size:16px;text-align:center;letter-spacing:4px;font-family:monospace;outline:none">' +
         '<button onclick="doFulfill(\'' + order.id + '\')" ' +
         'style="padding:12px 24px;background:#C7000B;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">确认取餐</button>' +
@@ -3952,10 +5260,10 @@ function doFulfill(orderId) {
     var msg = document.getElementById('fulfill_msg_' + orderId);
     var code = input.value.trim();
     
-    if (!code || code.length !== 4) {
+    if (!code || code.length !== 6) {
         msg.style.display = 'block';
         msg.style.color = '#C7000B';
-        msg.textContent = '请输入4位数字核销码';
+        msg.textContent = '请输入6位数字核销码';
         return;
     }
     
@@ -4273,9 +5581,19 @@ function renderReviewSection(order) {
 // ============ P0-3 END ============
 
 // ============ P0-4: 订单详情页状态机展示 ============
+// P2 修复：订单详情统一从 STORE 取数（P0 遗留代码读的是 icbc_oa_orders，与 STORE 不同源）
+function p2GetOrder(orderId){
+  var o = null;
+  (STORE.list('orders') || []).forEach(function(r){ if(r.id === orderId) o = r; });
+  return o;
+}
 function renderOrderDetail(orderId) {
-    var orders = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
-    var order = orders.find(function(o) { return o.id === orderId; });
+    var order = p2GetOrder(orderId);
+    if(!order){
+        // 兼容 P0 遗留存储
+        var legacy = JSON.parse(localStorage.getItem('icbc_oa_orders') || '[]');
+        order = legacy.filter(function(o){ return o.id === orderId; })[0];
+    }
     if (!order) return '<div class="empty">订单不存在</div>';
     
     var C = P.colors['餐饮服务'];
@@ -4353,6 +5671,9 @@ function renderOrderDetail(orderId) {
         h += '</div></div>';
     }
     
+    // P2-6：餐饮订单核销码（6 位数字 + 二维码图示）
+    h += renderOrderPickupCode(order);
+
     // 操作区域
     h += '<div style="margin:14px 0">';
     h += renderOrderActions(order);
@@ -4382,6 +5703,457 @@ function showOrderDetail(orderId) {
 // ============ P0-4 END ============
 
 
+
+
+// ============================================================
+// P3 改造模块（2026-09-19）· 七项改动全部落在此段
+// ①访客邀请二维码 ②预登记筛选 ③导航铃铛 ④消息中心
+// ⑤授权配置入口 ⑥权限矩阵页 ⑦我的申请审批链
+// 纯前端 mock，零外部依赖
+// ============================================================
+
+// ============ P3-④/③：消息中心数据层 MSG ============
+// 分类：全部 | 待办 | 审批 | 系统 | 通知
+const MSG = {
+  KEY: 'icbc_p3_msgs',
+  // 初始 mock：6 条消息，覆盖 4 个分类（末 3 条为未读，初始未读数 = 3）
+  SEED: [
+    { id: 'M001', cat: '待办', icon: '📝', bg: '#FFF4E5', fg: '#B45309',
+      title: '待处理维修工单', summary: '3F 会议室投影仪报修已派单，请确认上门时间。',
+      time: '09-19 21:10', unread: true,  route: '#/my_applies' },
+    { id: 'M002', cat: '审批', icon: '✅', bg: '#E9F0FA', fg: '#1E5AA8',
+      title: '用车申请待审批', summary: '您提交的公务用车申请（苏E7ZU27）待部门主管审批。',
+      time: '09-19 18:42', unread: true,  route: '#/my_applies' },
+    { id: 'M003', cat: '通知', icon: '🔔', bg: '#E9F6EF', fg: '#0F8A5F',
+      title: '咖啡订单已备好', summary: '您预订的生椰拿铁已完成制作，请至 1F 咖啡吧核销取餐。',
+      time: '09-19 15:20', unread: true,  route: '#/my_applies' },
+    { id: 'M004', cat: '审批', icon: '📋', bg: '#E9F0FA', fg: '#1E5AA8',
+      title: '访客申请已通过', summary: '访客王五（某某科技）预登记已通过审批，可凭邀请码通行。',
+      time: '09-19 11:05', unread: false, route: '#/visitor_list' },
+    { id: 'M005', cat: '系统', icon: '⚙️', bg: '#F0EDFA', fg: '#6D4AA8',
+      title: '系统维护通知', summary: '平台将于 09-21 00:00-02:00 进行版本升级，期间暂停服务。',
+      time: '09-18 17:30', unread: false, route: '#/msg_center' },
+    { id: 'M006', cat: '待办', icon: '💰', bg: '#FFF4E5', fg: '#B45309',
+      title: '钱包余额提醒', summary: '您的服务钱包余额不足 ¥50，建议及时充值以免影响预约。',
+      time: '09-18 09:00', unread: false, route: '#/wallet' }
+  ],
+  load(){
+    try{
+      var d = JSON.parse(localStorage.getItem(this.KEY) || 'null');
+      if(d && d.length) return d;
+    }catch(e){}
+    var seed = JSON.parse(JSON.stringify(this.SEED));
+    this.save(seed);
+    return seed;
+  },
+  save(list){ try{ localStorage.setItem(this.KEY, JSON.stringify(list)); }catch(e){} },
+  all(){ return this.load(); },
+  unreadCount(){ return this.load().filter(function(m){ return m.unread; }).length; },
+  // 标记单条已读
+  read(id){
+    var list = this.load(), hit = null;
+    list.forEach(function(m){ if(m.id === id){ m.unread = false; hit = m; } });
+    this.save(list);
+    return hit;
+  },
+  // P3-④：全部已读
+  readAll(){
+    var list = this.load();
+    list.forEach(function(m){ m.unread = false; });
+    this.save(list);
+  }
+};
+
+// ============ P3-④：消息中心页 ============
+let MSG_TAB = '全部';
+const MSG_CATS = [
+  { k: '全部', color: '#C7000B' },
+  { k: '待办', color: '#B45309' },
+  { k: '审批', color: '#1E5AA8' },
+  { k: '系统', color: '#6D4AA8' },
+  { k: '通知', color: '#0F8A5F' }
+];
+function setMsgTab(k){ MSG_TAB = k; render(); }
+
+function renderMsgCenter(screen){
+  renderNav({title:'消息中心', back:true, icbc:true});
+  var list = MSG.all();
+  var unread = MSG.unreadCount();
+  var h = '<div class="wrap">';
+
+  // 顶部：未读统计 + 全部已读
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">' +
+    '<div style="font-size:12.5px;color:#8A8A8A">共 ' + list.length + ' 条 · <b style="color:#C7000B">' + unread + '</b> 条未读</div>' +
+    '<button onclick="markAllMsgRead()" style="padding:6px 14px;border:1px solid #E8E8E8;background:#fff;border-radius:15px;' +
+    'font-size:12px;color:' + (unread ? '#C7000B' : '#B0B0B0') + ';cursor:pointer;font-family:inherit">全部已读</button></div>';
+
+  // 分类标签
+  h += '<div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px">';
+  MSG_CATS.forEach(function(c){
+    var on = MSG_TAB === c.k;
+    var n = c.k === '全部' ? list.length : list.filter(function(m){ return m.cat === c.k; }).length;
+    h += '<div onclick="setMsgTab(\'' + c.k + '\')" style="flex:0 0 auto;padding:6px 14px;border-radius:15px;font-size:12.5px;cursor:pointer;' +
+      (on ? 'background:' + c.color + ';color:#fff' : 'background:#fff;color:#666;border:1px solid #E8E8E8') + '">' +
+      esc(c.k) + (n ? ' ' + n : '') + '</div>';
+  });
+  h += '</div>';
+
+  // 消息列表
+  var rows = MSG_TAB === '全部' ? list : list.filter(function(m){ return m.cat === MSG_TAB; });
+  if(!rows.length){
+    h += '<div class="empty"><div class="ei">📭</div>暂无消息<br><span style="font-size:12px;color:#999">该分类下暂无内容</span></div>';
+  } else {
+    h += '<div class="list" style="padding:0">';
+    rows.forEach(function(m){
+      h += '<div class="msg-row' + (m.unread ? ' unread' : '') + '" onclick="openMsg(\'' + m.id + '\')">' +
+        '<div class="mi" style="background:' + m.bg + ';color:' + m.fg + '">' + m.icon + '</div>' +
+        '<div class="mb"><div class="mt">' + esc(m.title) +
+          (m.unread ? '<span class="dot"></span>' : '') + '</div>' +
+        '<div class="ms">' + esc(m.summary) + '</div>' +
+        '<div class="mtime">' + esc(m.time) + '　<span style="color:#C7000B">' + esc(m.cat) + '</span></div></div>' +
+        '<span class="arrow">›</span></div>';
+    });
+    h += '</div>';
+  }
+
+  h += '</div><div class="copyright">消息中心 · 演示数据</div>';
+  screen.innerHTML = h;
+}
+
+// P3-④：点击消息 -> 标记已读 + 跳转对应页面
+function openMsg(id){
+  var m = MSG.read(id);
+  refreshBell();                     // P3-③：未读数实时变化
+  if(m && m.route && m.route !== '#/msg_center'){
+    go(m.route);
+  } else {
+    render();
+  }
+}
+// P3-④：全部已读
+function markAllMsgRead(){
+  MSG.readAll();
+  refreshBell();
+  toast('已全部标为已读');
+  render();
+}
+
+// ============ P3-①：访客邀请（邀请码 + 二维码 + 复制）============
+let VISITOR_INVITE = null;
+
+// 邀请码规则：IV-YYYYMMDD-###
+function nextInviteCode(){
+  var d = new Date(), p = n => (n < 10 ? '0' : '') + n;
+  var ymd = d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+  var seq = {};
+  try{ seq = JSON.parse(localStorage.getItem('icbc_p3_invite_seq') || '{}'); }catch(e){ seq = {}; }
+  seq[ymd] = (seq[ymd] || 0) + 1;
+  try{ localStorage.setItem('icbc_p3_invite_seq', JSON.stringify(seq)); }catch(e){}
+  var n = seq[ymd];
+  return 'IV-' + ymd + '-' + (n < 10 ? '00' : (n < 100 ? '0' : '')) + n;
+}
+
+// 生成邀请（读取当前表单已填的被访人 / 来访时间）
+function genVisitorInvite(){
+  var host = '';
+  // 从表单草稿里取“被访人姓名”
+  try{
+    var draft = JSON.parse(localStorage.getItem('icbc_oa_formdraft') || '{}');
+    Object.keys(draft).forEach(function(k){
+      if(/被访人/.test(k) && draft[k]) host = draft[k];
+    });
+  }catch(e){}
+  if(!host){ host = '张三'; }
+  var d = new Date(), p = n => (n < 10 ? '0' : '') + n;
+  var today = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  var visit = today + ' 14:00';
+  VISITOR_INVITE = {
+    code: nextInviteCode(),
+    host: host,
+    visit: visit,
+    valid: today + ' 23:59'
+  };
+  render();
+  const sc = document.getElementById('screen'); if(sc) sc.scrollTop = sc.scrollHeight;
+  toast('邀请已生成 · ' + VISITOR_INVITE.code);
+}
+
+// 邀请卡片（无邀请时不渲染）
+function renderVisitorInvite(){
+  if(!VISITOR_INVITE) return '';
+  var v = VISITOR_INVITE;
+  var txt = '【访客邀请】邀请码：' + v.code + '｜被访人：' + v.host +
+            '｜来访时间：' + v.visit + '｜有效期至：' + v.valid + '｜凭此码于门卫处核验通行。';
+  var h = '<div class="sect-t">邀请信息</div><div class="wrap"><div class="form" style="padding:18px 15px">';
+  h += '<div style="text-align:center;margin-bottom:12px">' +
+       '<div style="font-size:12px;color:#8A8A8A;margin-bottom:8px">访客通行邀请码</div>' +
+       '<div style="font-size:22px;font-weight:700;color:#C7000B;letter-spacing:2px">' + esc(v.code) + '</div></div>';
+  h += renderQRCodeCSS(v.code);
+  h += '<div style="margin-top:12px;font-size:12.5px;color:#444;line-height:2">' +
+       '<div style="display:flex;justify-content:space-between"><span style="color:#999">被访人</span><span>' + esc(v.host) + '</span></div>' +
+       '<div style="display:flex;justify-content:space-between"><span style="color:#999">来访时间</span><span>' + esc(v.visit) + '</span></div>' +
+       '<div style="display:flex;justify-content:space-between"><span style="color:#999">有效期至</span><span>' + esc(v.valid) + '</span></div></div>';
+  h += '<button onclick="copyInvite()" style="width:100%;margin-top:14px;padding:11px;border:1px solid #C7000B;' +
+       'background:#fff;color:#C7000B;border-radius:8px;font-size:13.5px;cursor:pointer;font-family:inherit">复制邀请内容</button>';
+  h += '</div></div>';
+  h += '<input type="hidden" id="invite_text" value="' + esc(txt) + '">';
+  return h;
+}
+
+// 复制邀请内容（navigator.clipboard + textarea 降级）
+function copyInvite(){
+  if(!VISITOR_INVITE) return;
+  var v = VISITOR_INVITE;
+  var txt = '【访客邀请】邀请码：' + v.code + '｜被访人：' + v.host +
+            '｜来访时间：' + v.visit + '｜有效期至：' + v.valid + '｜凭此码于门卫处核验通行。';
+  var done = function(){ toast('邀请内容已复制，可发送给访客'); };
+  // 降级通道：无 clipboard API 时用 textarea + execCommand
+  var fallback = function(){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done();
+    }catch(e){ toast('复制失败，请手动长按复制邀请码 ' + v.code); }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done, fallback);
+  } else {
+    fallback();
+  }
+}
+
+// ============ P3-②：访客审批（预登记筛选）============
+let VISITOR_TAB = '全部';
+const VISITOR_TABS = [
+  { k: '全部',   color: '#1E5AA8' },
+  { k: '待审批', color: '#B45309' },
+  { k: '预登记', color: '#6D4AA8' },
+  { k: '已通过', color: '#0F8A5F' },
+  { k: '已驳回', color: '#C7000B' }
+];
+function setVisitorTab(k){ VISITOR_TAB = k; render(); }
+
+// 访客审批 mock 记录（含 2 条预登记）
+const VISITOR_MOCK = [
+  { name: '王五', org: '某某科技',    host: '张三 · 金融科技部', when: '9月16日 10:15', status: '预登记' },
+  { name: '周九', org: '系统集成商',  host: '李四 · 办公室',     when: '9月19日 09:30', status: '预登记' },
+  { name: '赵六', org: '设备维保',    host: '王五 · 运营管理部', when: '9月16日 09:20', status: '待审批' },
+  { name: '孙七', org: '合作洽谈',    host: '赵六 · 公司金融部', when: '9月15日 14:00', status: '已通过' },
+  { name: '钱八', org: '临时推销',    host: '—',                when: '9月14日 11:20', status: '已驳回' }
+];
+const VISITOR_STATUS_COLOR = {
+  '预登记': '#6D4AA8', '待审批': '#B45309', '已通过': '#0F8A5F', '已驳回': '#C7000B'
+};
+
+function renderVisitorFilter(){
+  var h = '<div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px">';
+  VISITOR_TABS.forEach(function(t){
+    var on = VISITOR_TAB === t.k;
+    h += '<div onclick="setVisitorTab(\'' + t.k + '\')" style="flex:0 0 auto;padding:6px 14px;border-radius:15px;font-size:12.5px;cursor:pointer;' +
+      (on ? 'background:' + t.color + ';color:#fff' : 'background:#fff;color:#666;border:1px solid #E8E8E8') + '">' +
+      esc(t.k) + '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderVisitorApprovalList(){
+  var rows = VISITOR_TAB === '全部'
+    ? VISITOR_MOCK
+    : VISITOR_MOCK.filter(function(v){ return v.status === VISITOR_TAB; });
+  if(!rows.length){
+    return '<div class="empty"><div class="ei">📋</div>暂无「' + esc(VISITOR_TAB) + '」记录</div>';
+  }
+  var h = '<div class="list">';
+  rows.forEach(function(v){
+    var c = VISITOR_STATUS_COLOR[v.status] || '#666';
+    h += '<div class="row" style="align-items:flex-start"><div class="ri" style="background:' + c + '1A;color:' + c + '">' + SVG_ICON.visitor_register + '</div>' +
+      '<div class="rb"><div class="rt">' + esc(v.name) + '（来访：' + esc(v.org) + '）</div>' +
+      '<div class="rs">被访：' + esc(v.host) + '</div>' +
+      '<div class="rs" style="color:#999;font-size:11.5px">' + esc(v.when) + '</div></div>' +
+      '<span class="tag" style="background:' + c + '1A;color:' + c + '">' + esc(v.status) + '</span></div>';
+  });
+  h += '</div>';
+  h += '<div style="font-size:11.5px;color:#8A8A8A;padding:10px 4px">说明：「预登记」为访客自行提交、尚未经审批人处理的登记记录（演示数据）。</div>';
+  return h;
+}
+
+// ============ P3-⑥：用户授权配置（角色权限矩阵）============
+const AUTH_ROLES = ['普通员工', '部门主管', '管理员', '访客'];
+const AUTH_ROLE_COLOR = { '普通员工': '#1E5AA8', '部门主管': '#B45309', '管理员': '#C7000B', '访客': '#6D4AA8' };
+// 行=功能模块，1=有权限 0=无权限
+const AUTH_MATRIX = [
+  { mod: '餐饮服务 · 餐单查询',      p: [1, 1, 1, 0] },
+  { mod: '餐饮服务 · 在线订餐',      p: [1, 1, 1, 0] },
+  { mod: '生活预约 · 场馆预约',      p: [1, 1, 1, 0] },
+  { mod: '门禁访客 · 访客预登记',    p: [1, 1, 1, 1] },
+  { mod: '门禁访客 · 审批与放行',    p: [0, 1, 1, 0] },
+  { mod: '办公保障 · 用车/接待申请', p: [1, 1, 1, 0] },
+  { mod: '办公保障 · 维修工单受理',  p: [0, 1, 1, 0] },
+  { mod: '平台管理 · 数据统计看板',  p: [0, 1, 1, 0] },
+  { mod: '平台管理 · 信息精准推送',  p: [0, 0, 1, 0] },
+  { mod: '平台管理 · 用户授权配置',  p: [0, 0, 1, 0] }
+];
+
+function renderMgmtAuthConfig(screen){
+  renderNav({title:'用户授权配置', back:true, icbc:true});
+  var h = '<div class="wrap">';
+  h += '<div class="tip info"><span class="ti">ℹ️</span><div>按角色配置各功能模块的可见与操作权限，支持批量导入 CSV 维护矩阵。</div></div>';
+
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;margin:4px 0 12px">' +
+    '<div style="font-size:12.5px;color:#8A8A8A">共 ' + AUTH_MATRIX.length + ' 个功能模块 · ' + AUTH_ROLES.length + ' 类角色</div>' +
+    '<button onclick="importAuthCsv()" style="padding:6px 14px;border:0;background:#C7000B;color:#fff;border-radius:15px;' +
+    'font-size:12px;cursor:pointer;font-family:inherit">批量导入</button></div>';
+
+  // 权限矩阵表格
+  h += '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;font-size:12px">';
+  h += '<thead><tr style="background:#F7F7F9">' +
+    '<th style="text-align:left;padding:10px 8px;font-weight:600;color:#333;white-space:nowrap">功能模块</th>';
+  AUTH_ROLES.forEach(function(r){
+    h += '<th style="padding:10px 4px;font-weight:600;color:' + AUTH_ROLE_COLOR[r] + ';white-space:nowrap;text-align:center">' + esc(r) + '</th>';
+  });
+  h += '</tr></thead><tbody>';
+  AUTH_MATRIX.forEach(function(row, ri){
+    h += '<tr style="border-top:1px solid #F0F0F0">' +
+      '<td style="padding:10px 8px;color:#333;line-height:1.4">' + esc(row.mod) + '</td>';
+    row.p.forEach(function(v, ci){
+      var on = v === 1;
+      h += '<td style="padding:10px 4px;text-align:center">' +
+        '<div onclick="toggleAuth(' + ri + ',' + ci + ')" style="width:24px;height:24px;line-height:24px;margin:0 auto;border-radius:6px;cursor:pointer;' +
+        'font-size:13px;font-weight:700;' + (on
+          ? 'background:#0F8A5F1A;color:#0F8A5F;border:1px solid #0F8A5F40'
+          : 'background:#F3F3F3;color:#C0C0C0;border:1px solid #E8E8E8') + '" title="点击切换">' +
+        (on ? '✓' : '✗') + '</div></td>';
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+
+  h += '<div style="font-size:11.5px;color:#8A8A8A;padding:10px 4px;line-height:1.7">' +
+    '说明：✓ 表示该角色具备此功能权限，✗ 表示不可见/不可操作。点击单元格可临时切换（演示效果）。<br>' +
+    '批量导入：上传 CSV（功能模块,普通员工,部门主管,管理员,访客），系统按行覆盖权限配置。</div>';
+  h += '</div><div class="copyright">平台管理 · 由办公室 / 物业公司负责</div>';
+  screen.innerHTML = h;
+}
+
+// P3-⑥：单元格权限切换（演示用，修改后重绘）
+function toggleAuth(ri, ci){
+  if(!AUTH_MATRIX[ri]) return;
+  AUTH_MATRIX[ri].p[ci] = AUTH_MATRIX[ri].p[ci] === 1 ? 0 : 1;
+  render();
+}
+// P3-⑥：批量导入（mock 提示）
+function importAuthCsv(){
+  toast('请上传 CSV 文件（演示：暂未接入文件选择）');
+}
+
+// ============ P3-⑦：我的申请 · 统一状态 + 审批链 + 驳回重提 ============
+let APPLY_OPEN = {};      // 展开的审批链 {id: true}
+
+// 统一状态：已提交 / 审批中 / 已通过 / 已驳回
+const APPLY_STATE = {
+  LABEL: { submitted: '已提交', pending: '审批中', approved: '已通过', rejected: '已驳回' },
+  COLOR: { submitted: '#1E5AA8', pending: '#B45309', approved: '#0F8A5F', rejected: '#C7000B' },
+  label(k){ return this.LABEL[k] || '审批中'; },
+  color(k){ return this.COLOR[k] || '#1E5AA8'; },
+  // 只对「申请类」记录展示审批链（订餐/评价/预约不适用）
+  canChain(r){
+    return r && r._kind === 'applies';
+  },
+  // 由原 status 归一化到四态
+  keyOf(st, r){
+    if(st === '已驳回' || st === '驳回') return 'rejected';
+    if(st === '已通过' || st === '审批通过') return 'approved';
+    if(st === '已提交') return 'submitted';
+    return 'pending';
+  },
+  // 重提次数（驳回后重新提交会累加）
+  resubmitCount(r){ return (r && r.resubmitCount) || 0; }
+};
+
+// 展开/收起审批链
+function toggleApplyChain(id){
+  APPLY_OPEN[id] = !APPLY_OPEN[id];
+  render();
+}
+
+// 审批链节点渲染（提交人 → 部门主管 → 管理员）
+function renderApplyChain(r, stKey){
+  var nodes = [];
+  var t0 = r.createdStr || '—';
+  // 节点 1：提交人（始终已完成）
+  nodes.push({
+    nm: '提交人 · ' + (r.user || '本人'), st: 'done',
+    meta: '提交时间 ' + t0,
+    opt: (r.summary || '申请已提交')
+  });
+  // 节点 2：部门主管
+  if(stKey === 'submitted'){
+    nodes.push({ nm: '部门主管 · 待审批', st: 'wait', meta: '等待主管处理', opt: '' });
+  } else if(stKey === 'pending'){
+    nodes.push({ nm: '部门主管 · 审批中', st: 'doing', meta: '已转交主管，处理中', opt: '已接收，正在核验申请内容' });
+  } else {
+    nodes.push({ nm: '部门主管 · 已审批', st: 'done', meta: '部门主管 ' + t0.slice(0, 10),
+      opt: (stKey === 'rejected' ? '材料不齐，予以驳回' : '同意，转管理员复核') });
+  }
+  // 节点 3：管理员
+  if(stKey === 'approved'){
+    nodes.push({ nm: '管理员 · 已通过', st: 'done', meta: '管理员复核通过', opt: '同意办理，请按流程执行' });
+  } else if(stKey === 'rejected'){
+    nodes.push({ nm: '管理员 · 已退回', st: 'rej', meta: '流程终止', opt: '驳回原因：' + (r.rejectReason || '申请信息不完整，请补充后重新提交') });
+  } else {
+    nodes.push({ nm: '管理员 · 待复核', st: 'wait', meta: '等待管理员复核', opt: '' });
+  }
+  var colorMap = { done: '#0F8A5F', doing: '#B45309', wait: '#C0C0C0', rej: '#C7000B' };
+  var markMap = { done: '✓', doing: '●', wait: '○', rej: '✗' };
+
+  var h = '<div style="padding:0 15px 12px 59px"><div class="chain">';
+  nodes.forEach(function(nd){
+    var c = colorMap[nd.st] || '#999';
+    h += '<div class="cnode"><div class="cdot" style="background:' + c + '">' + markMap[nd.st] + '</div>' +
+      '<div class="cline"></div><div class="cbody">' +
+      '<div class="cnm" style="color:' + (nd.st === 'wait' ? '#999' : '#1A1A1A') + '">' + esc(nd.nm) + '</div>' +
+      '<div class="cmeta">' + esc(nd.meta) + '</div>' +
+      (nd.opt ? '<div class="copt">' + esc(nd.opt) + '</div>' : '') +
+      '</div></div>';
+  });
+  h += '</div>';
+  // P3-⑦：驳回的申请 -> 重新提交
+  if(stKey === 'rejected'){
+    h += '<button onclick="resubmitApply(\'' + r.id + '\')" style="width:100%;margin-top:2px;padding:10px;border:1px solid #C7000B;' +
+      'background:#fff;color:#C7000B;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit">重新提交</button>';
+  }
+  h += '</div>';
+  return h;
+}
+
+// P3-⑦：驳回后再提交（新开一条申请记录回到可填写状态）
+function resubmitApply(id){
+  var src = null;
+  (STORE.list('applies') || []).forEach(function(r){ if(r.id === id) src = r; });
+  if(!src){ toast('记录不存在'); return; }
+  var r = STORE.add('applies', {
+    pageId: src.pageId || '',
+    title: src.title || '业务申请',
+    cat: src.cat || '综合业务',
+    summary: '【重新提交】' + (src.summary || ''),
+    user: src.user, dept: src.dept, badge: src.badge,
+    status: '已提交',
+    resubmitCount: (src.resubmitCount || 0) + 1,
+    resubmitFrom: id
+  });
+  // 原记录标记为已重提，避免重复操作
+  src.resubmitted = true;
+  STORE.save();
+  APPLY_OPEN[r.id] = true;
+  toast('已重新提交 · 新单号 ' + r.id);
+  setTimeout(function(){ render(); }, 900);
+}
 
 
 </script>
