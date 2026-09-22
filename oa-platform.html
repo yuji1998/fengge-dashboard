@@ -488,8 +488,8 @@ window.OA_DATA = {
               "required": true
             },
             {
-              "label": "预计到达时间",
-              "type": "datetime",
+              "label": "来访起止时间",
+              "type": "daterange",
               "required": true
             }
           ],
@@ -3290,7 +3290,7 @@ const SLOT_LIB = {
 function _pad(n){ return n < 10 ? '0' + n : '' + n; }
 function _dateList(){
   const out = [], WK = ['日','一','二','三','四','五','六'];
-  const base = new Date(2026, 8, 17);   // 2026-09-17 为"今天"
+  const base = new Date(); base.setHours(0,0,0,0);   // 真实"今天"
   for(let i = 0; i < 14; i++){
     const d = new Date(base.getTime() + i * 86400000);
     const mm = d.getMonth() + 1, dd = d.getDate();
@@ -3303,6 +3303,59 @@ function _dateList(){
               lb: mm + '月' + dd + '日', sub: lb});
   }
   return out;
+}
+
+// ---- 来访起止时间（访客登记专用）----
+var VISIT_HOURS = ['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30',
+                   '12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30',
+                   '16:00','16:30','17:00','17:30','18:00'];
+function visitRange(pageId){
+  BOOK[pageId] = BOOK[pageId] || {};
+  var v = BOOK[pageId].visit || {};
+  return { date: v.date || '', start: v.start || '', end: v.end || '' };
+}
+function setVisit(pageId, key, val){
+  BOOK[pageId] = BOOK[pageId] || {};
+  var v = BOOK[pageId].visit = BOOK[pageId].visit || {};
+  v[key] = val;
+}
+// 第一步：选日期（跳过周末，展示 14 天内的工作日）
+function openVisitDate(pageId){
+  var list = _dateList().filter(function(x){
+    var d = new Date(x.val.replace(/-/g, '/'));
+    var w = d.getDay();
+    return w !== 0 && w !== 6;   // 仅工作日
+  });
+  var cur = visitRange(pageId);
+  PICKER = {
+    type: 'visit_date', pageId: pageId, title: '选择来访日期',
+    items: list.map(function(x){
+      return { val: x.val, lb: x.lb, sub: x.sub, sel: cur.date === x.val };
+    })
+  };
+  renderPicker();
+}
+// 第二步：选起止时间（先点开始，再点结束）
+function openVisitTime(pageId, dateStr){
+  var cur = visitRange(pageId);
+  PICKER = {
+    type: 'visit_start', pageId: pageId, dateStr: dateStr,
+    title: '选择开始时间（' + dateStr.slice(5).replace('-', '/') + '）',
+    items: VISIT_HOURS.map(function(x){
+      return { val: x, lb: x, sub: '', sel: cur.start === x };
+    })
+  };
+  renderPicker();
+}
+function openVisitEnd(pageId, dateStr, startVal){
+  PICKER = {
+    type: 'visit_end', pageId: pageId, dateStr: dateStr, startVal: startVal,
+    title: '选择结束时间（' + startVal + ' 之后）',
+    items: VISIT_HOURS.filter(function(x){ return x > startVal; }).map(function(x){
+      return { val: x, lb: x, sub: '', sel: false };
+    })
+  };
+  renderPicker();
 }
 
 function openPicker(type, pageId){
@@ -3326,6 +3379,29 @@ function pickItem(val){
   if(!PICKER) return;
   const it = PICKER.items.find(x => x.val === val);
   if(it && it.dis) return;
+  // 来访起止时间：日期 -> 开始时间 -> 结束时间
+  if(PICKER.type === 'visit_date'){
+    var _vp = PICKER.pageId;
+    setVisit(_vp, 'date', val);
+    setVisit(_vp, 'start', '');
+    setVisit(_vp, 'end', '');
+    openVisitTime(_vp, val);
+    return;
+  }
+  if(PICKER.type === 'visit_start'){
+    var _vp2 = PICKER.pageId, _vd = PICKER.dateStr;
+    setVisit(_vp2, 'start', val);
+    setVisit(_vp2, 'end', '');
+    openVisitEnd(_vp2, _vd, val);
+    return;
+  }
+  if(PICKER.type === 'visit_end'){
+    var _vp3 = PICKER.pageId;
+    setVisit(_vp3, 'end', val);
+    closePicker();
+    render();
+    return;
+  }
   if(PICKER.type === 'dept'){ pickDept(val); return; }
   // P2-四：改期流程（第一步选日期 -> 第二步选时段 -> 提交）
   if(PICKER.type === 'reschedule'){
@@ -4169,6 +4245,21 @@ function fieldHtml(f){
       '<button onclick="stepNum(\'' + k + '\',-1)">−</button>' +
       '<span id="sn_' + esc(k) + '">' + v + '</span>' +
       '<button onclick="stepNum(\'' + k + '\',1)">＋</button></div></div>';
+  }
+  // 来访起止时间：先选日期，再选起止时间（几点到几点）
+  if(type === 'daterange' || /起止时间/.test(name)){
+    const pid0 = f._pid || (window._curPid || '');
+    const st = visitRange(pid0);
+    const disp = st.date
+      ? (function(){
+          var mm = parseInt(st.date.split('-')[1], 10);
+          var dd = parseInt(st.date.split('-')[2], 10);
+          return mm + '月' + dd + '日 ' + (st.start || '--:--') + ' - ' + (st.end || '--:--');
+        })()
+      : '';
+    return '<div class="fitem" onclick="openVisitDate(\'' + pid0 + '\')" style="cursor:pointer">' + label +
+      '<div class="fval' + (disp ? '' : ' ph') + '" style="text-align:right">' + (disp || '请选择日期与时间') +
+      '<span class="farrow">›</span></div></div>';
   }
   if(/日期|时间|时段/.test(name)){
     const pid = f._pid || (window._curPid || '');
