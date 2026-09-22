@@ -80,7 +80,44 @@
       "id": "lucai",
       "name": "卤菜",
       "icon": "🍗",
-      "items": []
+      "items": [
+        {
+          "name": "卤牛肉",
+          "spec": "份",
+          "price": 38.0,
+          "stock": 20,
+          "sales": 0,
+          "tags": [
+            "招牌"
+          ]
+        },
+        {
+          "name": "卤鸡爪",
+          "spec": "份",
+          "price": 18.0,
+          "stock": 30,
+          "sales": 0,
+          "tags": [
+            "热销"
+          ]
+        },
+        {
+          "name": "爆鱼",
+          "spec": "份",
+          "price": 26.0,
+          "stock": 25,
+          "sales": 0,
+          "tags": []
+        },
+        {
+          "name": "盐水鸭",
+          "spec": "份",
+          "price": 32.0,
+          "stock": 18,
+          "sales": 0,
+          "tags": []
+        }
+      ]
     }
   ]
 }
