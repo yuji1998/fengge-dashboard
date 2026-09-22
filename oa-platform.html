@@ -377,7 +377,6 @@ body{
 </head>
 <body>
 <div id="phone">
-  <div id="statusbar"><span>9:41</span><span class="right">▮▮▮ ᯤ 🔋</span></div>
   <div id="nav"></div>
   <div id="screen"></div>
   <div id="specbtn" onclick="openSpec()" title="查看规格说明">ⓘ</div>
@@ -469,6 +468,18 @@ window.OA_DATA = {
             {
               "label": "被访部门",
               "type": "select",
+              "options": [
+                "办公室",
+                "人力资源部",
+                "财务会计部",
+                "金融科技部",
+                "公司金融业务部",
+                "个人金融业务部",
+                "风险管理部",
+                "安全保卫部",
+                "运行管理部",
+                "其他"
+              ],
               "required": true
             },
             {
@@ -1357,6 +1368,38 @@ window.OA_DATA = {
                 "其他"
               ],
               "required": true
+            },
+            {
+              "label": "车辆性质",
+              "type": "select",
+              "options": [
+                "员工车辆",
+                "客户车辆"
+              ],
+              "required": true
+            },
+            {
+              "label": "审批部门",
+              "type": "select",
+              "options": [
+                "中新支行",
+                "分行本部营业部",
+                "办公室",
+                "安全保卫部",
+                "财务会计部",
+                "公司金融业务部",
+                "个人金融业务部",
+                "运行管理部",
+                "其他"
+              ],
+              "required": true
+            },
+            {
+              "label": "申请人",
+              "type": "user_info",
+              "name": "张三",
+              "dept": "金融科技部",
+              "mode": "current_account"
             }
           ],
           "status": [
@@ -1497,6 +1540,17 @@ window.OA_DATA = {
             {
               "label": "用车时间",
               "type": "datetime_range",
+              "required": true
+            },
+            {
+              "label": "车型选择",
+              "type": "select",
+              "options": [
+                "轿车",
+                "商务车",
+                "大商务车（10人）",
+                "考斯特（17人以内）"
+              ],
               "required": true
             },
             {
@@ -1788,6 +1842,21 @@ window.OA_DATA = {
               "required": true
             },
             {
+              "label": "维修事项",
+              "type": "select",
+              "options": [
+                "灯管/照明更换",
+                "空调故障",
+                "水龙头/水管漏水",
+                "门锁/门禁故障",
+                "办公桌椅维修",
+                "墙面/地面修补",
+                "卫生间设施维修",
+                "其他"
+              ],
+              "required": true
+            },
+            {
               "label": "故障描述",
               "type": "textarea",
               "required": true
@@ -1805,6 +1874,13 @@ window.OA_DATA = {
                 "紧急"
               ],
               "required": true
+            },
+            {
+              "label": "申请人",
+              "type": "user_info",
+              "name": "张三",
+              "dept": "金融科技部",
+              "mode": "current_account"
             }
           ],
           "status": [
@@ -2525,7 +2601,12 @@ const MENU_FALLBACK_SNACK = { categories: [
     {name:'菜肉水饺（生）', spec:'15只/盒', price:12, stock:14, sales:0, tags:['库存紧张']},
     {name:'菜肉馄饨（生）', spec:'15只/盒', price:12, stock:12, sales:0, tags:['库存紧张']}
   ]},
-  { id:'lucai', name:'卤菜', icon:'🍗', items: [] }
+  { id:'lucai', name:'卤菜', icon:'🍗', items:[
+    {name:'卤牛肉', spec:'份', price:38, stock:20, sales:0, tags:['招牌']},
+    {name:'卤鸡爪', spec:'份', price:18, stock:30, sales:0, tags:['热销']},
+    {name:'爆鱼',   spec:'份', price:26, stock:25, sales:0, tags:[]},
+    {name:'盐水鸭', spec:'份', price:32, stock:18, sales:0, tags:[]}
+  ]}
 ]};
 
 function getMenuByPage(pageId){
@@ -2587,18 +2668,39 @@ function cartSum(pageId){
 }
 
 // ---- 取餐时段生成 ----
+// 面点卤菜：取餐方式固定 4 选 1（次日日期每天自动更新）
+function nextDayLabel(offset){
+  var d = new Date();
+  d.setDate(d.getDate() + (offset || 1));
+  return (d.getMonth()+1) + '/' + d.getDate();
+}
 function pickSlots(pageId){
-  var out = [], start = isSnack(pageId) ? 7*60 : 9*60+30, end = isSnack(pageId) ? 18*60 : 19*60;
+  if(isSnack(pageId)){
+    // 次日自动更新：每次渲染都按"明天"的日期重算
+    var nd = nextDayLabel(1);
+    return [
+      {val:'next_noon',   lb:'次日 12:00-13:00', sub:nd + ' 取餐'},
+      {val:'next_evening',lb:'次日 17:30-19:00', sub:nd + ' 取餐'},
+      {val:'self_pick',   lb:'各行自取',          sub:'到店自取'},
+      {val:'delivery',    lb:'分行派送',          sub:'送至分行'}
+    ];
+  }
+  var out = [], start = 9*60+30, end = 19*60;
   for(var t = start; t <= end; t += 30){
     var h = Math.floor(t/60), m = t%60;
-    out.push((h<10?'0':'')+h + ':' + (m<10?'0':'')+m);
+    out.push({val:(h<10?'0':'')+h + ':' + (m<10?'0':'')+m});
   }
   return out;
 }
 function openTimePicker(pageId){
   var cur = (BOOK[pageId] && BOOK[pageId].pick) || '';
-  var items = pickSlots(pageId).map(function(x){ return {val:x, lb:x, sub:'', sel: cur===x}; });
-  PICKER = { type:'pick', pageId:pageId, title:'选择取餐时间', items:items };
+  var items = pickSlots(pageId).map(function(x){
+    var val = (typeof x === 'object') ? x.val : x;
+    var lb  = (typeof x === 'object') ? x.lb  : x;
+    var sub = (typeof x === 'object') ? (x.sub || '') : '';
+    return {val:val, lb:lb, sub:sub, sel: cur===val};
+  });
+  PICKER = { type:'pick', pageId:pageId, title: isSnack(pageId) ? '选择取餐方式' : '选择取餐时间', items:items };
   renderPicker();
 }
 
@@ -2650,7 +2752,7 @@ function renderMenuPage(screen, p, m){
   if(ci >= menu.categories.length) ci = 0;
   var cat = menu.categories[ci];
 
-  h += '<div class="wrap" style="margin-bottom:12px"><div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">';
+  h += '<div class="wrap" style="margin-top:14px;margin-bottom:14px"><div style="display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px">';
   menu.categories.forEach(function(c, i){
     var on = i === ci;
     h += '<div onclick="menuCatPick(\'' + p.id + '\',' + i + ')" style="flex:0 0 auto;padding:7px 15px;border-radius:16px;font-size:12.5px;white-space:nowrap;cursor:pointer;' +
@@ -3864,7 +3966,7 @@ function renderHome(screen){
   h += '<div class="notice-bar">' +
        '<div class="nb-ic">' + SVG_ICON.row_recent + '</div>' +
        '<div class="nb-track"><div class="nb-txt">' +
-       '欢迎体验分行员工综合服务平台功能！' +
+       '分行员工综合服务平台demo测试系统测试' +
        '</div></div></div>';
 
   // 最近使用
