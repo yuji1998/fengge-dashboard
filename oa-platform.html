@@ -157,6 +157,36 @@ body{
   padding:1px 5px;border-radius:7px;border:1.5px solid #fff;line-height:1.4;
 }
 
+/* ============ 通知栏跑马灯（首页金刚区下方） ============ */
+.notice-bar{
+  display:flex;align-items:center;gap:8px;
+  margin:0 14px 12px;padding:0 12px;height:36px;
+  background:#FFF5F5;border:1px solid #FFE3E3;border-radius:10px;
+  overflow:hidden;position:relative;
+}
+.notice-bar .nb-ic{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  width:18px;height:18px;color:var(--icbc);
+}
+.notice-bar .nb-ic svg{width:16px;height:16px;display:block;}
+.notice-bar .nb-track{
+  flex:1;min-width:0;overflow:hidden;position:relative;height:100%;
+}
+.notice-bar .nb-txt{
+  position:absolute;top:0;left:0;height:100%;
+  display:flex;align-items:center;white-space:nowrap;
+  font-size:12px;color:#C7000B;letter-spacing:.2px;
+  will-change:transform;
+  animation:nb-marquee 14s linear infinite;
+}
+@keyframes nb-marquee{
+  0%   { transform:translateX(100%); }
+  100% { transform:translateX(-100%); }
+}
+@keyframes nb-marquee-2{
+  0%   { transform:translateX(0); }
+  100% { transform:translateX(-200%); }
+}
 /* ============ 模块卡（首页下方） ============ */
 .sect-hd{
   display:flex;align-items:center;justify-content:space-between;
@@ -3829,6 +3859,13 @@ function renderHome(screen){
       '<div class="lb">' + k.lb + '</div></div>';
   });
   h += '</div></div>';
+
+  // 通知栏跑马灯（金刚区下方）
+  h += '<div class="notice-bar">' +
+       '<div class="nb-ic">' + SVG_ICON.row_recent + '</div>' +
+       '<div class="nb-track"><div class="nb-txt">' +
+       '欢迎体验分行员工综合服务平台功能！' +
+       '</div></div></div>';
 
   // 最近使用
   var rec = getRecent();
