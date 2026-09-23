@@ -319,9 +319,10 @@ body{
 .rec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px;}
 .rec-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;min-width:0;}
 .rec-item:active{transform:scale(.96);}
-.rec-ic{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#F5F5F5;flex:none;}
-.rec-t{font-size:12px;color:#333;text-align:center;line-height:1.3;max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-.rec-s{font-size:11px;color:#A0A0A0;text-align:center;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rec-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex:none;transition:transform .2s;}
+.rec-ic svg{width:24px;height:24px;display:block;}
+.rec-item:active .rec-ic{transform:scale(.92);}
+.rec-t{font-size:12.5px;color:#333;text-align:center;line-height:1.3;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:500;}
 
 /* ============ 时段 ============ */
 .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:14px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;}
@@ -2491,7 +2492,17 @@ const T = window.OA_TOKENS;
 //   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
 //   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
 // ============================================================
-const APP_VERSION = '1.2';
+const APP_VERSION = '1.3';
+
+// 色值 -> 淡色底（用于最近使用图标底色）
+function hexToTint(hex, a){
+  var c = String(hex||'#666666').trim();
+  if(c.charAt(0) === '#') c = c.slice(1);
+  if(c.length === 3) c = c.charAt(0)+c.charAt(0)+c.charAt(1)+c.charAt(1)+c.charAt(2)+c.charAt(2);
+  var n = parseInt(c, 16);
+  if(isNaN(n)) return 'rgba(102,102,102,' + a + ')';
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')';
+}
 
 const SVG_ICON = {
   canteen_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10L12 3L21 10V20H3V10Z\"/><path d=\"M9 20V14H15V20\"/></svg>",
@@ -4115,10 +4126,10 @@ function renderHome(screen){
     recPages.slice(0,4).forEach(function(p){
       var modName = p._mod ? p._mod.name : '';
       var col = (p._mod && p._mod.color) ? p._mod.color : '#666';
+      var tint = hexToTint(col, .12);
       h += '<div class="rec-item" onclick="go(\'#/' + p.id + '\')">' +
-        '<div class="rec-ic" style="background:#F5F5F5;color:' + col + '">' + SVG_ICON.row_recent + '</div>' +
+        '<div class="rec-ic" style="background:' + tint + ';color:' + col + '">' + (SVG_ICON[p.id] || SVG_ICON.row_recent) + '</div>' +
         '<div class="rec-t">' + esc(p.title) + '</div>' +
-        '<div class="rec-s">' + esc(modName) + '</div>' +
       '</div>';
     });
     h += '</div></div>';
