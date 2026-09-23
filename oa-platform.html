@@ -156,6 +156,53 @@ body{
   position:absolute;top:-3px;right:-3px;font-size:8.5px;background:#FF8A00;color:#fff;
   padding:1px 5px;border-radius:7px;border:1.5px solid #fff;line-height:1.4;
 }
+/* 金刚区右上角编辑按钮 */
+.kk-edit-btn{
+  position:absolute;top:8px;right:10px;width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  color:#BBB;background:transparent;transition:color .15s,background .15s;z-index:6;
+}
+.kk-edit-btn svg{width:15px;height:15px;display:block;}
+.kk-edit-btn:active{color:#666;background:#F2F2F2;}
+/* 金刚区空状态 */
+.kk-empty{padding:16px 8px 20px;text-align:center;font-size:12.5px;color:#AAA;}
+/* 金刚区编辑面板 */
+.kk-ed-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.kk-ed-hd .t{font-size:15.5px;font-weight:600;color:#1A1A1A;}
+.kk-ed-hd .x{font-size:20px;color:#BBB;cursor:pointer;line-height:1;padding:0 4px;}
+.kk-ed-sub{font-size:12px;color:#999;margin:14px 0 8px;display:flex;justify-content:space-between;align-items:center;}
+.kk-ed-item{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid #F0F0F0;
+  border-radius:9px;margin-bottom:7px;background:#FCFCFC;
+}
+.kk-ed-item .ico{
+  width:30px;height:30px;border-radius:50%;flex:none;display:flex;
+  align-items:center;justify-content:center;
+}
+.kk-ed-item .ico svg{width:16px;height:16px;display:block;}
+.kk-ed-item .nm{flex:1;font-size:13px;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.kk-ed-item .nm.bad{color:#C7000B;}
+.kk-ed-item .nm.bad::after{content:' ·已失效';font-size:11px;color:#C7000B;}
+.kk-ed-btns{display:flex;gap:5px;flex:none;}
+.kk-ed-btns button{
+  width:26px;height:26px;border:1px solid #E6E6E6;background:#fff;border-radius:6px;
+  color:#555;font-size:13px;cursor:pointer;font-family:inherit;padding:0;line-height:1;
+}
+.kk-ed-btns button:disabled{color:#DDD;border-color:#F2F2F2;}
+.kk-ed-btns button.del{color:#C7000B;border-color:#FADCDC;}
+.kk-ed-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.kk-ed-tag{
+  font-size:12px;padding:5px 10px;border-radius:20px;background:#F5F5F5;color:#555;
+  cursor:pointer;border:1px solid transparent;
+}
+.kk-ed-tag.on{background:#EFEFEF;color:#BBB;cursor:default;}
+.kk-ed-tag.add:active{background:#E8F0FA;color:#1E5AA8;border-color:#CFE0F4;}
+.kk-ed-ft{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:1px solid #F2F2F2;}
+.kk-ed-ft .rst{font-size:12.5px;color:#999;cursor:pointer;text-decoration:underline;}
+.kk-ed-ft .ok{
+  padding:9px 22px;border:none;border-radius:8px;background:#C7000B;color:#fff;
+  font-size:14px;cursor:pointer;font-family:inherit;
+}
 
 /* ============ 通知栏跑马灯（首页金刚区下方） ============ */
 .notice-bar{
@@ -2492,7 +2539,7 @@ const T = window.OA_TOKENS;
 //   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
 //   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
 // ============================================================
-const APP_VERSION = '1.3';
+const APP_VERSION = '1.4';
 
 // 色值 -> 淡色底（用于最近使用图标底色）
 function hexToTint(hex, a){
@@ -2557,6 +2604,8 @@ row_recent: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke=
 row_repair: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a3.6 3.6 0 0 0 4.7 4.7l-8 8a2.3 2.3 0 0 1-3.3-3.3l8-8z"/><path d="M6.5 3.5l1.8 1.8M3.5 6.5l1.8 1.8"/></svg>',
   row_food: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v8a2 2 0 0 0 4 0V3M7 11v10"/><path d="M16.5 3c-1.4 1.2-2 3-2 5s.6 3.4 2 4v9"/></svg>',
   row_star: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9z"/></svg>',
+  // 金刚区/最近使用通用兜底图标（页面没有专属图标时使用）
+  _fallback: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg>',
 };
 const SVG_MI = {
   canteen: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20V10a8 8 0 0 1 16 0v10\" /><path d=\"M12 2v18\" /></svg>",
@@ -4071,18 +4120,166 @@ function render(){
   else renderDetail(screen, p, mod);
 }
 
+// ============================================================
+// 金刚区自定义编辑（2026-09-23）
+//   数据：localStorage['icbc_kk_custom'] = 有序的页面 id 数组
+//   样式：从 KK_MAP 反查（KK 保留作为默认值 + 样式表）
+// ============================================================
+// 默认金刚区（原写死在 renderHome 内，2026-09-23 提到模块级供编辑功能使用）
+const KK = [
+  {id:'canteen_menu',          lb:'每周餐单', ic:SVG_ICON.canteen_menu, bg:'#FFEDEC', fg:'#C7000B'},
+  {id:'canteen_coffee_order',  lb:'西点咖啡', ic:SVG_ICON.canteen_coffee_order, bg:'#FFF1E8', fg:'#B45309'},
+  {id:'canteen_snack_order',   lb:'面点卤菜', ic:SVG_ICON.canteen_snack_order, bg:'#FDF0E4', fg:'#A16207'},
+  {id:'office_car_apply',      lb:'用车申请', ic:SVG_ICON.office_car_apply, bg:'#E9F6EF', fg:'#0F8A5F'},
+  {id:'life_haircut',          lb:'理发预约', ic:SVG_ICON.life_haircut, bg:'#F0EBFA', fg:'#6D3BBF'},
+  {id:'office_property_repair',lb:'物业维修', ic:SVG_ICON.office_property_repair, bg:'#FFF7E6', fg:'#B45309'},
+  {id:'office_item_apply',     lb:'物品申请', ic:SVG_ICON.office_item_apply, bg:'#EAF2FB', fg:'#1E5AA8'},
+  {id:'visitor_register',      lb:'访客登记', ic:SVG_ICON.visitor_register, bg:'#FDECEC', fg:'#C7000B'}
+];
+const KK_MAP = {};
+KK.forEach(function(k){ KK_MAP[k.id] = k; });
+
+function getKKIds(){
+  var arr = null;
+  try{ arr = JSON.parse(localStorage.getItem('icbc_kk_custom') || 'null'); }catch(e){ arr = null; }
+  if(arr && arr.length){
+    var ok = arr.filter(function(id){ return pageById(id) !== undefined; });
+    if(ok.length) return ok;
+  }
+  return KK.map(function(k){ return k.id; });
+}
+function saveKKIds(ids){
+  try{ localStorage.setItem('icbc_kk_custom', JSON.stringify(ids)); }catch(e){}
+}
+function resetKKIds(){
+  try{ localStorage.removeItem('icbc_kk_custom'); }catch(e){}
+}
+function getKKItem(id){
+  var d = KK_MAP[id];
+  if(d) return d;
+  var p = pageById(id);
+  return {
+    id: id,
+    lb: p ? p.title : id,
+    ic: SVG_ICON[id] || SVG_ICON._fallback,
+    bg: '#F0F4F8',
+    fg: '#4A5568'
+  };
+}
+// 金刚区渲染（替代原写死的 KK.forEach）
+function renderKK(){
+  var ids = getKKIds();
+  var h = '<div class="kingkong"><span class="kk-edit-btn" onclick="openKKEditor()" title="编辑金刚区">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' +
+          '</span>';
+  if(!ids.length){
+    h += '<div class="kk-empty">暂无常用入口，点击右上角编辑添加</div></div>';
+    return h;
+  }
+  h += '<div class="kk-grid">';
+  ids.forEach(function(id){
+    var k = getKKItem(id);
+    var p = pageById(id);
+    var badge = (p && (p.status||[]).includes('待上线')) ? '<span class="badge">待上线</span>' : '';
+    h += '<div class="kk" onclick="go(\'#/' + id + '\')">' +
+      '<div class="ic" style="background:' + k.bg + ';color:' + k.fg + '">' + (k.ic || SVG_ICON._fallback) + badge + '</div>' +
+      '<div class="lb">' + esc(k.lb) + '</div></div>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+// 编辑面板临时状态
+var KK_EDIT = [];
+var KK_MAX = 12;
+
+function openKKEditor(){
+  KK_EDIT = getKKIds().slice();
+  renderKKEditor();
+  document.getElementById('spec').classList.add('on');
+}
+function closeKKEditor(){ closeSpec(); }
+
+function renderKKEditor(){
+  var box = document.getElementById('specbox');
+  var all = allPages();
+  var h = '<div class="kk-ed-hd"><div class="t">编辑金刚区</div>' +
+          '<div class="x" onclick="closeKKEditor()">✕</div></div>';
+
+  // 已添加
+  h += '<div class="kk-ed-sub"><span>已添加 (' + KK_EDIT.length + '/' + KK_MAX + ')</span>' +
+       '<span style="font-size:11px;color:#BBB">↑↓ 调序 · ✕ 移除</span></div>';
+  if(!KK_EDIT.length){
+    h += '<div style="font-size:12.5px;color:#BBB;padding:10px 0">还没有添加入口，从下方选择</div>';
+  }else{
+    KK_EDIT.forEach(function(id, i){
+      var p = pageById(id);
+      var k = getKKItem(id);
+      h += '<div class="kk-ed-item">' +
+        '<div class="ico" style="background:' + k.bg + ';color:' + k.fg + '">' + (k.ic || SVG_ICON._fallback) + '</div>' +
+        '<div class="nm' + (p ? '' : ' bad') + '">' + esc(k.lb) + '</div>' +
+        '<div class="kk-ed-btns">' +
+          '<button onclick="kkMove(' + i + ',-1)"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+          '<button onclick="kkMove(' + i + ',1)"' + (i === KK_EDIT.length - 1 ? ' disabled' : '') + '>↓</button>' +
+          '<button class="del" onclick="kkRemove(\'' + id + '\')">✕</button>' +
+        '</div></div>';
+    });
+  }
+
+  // 可添加
+  var full = KK_EDIT.length >= KK_MAX;
+  h += '<div class="kk-ed-sub"><span>添加入口' + (full ? '（已达上限 ' + KK_MAX + ' 个）' : '') + '</span></div>';
+  h += '<div class="kk-ed-tags">';
+  all.forEach(function(p){
+    var on = KK_EDIT.indexOf(p.id) >= 0;
+    h += '<span class="kk-ed-tag' + (on ? ' on' : (full ? '' : ' add')) + '"' +
+      (on || full ? '' : ' onclick="kkAdd(\'' + p.id + '\')"') + '>' +
+      (on ? '✓ ' : '+ ') + esc(p.title) + '</span>';
+  });
+  h += '</div>';
+
+  // 底部
+  h += '<div class="kk-ed-ft">' +
+       '<span class="rst" onclick="kkReset()">恢复默认</span>' +
+       '<button class="ok" onclick="kkConfirm()">完成</button></div>';
+  box.innerHTML = h;
+}
+
+function kkMove(idx, dir){
+  var t = idx + dir;
+  if(t < 0 || t >= KK_EDIT.length) return;
+  var item = KK_EDIT.splice(idx, 1)[0];
+  KK_EDIT.splice(t, 0, item);
+  renderKKEditor();
+}
+function kkRemove(id){
+  KK_EDIT = KK_EDIT.filter(function(x){ return x !== id; });
+  renderKKEditor();
+}
+function kkAdd(id){
+  if(KK_EDIT.length >= KK_MAX) return;
+  if(KK_EDIT.indexOf(id) >= 0) return;
+  KK_EDIT.push(id);
+  renderKKEditor();
+}
+function kkReset(){
+  if(!confirm('确定恢复默认 8 项？')) return;
+  resetKKIds();
+  closeKKEditor();
+  render();
+}
+function kkConfirm(){
+  var ids = KK_EDIT.filter(function(id){ return pageById(id) !== undefined; });
+  if(!ids.length){
+    if(!confirm('金刚区将为空，确定？')) return;
+  }
+  saveKKIds(ids);
+  closeKKEditor();
+  render();
+}
+
 function renderHome(screen){
   renderNav({title:'办公室综合服务平台', back:false, icbc:true});
-  const KK = [
-    {id:'canteen_menu',          lb:'每周餐单', ic:SVG_ICON.canteen_menu, bg:'#FFEDEC', fg:'#C7000B'},
-    {id:'canteen_coffee_order',  lb:'西点咖啡', ic:SVG_ICON.canteen_coffee_order, bg:'#FFF1E8', fg:'#B45309'},
-    {id:'canteen_snack_order',   lb:'面点卤菜', ic:SVG_ICON.canteen_snack_order, bg:'#FDF0E4', fg:'#A16207'},
-    {id:'office_car_apply',      lb:'用车申请', ic:SVG_ICON.office_car_apply, bg:'#E9F6EF', fg:'#0F8A5F'},
-    {id:'life_haircut',          lb:'理发预约', ic:SVG_ICON.life_haircut, bg:'#F0EBFA', fg:'#6D3BBF'},
-    {id:'office_property_repair',lb:'物业维修', ic:SVG_ICON.office_property_repair, bg:'#FFF7E6', fg:'#B45309'},
-    {id:'office_item_apply',     lb:'物品申请', ic:SVG_ICON.office_item_apply, bg:'#EAF2FB', fg:'#1E5AA8'},
-    {id:'visitor_register',      lb:'访客登记', ic:SVG_ICON.visitor_register, bg:'#FDECEC', fg:'#C7000B'}
-  ];
   let h = '';
   h += '<div class="icbc-hero">' +
     '<div class="row1">' +
@@ -4094,16 +4291,8 @@ function renderHome(screen){
 
   '</div>';
 
-  // 金刚区
-  h += '<div class="kingkong"><div class="kk-grid">';
-  KK.forEach(k => {
-    const p = pageById(k.id);
-    const badge = (p && (p.status||[]).includes('待上线')) ? '<span class="badge">待上线</span>' : '';
-    h += '<div class="kk" onclick="go(\'#/' + k.id + '\')">' +
-      '<div class="ic" style="background:' + k.bg + ';color:' + k.fg + '">' + k.ic + badge + '</div>' +
-      '<div class="lb">' + k.lb + '</div></div>';
-  });
-  h += '</div></div>';
+  // 金刚区（用户可自定义编辑，见 renderKK）
+  h += renderKK();
 
   // 通知栏跑马灯（金刚区下方）
   // 版本号统一取 APP_VERSION（单一来源，勿在别处硬编码）
