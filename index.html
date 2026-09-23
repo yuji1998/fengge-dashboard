@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·数据可视化驾驶舱（2026-09-22收盘）</title>
+<title>丰哥·数据可视化驾驶舱（2026-09-23收盘）</title>
 <script>
 /* ECharts 多CDN动态加载+自动回退（国内网络首选npmmirror，失败依次回退） */
 (function(){
@@ -133,7 +133,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
-    <span id="dataDate">数据：2026-09-22 收盘</span>
+    <span id="dataDate">数据：2026-09-23 收盘</span>
     <span id="clock"></span>
     <div class="switch-wrap" id="switchWrap" title="点击尝试连接新浪行情（需本地服务器或代理）">
       <div class="switch" id="switchBtn"></div>
@@ -146,12 +146,12 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <section class="cards">
   <div class="card">
     <div class="label">总市值</div>
-    <div class="value">¥179,123</div>
+    <div class="value">¥178,450</div>
     <div class="sub">3 只持仓合计</div>
   </div>
   <div class="card">
     <div class="label">总浮亏</div>
-    <div class="value neg">¥-18,732</div>
+    <div class="value neg">¥-19,405</div>
     <div class="sub">较持仓成本</div>
   </div>
   <div class="card">
@@ -161,8 +161,8 @@ main{ display:flex; flex-direction:column; gap:14px; }
   </div>
   <div class="card">
     <div class="label">今日大盘</div>
-    <div class="value pos">+0.06%</div>
-    <div class="sub">上证指数 3,952.13</div>
+    <div class="value neg">-0.39%</div>
+    <div class="sub">上证指数 3,936.52</div>
   </div>
 </section>
 
@@ -171,7 +171,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
   <div class="panel">
     <h2>⚠️ 持仓风险监控</h2>
     <div class="row row-risk" style="margin-top:10px;">
-      <div class="risk-card"><div class="name">莱克电气 </div><div class="metric"><span>Beta</span><span>0.88</span></div><div class="metric"><span>年化波动率</span><span>49.9%</span></div><div class="metric"><span>止损位</span><span>25</span></div><div class="metric"><span>集中度</span><span>10.9%</span></div><div class="metric"><span>现价</span><span>32.44</span></div></div><div class="risk-card"><div class="name">立讯精密 </div><div class="metric"><span>Beta</span><span>1.99</span></div><div class="metric"><span>年化波动率</span><span>55.9%</span></div><div class="metric"><span>止损位</span><span>50</span></div><div class="metric"><span>集中度</span><span>30.6%</span></div><div class="metric"><span>现价</span><span>54.84</span></div></div><div class="risk-card"><div class="name">天孚通信 <span class="warn">集中58%超限</span></div><div class="metric"><span>Beta</span><span>2.85</span></div><div class="metric"><span>年化波动率</span><span>94.0%</span></div><div class="metric"><span>止损位</span><span>255</span></div><div class="metric"><span>集中度</span><span>58.5%</span></div><div class="metric"><span>现价</span><span>275.84</span></div></div>
+      <div class="risk-card"><div class="name">莱克电气 </div><div class="metric"><span>Beta</span><span>0.88</span></div><div class="metric"><span>年化波动率</span><span>49.9%</span></div><div class="metric"><span>止损位</span><span>25</span></div><div class="metric"><span>集中度</span><span>10.9%</span></div><div class="metric"><span>现价</span><span>32.38</span></div></div><div class="risk-card"><div class="name">立讯精密 </div><div class="metric"><span>Beta</span><span>1.99</span></div><div class="metric"><span>年化波动率</span><span>55.9%</span></div><div class="metric"><span>止损位</span><span>50</span></div><div class="metric"><span>集中度</span><span>30.5%</span></div><div class="metric"><span>现价</span><span>54.37</span></div></div><div class="risk-card"><div class="name">天孚通信 <span class="warn">集中59%超限</span></div><div class="metric"><span>Beta</span><span>2.85</span></div><div class="metric"><span>年化波动率</span><span>94.0%</span></div><div class="metric"><span>止损位</span><span>255</span></div><div class="metric"><span>集中度</span><span>58.6%</span></div><div class="metric"><span>现价</span><span>275.40</span></div></div>
     </div>
   </div>
 
@@ -241,7 +241,7 @@ plChart.setOption(Object.assign({}, animOpt, {
   xAxis: { type: 'value', axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
   yAxis: { type: 'category', data: ["莱克电气", "立讯精密", "天孚通信"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
   series: [{ name: '持仓盈亏', type: 'bar', barWidth: 16,
-    data: [-1146.0, -10039.0, -7546.8],
+    data: [-1182.0, -10509.0, -7714.0],
     itemStyle: { color: '#3fb950', borderRadius: [0, 6, 6, 0] },
     label: { show: true, position: 'right', color: '#3fb950', fontSize: 12,
       formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); } }
@@ -250,9 +250,9 @@ plChart.setOption(Object.assign({}, animOpt, {
 
 /* 3. 上证指数当日走势 + 成交额副轴 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
-var lineData = [0, 3955.92, 3952.13];
+var lineData = [3942.33, 3941.29, 3936.52];
 var lineLabels = ["早盘", "午盘", "收盘"];
-var lineAmts = [0.0, 7089.7, 10080.0];
+var lineAmts = [986.1, 5686.6, 8341.3];
 lineChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
@@ -265,7 +265,7 @@ lineChart.setOption(Object.assign({}, animOpt, {
   grid: { left: 60, right: 70, top: 36, bottom: 42 },
   xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
   yAxis: [
-    { type: 'value', min: -5, max: 3961, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+    { type: 'value', min: 3932, max: 3947, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
     { type: 'value', name: '成交额(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: { color: '#d29922', fontSize: 11 }, splitLine: { show: false }, axisLine: { show: false } }
   ],
   series: [
@@ -293,7 +293,7 @@ donutChart.setOption(Object.assign({}, animOpt, {
     itemStyle: { borderRadius: 6, borderColor: '#0d1117', borderWidth: 2 },
     label: { show: true, color: '#e6edf3', fontSize: 11, formatter: '{b}\n¥{c}  {d}%' },
     emphasis: { label: { show: true, fontWeight: 'bold', fontSize: 14 } },
-    data: [{"value": 19464, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 54840, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 104819, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
+    data: [{"value": 19428, "name": "莱克电气", "itemStyle": {"color": "#58a6ff"}}, {"value": 54370, "name": "立讯精密", "itemStyle": {"color": "#f85149"}}, {"value": 104652, "name": "天孚通信", "itemStyle": {"color": "#f0b429"}}]
   }]
 }));
 
