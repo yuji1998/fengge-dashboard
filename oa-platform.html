@@ -140,7 +140,8 @@ body{
 .ad-hero{width:100%;display:block;background:#EDEDED;}
 .ad-body{background:#fff;margin:0 14px;margin-top:-14px;border-radius:12px;
   padding:18px 16px 20px;box-shadow:0 2px 12px rgba(0,0,0,.06);position:relative;}
-.ad-body h2{margin:0 0 10px;font-size:17px;color:#1A1A1A;font-weight:600;}
+.ad-body h2{margin:0 0 8px;font-size:17px;color:#1A1A1A;font-weight:600;}
+.ad-sub{font-size:12.5px;color:#C7000B;margin:0 0 10px;}
 .ad-body p{margin:0 0 16px;font-size:13px;color:#666;line-height:1.75;white-space:pre-wrap;}
 .ad-btn{width:100%;padding:12px;border:none;border-radius:9px;background:#C7000B;color:#fff;
   font-size:15px;font-family:inherit;cursor:pointer;}
@@ -2550,7 +2551,7 @@ const T = window.OA_TOKENS;
 //   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
 //   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
 // ============================================================
-const APP_VERSION = '1.5';
+const APP_VERSION = '1.6';
 
 // 色值 -> 淡色底（用于最近使用图标底色）
 function hexToTint(hex, a){
@@ -4357,19 +4358,21 @@ var OA_BANNERS = [
 // 轮播广告落地页配置（改文案/链接/图都改这里）
 var OA_ADS = {
   ad_1: {
-    title: '广告详情',
+    title: '财富研学馆',
     img: 'ad_1.jpg',
-    head: '活动详情',
-    body: '这里填写第一个广告的详细内容。',
+    head: '逐梦心愿·支付好礼',
+    sub: '财富研学馆',
+    body: '进入财富研学馆，学习金融知识、参与互动体验，\n完成指定任务即可领取支付好礼。',
     action: '立即参与',
-    target: ''            // 留空=不跳转；可填外部网址或内部路由 '#/xxx'
+    target: ''
   },
   ad_2: {
-    title: '广告详情',
+    title: '工银i豆乐园',
     img: 'ad_2.jpg',
-    head: '活动详情',
-    body: '这里填写第二个广告的详细内容。',
-    action: '立即参与',
+    head: '工银i豆乐园·浇水有礼',
+    sub: '入园签到浇水，每日有机会赢最高100豆',
+    body: '进入 i豆乐园签到浇水，每日浇水即有机会获得 i豆奖励。\n连续参与还有成长礼豆相送。',
+    action: '去参与',
     target: ''
   }
 };
@@ -4383,6 +4386,7 @@ function renderAdPage(screen, key){
   h += '<img class="ad-hero" src="' + a.img + '" alt="' + esc(a.head) + '" onerror="this.style.display=\'none\'">';
   h += '<div class="ad-body">';
   h += '<h2>' + esc(a.head) + '</h2>';
+  if(a.sub) h += '<div class="ad-sub">' + esc(a.sub) + '</div>';
   h += '<p>' + esc(a.body) + '</p>';
   if(a.action){
     var tap = a.target ? ' onclick="adAction(\'' + key + '\')"' : '';
