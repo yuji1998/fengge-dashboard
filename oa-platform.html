@@ -287,6 +287,14 @@ body{
 .stepper button:active{background:#F2F2F2;}
 .stepper span{min-width:22px;text-align:center;font-size:15px;font-weight:600;}
 
+/* ============ 最近使用（一行 4 个） ============ */
+.rec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px;}
+.rec-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;min-width:0;}
+.rec-item:active{transform:scale(.96);}
+.rec-ic{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#F5F5F5;flex:none;}
+.rec-t{font-size:12px;color:#333;text-align:center;line-height:1.3;max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.rec-s{font-size:11px;color:#A0A0A0;text-align:center;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
 /* ============ 时段 ============ */
 .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:14px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;}
 .slot{padding:9px 4px;border-radius:8px;border:1px solid #E8E8E8;font-size:12.5px;text-align:center;cursor:pointer;background:#fff;}
@@ -1910,7 +1918,6 @@ window.OA_DATA = {
         "数币",
         "员工建议反馈",
         "车位管理",
-        "健康打卡",
         "人力资源同步"
       ],
       "pages": [
@@ -2117,48 +2124,6 @@ window.OA_DATA = {
             "规划中"
           ],
           "note": "车位管理功能",
-          "module": "data_collection",
-          "module_name": "数据采集",
-          "color": "#6D4AA8",
-          "owner": "办公室",
-          "audience": ""
-        },
-        {
-          "id": "data_health_check",
-          "title": "健康打卡",
-          "route": "#/data/health-check",
-          "type": "form",
-          "service_target": "全体员工",
-          "departments": "办公室",
-          "priority": "三期",
-          "deps": "",
-          "systems": "",
-          "fields": [
-            {
-              "label": "体温",
-              "type": "number",
-              "required": true
-            },
-            {
-              "label": "健康状况",
-              "type": "radio",
-              "options": [
-                "正常",
-                "异常"
-              ],
-              "required": true
-            },
-            {
-              "label": "备注",
-              "type": "textarea",
-              "required": false
-            }
-          ],
-          "status": [
-            "已打卡",
-            "未打卡"
-          ],
-          "note": "健康打卡基础功能",
           "module": "data_collection",
           "module_name": "数据采集",
           "color": "#6D4AA8",
@@ -2492,6 +2457,14 @@ window.OA_TOKENS = {
 const P = window.OA_DATA;
 const T = window.OA_TOKENS;
 
+// ============================================================
+// 版本号（单一来源·勿在别处硬编码）
+//   规则（2026-09-23 丰哥定）：当前 V1.0；以后每次修改自动 +0.1
+//   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
+//   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
+// ============================================================
+const APP_VERSION = '1.1';
+
 const SVG_ICON = {
   canteen_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10L12 3L21 10V20H3V10Z\"/><path d=\"M9 20V14H15V20\"/></svg>",
   canteen_menu: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"16\" rx=\"2.5\"/><path d=\"M8 3v3M16 3v3M3.5 9.5h17\"/><path d=\"M8 13.5h3M8 17h3M14.5 13.5h1.5M14.5 17h1.5\"/></svg>",
@@ -2525,7 +2498,6 @@ const SVG_ICON = {
   data_digital_rmb: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 8l-4 8\"/><path d=\"M14 8l4 8\"/><line x1=\"8\" y1=\"12\" x2=\"16\" y2=\"12\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/></svg>",
   data_feedback: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><line x1=\"8\" y1=\"9\" x2=\"16\" y2=\"9\"/><line x1=\"8\" y1=\"13\" x2=\"13\" y2=\"13\"/></svg>",
   data_parking_mgmt: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M9 17V7h4a3 3 0 0 1 0 6H9\"/></svg>",
-  data_health_check: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 21C12 21 20 15 20 9C20 5.5 17.5 3 14.5 3C13 3 12 4 12 4C12 4 11 3 9.5 3C6.5 3 4 5.5 4 9C4 15 12 21 12 21Z\"/><path d=\"M8 12L11 15L16 9\"/></svg>",
   data_hr_sync: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21V19C4 16.8 5.8 15 8 15H16C18.2 15 20 16.8 20 19V21\"/><path d=\"M17 4L20 7L17 10\"/><path d=\"M20 7H13\"/><path d=\"M7 20L4 17L7 14\"/><path d=\"M4 17H11\"/></svg>",
   mgmt_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12L12 3L21 12\"/><path d=\"M5 10V21H19V10\"/><path d=\"M9 21V15H15V21\"/></svg>",
   mgmt_stats: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20H20\"/><path d=\"M8 20V14\"/><path d=\"M12 20V8\"/><path d=\"M16 20V10\"/></svg>",
@@ -2539,7 +2511,6 @@ const SVG_ICON = {
   row_cal: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/></svg>',
   row_doc: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h7l5 5v13a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 21V3z"/><path d="M13 3v5h5M9 13h6M9 17h4"/></svg>',
   row_wallet: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h11a2 2 0 0 1 2 2v1"/><rect x="3.5" y="8.5" width="17" height="11" rx="2.5"/><circle cx="16" cy="14" r="1.4" fill="currentColor" stroke="none"/></svg>',
-  row_health: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-9.6A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.5 2.8C19.5 15.4 12 20 12 20z"/></svg>',
   row_user: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"/></svg>',
   row_bell: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 4.2 1.5 5.5 1.5 5.5H5s1.5-1.3 1.5-5.5z"/><path d="M10.2 19a2 2 0 0 0 3.6 0"/></svg>',
   row_gear: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.6l1.4 2.5 2.8-.5.6 2.8 2.4 1.5-1.5 2.4 1.5 2.4-2.4 1.5-.6 2.8-2.8-.5L12 21.4l-1.4-2.5-2.8.5-.6-2.8L4.8 15l1.5-2.4L4.8 10l2.4-1.5.6-2.8 2.8.5z"/></svg>',
@@ -3025,6 +2996,32 @@ const WEEK_MENU = {
    "刀切",
    "花卷",
    "咸肉冬瓜汤"
+  ],
+  "周六": [
+   "水饺（8元）",
+   "馄饨（8元）",
+   "小排砂锅（10元）",
+   "干煎带鱼",
+   "西红柿炒蛋",
+   "茭白炒肉丝",
+   "青椒土豆丝",
+   "蒜蓉西兰花",
+   "米饭",
+   "紫菜蛋花汤",
+   "水果"
+  ],
+  "周日": [
+   "水饺（8元）",
+   "馄饨（8元）",
+   "小排砂锅（10元）",
+   "红烧鸡腿",
+   "花菜炒肉片",
+   "清炒时蔬",
+   "开洋白菜",
+   "油焖茄子",
+   "米饭",
+   "冬瓜排骨汤",
+   "酸奶"
   ]
  },
  "晚餐": {
@@ -3097,6 +3094,32 @@ const WEEK_MENU = {
    "绿豆粥",
    "雪菜蛋汤",
    "米饭"
+  ],
+  "周六": [
+   "水饺（8元）",
+   "馄饨（8元）",
+   "小排砂锅（10元）",
+   "红烧狮子头",
+   "清蒸鲈鱼",
+   "青椒肉丝",
+   "上汤菠菜",
+   "干煸四季豆",
+   "米饭",
+   "番茄蛋汤",
+   "水果"
+  ],
+  "周日": [
+   "水饺（8元）",
+   "馄饨（8元）",
+   "小排砂锅（10元）",
+   "糖醋排骨",
+   "茭白炒鳝丝",
+   "香菇青菜",
+   "肉末豆腐",
+   "清炒虾仁",
+   "米饭",
+   "老鸭汤",
+   "酸奶"
   ]
  },
  "夜宵": {
@@ -3215,7 +3238,7 @@ function shade(hex, pct){
 let MENU_MEAL = '早餐';
 let MENU_DAY  = '周一';
 const MEALS = ['早餐','午餐','晚餐','夜宵'];
-const DAYS  = ['周一','周二','周三','周四','周五'];
+const DAYS  = ['周一','周二','周三','周四','周五','周六','周日'];
 
 function menuPick(kind, val){
   if(kind === 'meal') MENU_MEAL = val;
@@ -3235,7 +3258,7 @@ function renderMenu(){
   h += '</div></div>';
   // 日期切换（夜宵不分日）
   if(MENU_MEAL !== '夜宵'){
-    h += '<div class="wrap" style="margin-bottom:12px"><div class="slots" style="grid-template-columns:repeat(5,1fr)">';
+    h += '<div class="wrap" style="margin-bottom:12px"><div class="slots" style="grid-template-columns:repeat(4,1fr)">';
     DAYS.forEach(d => {
       h += '<div class="slot' + (d === MENU_DAY ? ' on' : '') + '" onclick="menuPick(\'day\',\'' + d + '\')">' + d + '</div>';
     });
@@ -3249,12 +3272,16 @@ function renderMenu(){
   h += '<div class="wrap"><div class="form">';
   list.forEach((name, i) => {
     const isMd = /（明档）/.test(name);
-    const clean = name.replace('（明档）', '');
+    let clean = name.replace('（明档）', '');
+    const pm = clean.match(/（(\d+元)）/);
+    if(pm) clean = clean.replace(/（\d+元）/, '');
     h += '<div class="fitem"><div class="flabel" style="width:auto;flex:1">' +
       '<span style="color:#B0B0B0;font-size:12px;margin-right:8px">' + (i + 1) + '</span>' +
       esc(clean) +
       (isMd ? '<span style="margin-left:6px;font-size:10px;padding:1px 5px;border-radius:3px;background:' +
               C + '1A;color:' + C + '">明档</span>' : '') +
+      (pm ? '<span style="margin-left:6px;font-size:10px;padding:1px 5px;border-radius:3px;background:' +
+              C + '1A;color:' + C + ';font-weight:600">' + pm[1] + '</span>' : '') +
       '</div></div>';
   });
   h += '</div></div>';
@@ -4039,23 +4066,28 @@ function renderHome(screen){
   h += '</div></div>';
 
   // 通知栏跑马灯（金刚区下方）
+  // 版本号统一取 APP_VERSION（单一来源，勿在别处硬编码）
   h += '<div class="notice-bar">' +
        '<div class="nb-ic">' + SVG_ICON.row_recent + '</div>' +
        '<div class="nb-track"><div class="nb-txt">' +
        '分行员工综合服务平台demo测试系统测试' +
+       '　|　当前版本 V' + APP_VERSION +
        '</div></div></div>';
 
   // 最近使用
   var rec = getRecent();
   var recPages = rec.map(function(id){ return pageById(id); }).filter(function(p){ return p; });
   if(recPages.length >= 2){
-    h += '<div class="sect-hd"><div class="t"><i></i>最近使用</div></div><div class="wrap"><div class="list">';
+    h += '<div class="sect-hd"><div class="t"><i></i>最近使用</div></div>' +
+         '<div class="wrap"><div class="rec-grid">';
     recPages.slice(0,4).forEach(function(p){
-      h += '<div class="row" onclick="go(\'#/' + p.id + '\')">' +
-        '<div class="ri" style="background:#F3F3F3;color:#666">' + SVG_ICON.row_recent + '</div>' +
-        '<div class="rb"><div class="rt">' + esc(p.title) + '</div>' +
-        '<div class="rs">' + esc(p._mod ? p._mod.name : '') + '</div></div>' +
-        '<span class="arrow">›</span></div>';
+      var modName = p._mod ? p._mod.name : '';
+      var col = (p._mod && p._mod.color) ? p._mod.color : '#666';
+      h += '<div class="rec-item" onclick="go(\'#/' + p.id + '\')">' +
+        '<div class="rec-ic" style="background:#F5F5F5;color:' + col + '">' + SVG_ICON.row_recent + '</div>' +
+        '<div class="rec-t">' + esc(p.title) + '</div>' +
+        '<div class="rec-s">' + esc(modName) + '</div>' +
+      '</div>';
     });
     h += '</div></div>';
   }
@@ -4079,7 +4111,7 @@ function renderHome(screen){
 
   h += '<div class="demo-note"><b>原型说明</b>：可点击交互原型，供开发参考。数据均为演示数据。' +
        '右下角 <b>ⓘ</b> 可查看当前页面规格（路由 / 字段 / 依赖 / 对接系统）。</div>';
-  h += '<div class="copyright">中国工商银行苏州分行 · 办公室综合服务平台 手机端原型 v0.8</div>';
+  h += '<div class="copyright">中国工商银行苏州分行 · 办公室综合服务平台 手机端原型 V' + APP_VERSION + '</div>';
   screen.innerHTML = h;
 }
 
@@ -4091,7 +4123,7 @@ function renderService(screen){
     {t:'生活预约',   ids:['life_haircut','life_laundry','life_cleaning','life_venue','life_medical','life_gym','life_library','life_parking']},
     {t:'门禁访客',   ids:['access_home','visitor_register','visitor_list','access_log']},
     {t:'办公保障',   ids:['office_item_apply','office_car_apply','office_reception_apply','office_meeting_apply','office_overtime_apply','office_tech_repair','office_property_repair']},
-    {t:'信息与数据', ids:['data_bind_card','data_e_pay','data_digital_rmb','data_feedback','data_health_check','data_parking_mgmt','data_hr_sync']},
+    {t:'信息与数据', ids:['data_bind_card','data_e_pay','data_digital_rmb','data_feedback','data_parking_mgmt','data_hr_sync']},
     {t:'平台管理',   ids:['mgmt_stats','mgmt_attendance','mgmt_inspection','mgmt_push']}
   ];
   let h = '<div class="banner" style="background:var(--brand-grad)">' +
@@ -4138,8 +4170,6 @@ function renderMine(screen){
       '<div class="rb"><div class="rt">我的钱包</div><div class="rs">余额 · 流水明细 · 扣费协议</div></div>' +
       '<span class="tag ' + (Wallet.agreement().signed ? 'green' : 'orange') + '">' +
         (Wallet.agreement().signed ? '已签协议' : '未签协议') + '</span><span class="arrow">›</span></div>' +
-    '<div class="row" onclick="go(\'#/data_health_check\')"><div class="ri" style="background:#F0EDFA;color:#6D4AA8">' + SVG_ICON.row_health + '</div>' +
-      '<div class="rb"><div class="rt">健康打卡</div><div class="rs">每日健康状态记录</div></div><span class="arrow">›</span></div>' +
   '</div></div>';
   h += '<div class="sect-hd"><div class="t"><i></i>账号与设置</div></div><div class="wrap"><div class="list">' +
     '<div class="row" onclick="go(\'#/profile\')"><div class="ri" style="background:#FFEDEC;color:#C7000B">' + SVG_ICON.row_user + '</div>' +
@@ -4149,7 +4179,7 @@ function renderMine(screen){
     '<div class="row" onclick="toast(\'系统设置\')"><div class="ri" style="background:#F3F3F3">' + SVG_ICON.row_gear + '</div>' +
       '<div class="rb"><div class="rt">设置</div></div><span class="arrow">›</span></div>' +
   '</div></div>';
-  h += '<div class="copyright">办公室综合服务平台 · 手机端原型 v0.8</div>';
+  h += '<div class="copyright">办公室综合服务平台 · 手机端原型 V' + APP_VERSION + '</div>';
   screen.innerHTML = h;
 }
 
@@ -4223,8 +4253,7 @@ function tipFor(p){
     office_tech_repair:'科技维修提交后由科技部处理，可实时查看进度。',
     office_property_repair:'物业维修提交后由劳服公司处理，可实时查看进度。',
     data_feedback:'您的建议将直达办公室，可查看回复。',
-    data_health_check:'每日健康打卡，记录个人健康状态。',
-    data_bind_card:'绑定卡用于餐饮、门禁等场景的身份识别（需先对接总行智慧餐饮）。',
+      data_bind_card:'绑定卡用于餐饮、门禁等场景的身份识别（需先对接总行智慧餐饮）。',
     mgmt_push:'推送内容将定向发送至指定范围员工。'
   };
   return esc(map[p.id] || '请按提示填写下方信息。');
