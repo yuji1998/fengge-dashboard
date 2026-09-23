@@ -1653,8 +1653,8 @@ window.OA_DATA = {
               "options": [
                 "轿车",
                 "商务车",
-                "大商务车（10人）",
-                "考斯特（17人以内）"
+                "考斯特",
+                "租赁车"
               ],
               "required": true
             },
@@ -2560,7 +2560,7 @@ const T = window.OA_TOKENS;
 //   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
 //   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
 // ============================================================
-const APP_VERSION = '1.8';
+const APP_VERSION = '1.9';
 
 // 色值 -> 淡色底（用于最近使用图标底色）
 function hexToTint(hex, a){
@@ -3643,6 +3643,15 @@ function stepNum(k, d){
 function bookVal(pageId, kind){
   const b = BOOK[pageId] || {};
   return b[kind] || '';
+}
+
+// 公车申请：车型选择（2026-09-23 丰哥定：轿车 / 商务车 / 考斯特 / 租赁车）
+var CAR_TYPES = ['轿车', '商务车', '考斯特', '租赁车'];
+function setBookCarType(v){
+  if(!BOOK['office_car_apply']) BOOK['office_car_apply'] = {};
+  BOOK['office_car_apply'].car_type = v;
+  try{ localStorage.setItem('icbc_oa_formdraft', JSON.stringify(BOOK)); }catch(e){}
+  render();
 }
 
 // 各预约页应付金额（演示口径）
@@ -4737,6 +4746,22 @@ function renderForm(screen, p, m){
          '<div class="flabel" style="width:auto;flex:0 0 74px">预约时段</div>' +
          '<div class="fval" style="flex:1;text-align:right;color:' + (bs ? '#222' : '#B0B0B0') + '">' +
          (bs || '请选择') + '　<span style="color:#C0C0C0">›</span></div></div>';
+    h += '</div></div>';
+  }
+
+  // 公车申请：车型选择下拉（2026-09-23 丰哥定：轿车 / 商务车 / 考斯特 / 租赁车）
+  if(p.id === 'office_car_apply'){
+    var carType = bookVal(p.id, 'car_type') || '';
+    h += '<div class="sect-t">车型选择</div><div class="wrap"><div class="form">';
+    h += '<div class="fitem" style="flex-direction:column;align-items:stretch">' +
+         '<div class="flabel" style="width:auto;margin-bottom:8px"><em>*</em>车型选择</div>' +
+         '<select onchange="setBookCarType(this.value)" style="width:100%;background:#F7F7F9;border:0;border-radius:9px;' +
+         'padding:11px 10px;font-size:13.5px;color:' + (carType ? '#222' : '#B0B0B0') + ';font-family:inherit;outline:none;-webkit-appearance:none;appearance:none">' +
+         '<option value=""' + (carType ? '' : ' selected') + ' disabled>请选择车型</option>' +
+         ['轿车','商务车','考斯特','租赁车'].map(function(o){
+           return '<option value="' + o + '"' + (carType === o ? ' selected' : '') + '>' + o + '</option>';
+         }).join('') +
+         '</select></div>';
     h += '</div></div>';
   }
 
