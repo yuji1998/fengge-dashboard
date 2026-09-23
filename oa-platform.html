@@ -2560,7 +2560,7 @@ const T = window.OA_TOKENS;
 //   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
 //   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
 // ============================================================
-const APP_VERSION = '1.9';
+const APP_VERSION = '2.0';
 
 // 色值 -> 淡色底（用于最近使用图标底色）
 function hexToTint(hex, a){
@@ -4765,6 +4765,19 @@ function renderForm(screen, p, m){
     h += '</div></div>';
   }
 
+
+  // 公车申请：自动带出申请人 + 部门（按当前账号默认信息，2026-09-23 丰哥定）
+  if(p.id === 'office_car_apply'){
+    var _pf = getProfile();
+    h += '<div class="sect-t">申请用车人</div><div class="wrap"><div class="form">';
+    h += '<div class="fitem">' +
+         '<div style="width:34px;height:34px;border-radius:50%;background:' + m.color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin-right:11px;flex:0 0 34px">' +
+         esc(_pf.avatar || (_pf.name || '张').charAt(0)) + '</div>' +
+         '<div class="rb"><div class="rt" style="font-size:14px">' + esc(_pf.name) + '</div>' +
+         '<div class="rs">' + esc(_pf.dept) + ' · ' + esc(_pf.post || '') + '</div></div>' +
+         '<span class="tag green">按当前账号</span></div>';
+    h += '</div></div>';
+  }
 
   if(p.id === 'visitor_register'){
     // P3-①：生成邀请按钮（生成邀请码 + 二维码占位）
