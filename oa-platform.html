@@ -187,6 +187,34 @@ body{
   0%   { transform:translateX(0); }
   100% { transform:translateX(-200%); }
 }
+/* ============ Banner 轮播（跑马灯下方） ============ */
+.banner-wrap{
+  margin:0 14px 12px;position:relative;border-radius:10px;overflow:hidden;
+  height:165px;box-shadow:var(--shadow);background:#F3F3F3;
+}
+.banner-track{
+  display:flex;height:100%;
+  transition:transform .45s ease;
+  will-change:transform;
+}
+.banner-img{
+  width:100%;height:100%;object-fit:cover;flex:0 0 100%;
+  display:block;border:0;
+}
+.banner-dots{
+  position:absolute;left:0;right:0;bottom:8px;
+  display:flex;justify-content:center;gap:6px;
+  pointer-events:none;
+}
+.banner-dots .dot{
+  width:6px;height:6px;border-radius:3px;
+  background:rgba(255,255,255,.55);
+  transition:all .3s;
+}
+.banner-dots .dot.on{
+  background:#fff;width:16px;
+}
+
 /* ============ 模块卡（首页下方） ============ */
 .sect-hd{
   display:flex;align-items:center;justify-content:space-between;
@@ -2463,7 +2491,7 @@ const T = window.OA_TOKENS;
 //   即 V1.0 → V1.1 → V1.2 …（修改一次递增一次）
 //   发布时：运行 scripts/oa_bump_publish.py 自动 +0.1 并推送
 // ============================================================
-const APP_VERSION = '1.1';
+const APP_VERSION = '1.2';
 
 const SVG_ICON = {
   canteen_home: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10L12 3L21 10V20H3V10Z\"/><path d=\"M9 20V14H15V20\"/></svg>",
@@ -3998,6 +4026,7 @@ function row2(ico, title, sub, st, cls){
 // ============================================================
 function render(){
   const screen = document.getElementById('screen');
+  _bannerStop();            // 离开首页先停轮播（renderHome 会重新启动）
   const parts = ROUTE.replace(/^#\//,'').split('/').filter(Boolean);
   const key = parts[0] || '';
   if(key === 'mine'){ renderTab('mine'); renderMine(screen); return; }
@@ -4074,6 +4103,9 @@ function renderHome(screen){
        '　|　当前版本 V' + APP_VERSION +
        '</div></div></div>';
 
+  // Banner 轮播（跑马灯下方）
+  h += renderBanner();
+
   // 最近使用
   var rec = getRecent();
   var recPages = rec.map(function(id){ return pageById(id); }).filter(function(p){ return p; });
@@ -4113,6 +4145,63 @@ function renderHome(screen){
        '右下角 <b>ⓘ</b> 可查看当前页面规格（路由 / 字段 / 依赖 / 对接系统）。</div>';
   h += '<div class="copyright">中国工商银行苏州分行 · 办公室综合服务平台 手机端原型 V' + APP_VERSION + '</div>';
   screen.innerHTML = h;
+
+  // 渲染完成后启动轮播（定时器统一由 _bannerStart 管理，避免叠加）
+  _bannerStart();
+}
+
+// ============================================================
+// Banner 轮播（2026-09-23）
+//   两张图 banner_1.jpg / banner_2.jpg，3.5s 自动切换，底部圆点指示器
+//   ⚠ renderHome 会被反复调用，定时器必须先去后建，否则会越转越快
+// ============================================================
+var OA_BANNERS = ['banner_1.jpg', 'banner_2.jpg'];
+var _bannerTimer = null;
+var _bannerIdx = 0;
+var BANNER_INTERVAL = 3500;
+
+function renderBanner(){
+  var h = '<div class="banner-wrap" id="oaBanner">';
+  h += '<div class="banner-track" id="oaBannerTrack">';
+  OA_BANNERS.forEach(function(src){
+    h += '<img class="banner-img" src="' + src + '" alt="宣传图">';
+  });
+  h += '</div>';
+  h += '<div class="banner-dots" id="oaBannerDots">';
+  OA_BANNERS.forEach(function(_, i){
+    h += '<span class="dot' + (i === 0 ? ' on' : '') + '"></span>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+function _bannerPaint(){
+  var track = document.getElementById('oaBannerTrack');
+  if(track) track.style.transform = 'translateX(-' + (_bannerIdx * 100) + '%)';
+  var dots = document.getElementById('oaBannerDots');
+  if(dots){
+    var ds = dots.querySelectorAll('.dot');
+    for(var i = 0; i < ds.length; i++){
+      if(i === _bannerIdx) ds[i].classList.add('on');
+      else ds[i].classList.remove('on');
+    }
+  }
+}
+
+function _bannerStart(){
+  _bannerStop();                       // 先清旧的，防叠加
+  if(!document.getElementById('oaBannerTrack')) return;   // 不在首页则不跑
+  _bannerIdx = 0;
+  _bannerPaint();
+  if(OA_BANNERS.length < 2) return;    // 单图不轮播
+  _bannerTimer = setInterval(function(){
+    _bannerIdx = (_bannerIdx + 1) % OA_BANNERS.length;
+    _bannerPaint();
+  }, BANNER_INTERVAL);
+}
+
+function _bannerStop(){
+  if(_bannerTimer){ clearInterval(_bannerTimer); _bannerTimer = null; }
 }
 
 
