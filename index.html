@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·数据可视化驾驶舱（2026-09-24收盘）</title>
+<title>丰哥·数据可视化驾驶舱（2026-09-25收盘）</title>
 <script>
 /* ECharts 多CDN动态加载+自动回退（国内网络首选npmmirror，失败依次回退） */
 (function(){
@@ -133,7 +133,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
-    <span id="dataDate">数据：2026-09-24 收盘</span>
+    <span id="dataDate">数据：2026-09-25 收盘</span>
     <span id="clock"></span>
     <div class="switch-wrap" id="switchWrap" title="点击尝试连接新浪行情（需本地服务器或代理）">
       <div class="switch" id="switchBtn"></div>
@@ -250,9 +250,9 @@ plChart.setOption(Object.assign({}, animOpt, {
 
 /* 3. 上证指数当日走势 + 成交额副轴 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
-var lineData = [3928.1, 3903.33, 3888.37];
+var lineData = [3888.37, 3888.37, 3888.37];
 var lineLabels = ["早盘", "午盘", "收盘"];
-var lineAmts = [906.2, 5769.2, 7836.1];
+var lineAmts = [7836.1, 7836.1, 7836.1];
 lineChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
@@ -265,7 +265,7 @@ lineChart.setOption(Object.assign({}, animOpt, {
   grid: { left: 60, right: 70, top: 36, bottom: 42 },
   xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
   yAxis: [
-    { type: 'value', min: 3883, max: 3933, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+    { type: 'value', min: 3883, max: 3893, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
     { type: 'value', name: '成交额(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: { color: '#d29922', fontSize: 11 }, splitLine: { show: false }, axisLine: { show: false } }
   ],
   series: [
