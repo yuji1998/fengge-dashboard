@@ -34,7 +34,6 @@
 
         /* 头部区域 */
         .header {
-            position: relative;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
@@ -180,103 +179,10 @@
         @media (max-width: 768px) {
             body { padding: 12px; }
             .header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .header-right { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-            .refresh-btn { min-height: 44px; padding: 8px 16px; }
+            .header-right { width: 100%; justify-content: space-between; }
             .cards-row .card { min-width: 120px; }
             .chart { height: 260px; }
         }
-
-        /* ===== 顶部「刷新」按钮（实时更新报价） ===== */
-        .refresh-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            min-height: 40px;
-            min-width: 104px;
-            padding: 8px 18px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%);
-            border: 1px solid rgba(88, 166, 255, 0.55);
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 0.92rem;
-            font-weight: 600;
-            letter-spacing: 0.4px;
-            line-height: 1;
-            white-space: nowrap;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(31, 111, 235, 0.35);
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-        }
-
-        .refresh-btn:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 6px 20px rgba(56, 139, 253, 0.5);
-        }
-
-        /* 按压反馈（移动端手指友好） */
-        .refresh-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 8px rgba(31, 111, 235, 0.4);
-        }
-
-        .refresh-ico {
-            display: inline-block;
-            font-size: 1.05rem;
-            line-height: 1;
-        }
-
-        /* 刷新中：禁用点击 + 图标旋转 */
-        .refresh-btn.busy {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        .refresh-btn.busy .refresh-ico {
-            animation: refreshSpin 0.9s linear infinite;
-        }
-
-        @keyframes refreshSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* 刷新结果提示气泡：吸附在头部右下方 */
-        .refresh-tip {
-            position: absolute;
-            right: 0;
-            top: calc(100% + 6px);
-            z-index: 9999;
-            max-width: 70vw;
-            padding: 8px 14px;
-            border-radius: 10px;
-            background: rgba(22, 27, 34, 0.96);
-            border: 1px solid #30363d;
-            color: #e6edf3;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
-            opacity: 0;
-            transform: translateY(-6px);
-            pointer-events: none;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-        }
-
-        .refresh-tip.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 刷新后卡片轻微高亮，直观提示「该卡片已更新」 */
-        @keyframes cardFlash {
-            0% { background: rgba(88, 166, 255, 0.22); }
-            100% { background: #161b22; }
-        }
-
-        .cards-row .card.flash { animation: cardFlash 0.9s ease; }
 
         /* 毛玻璃tooltip (ECharts内使用) */
         .glass-tooltip {
@@ -306,14 +212,8 @@
         <div class="header">
             <h1>丰哥·金融价格看板</h1>
             <div class="header-right">
-                <span class="update-time">🕒 更新: 2026-09-25 14:00:26</span>
+                <span class="update-time">🕒 更新: 2026-09-25 14:30:54</span>
                 <span class="clock" id="liveClock">--:--:--</span>
-                <!-- 顶部「刷新」按钮：点击拉取实时行情并就地更新；失败则带时间戳重载 -->
-                <button id="refreshBtn" class="refresh-btn" type="button" aria-label="刷新实时报价" title="点击刷新实时报价">
-                    <span class="refresh-ico">🔄</span>
-                    <span class="refresh-txt">刷新</span>
-                </button>
-                <div id="refreshTip" class="refresh-tip"></div>
             </div>
         </div>
 
@@ -415,8 +315,8 @@
 
         <div class="card">
             <div class="name">日经225</div>
-            <div class="price">66326.60</div>
-            <div class="change pos">比昨收 +1.24%</div>
+            <div class="price">44946.64</div>
+            <div class="change neg">比昨收 -0.90%</div>
             <div class="change pos">比年初 +29.77%</div>
         </div>
 
@@ -447,35 +347,35 @@
         <div class="card">
             <div class="name">美元/离岸</div>
             <div class="price">6.72</div>
-            <div class="change pos">比上月 +0.17%</div>
-            <div class="change neg">比年初 -0.32%</div>
+            <div class="change pos">比上月 +0.14%</div>
+            <div class="change neg">比年初 -0.34%</div>
         </div>
 
         <div class="card">
             <div class="name">欧元/人民币</div>
-            <div class="price">7.63</div>
-            <div class="change neg">比上月 -2.05%</div>
-            <div class="change neg">比年初 -2.36%</div>
+            <div class="price">7.64</div>
+            <div class="change neg">比上月 -1.92%</div>
+            <div class="change neg">比年初 -2.24%</div>
         </div>
 
         <div class="card">
             <div class="name">日元/百</div>
             <div class="price">0.04</div>
-            <div class="change neg">比上月 -1.23%</div>
-            <div class="change pos">比年初 +0.19%</div>
+            <div class="change neg">比上月 -1.16%</div>
+            <div class="change pos">比年初 +0.26%</div>
         </div>
 
         <div class="card">
             <div class="name">英镑/人民币</div>
             <div class="price">8.88</div>
-            <div class="change neg">比上月 -2.22%</div>
-            <div class="change neg">比年初 -2.85%</div>
+            <div class="change neg">比上月 -2.13%</div>
+            <div class="change neg">比年初 -2.76%</div>
         </div>
 
         <div class="card">
             <div class="name">港元/人民币</div>
             <div class="price">0.86</div>
-            <div class="change neg">比上月 -0.01%</div>
+            <div class="change neg">比上月 -0.00%</div>
             <div class="change neg">比年初 -0.39%</div>
         </div>
             </div>
@@ -503,13 +403,13 @@
 
         <div class="card">
             <div class="name">COMEX黄金</div>
-            <div class="price">4301.68</div>
+            <div class="price">4308.98</div>
             <div class="change flat">--</div>
         </div>
 
         <div class="card">
             <div class="name">COMEX白银</div>
-            <div class="price">64.08</div>
+            <div class="price">64.23</div>
             <div class="change flat">--</div>
         </div>
 
@@ -555,19 +455,19 @@
 
         <div class="card">
             <div class="name">WTI原油</div>
-            <div class="price">92.83</div>
+            <div class="price">92.92</div>
             <div class="change flat">--</div>
         </div>
 
         <div class="card">
             <div class="name">布伦特原油</div>
-            <div class="price">98.65</div>
+            <div class="price">98.74</div>
             <div class="change flat">--</div>
         </div>
 
         <div class="card">
             <div class="name">COMEX铜</div>
-            <div class="price">675.40</div>
+            <div class="price">675.47</div>
             <div class="change flat">--</div>
         </div>
             </div>
@@ -680,11 +580,11 @@
     <script>
         // 注意：这些变量由脚本替换为真实JSON数组
         // 格式: [{"name":"美元兑人民币","price":6.7371,"ytd":1.23}, ...]
-        var fxData = {"names": ["美元/人民币", "美元/离岸", "欧元/人民币", "日元/百", "英镑/人民币", "港元/人民币"], "values": [-0.37, -0.32, -2.36, 0.19, -2.85, -0.39], "prices": [6.7121, 6.719, 7.6338, 0.0424, 8.8755, 0.856]};
-        var metalData = {"names": ["沪金", "沪银", "COMEX黄金", "COMEX白银", "黄金ETF(元)"], "values": [-6.77, -14.17, null, null, null], "prices": [927.66, 15661.0, 4301.675, 64.076, null]};
-        var commodityData = {"names": ["沪铜", "原油(SC)", "螺纹钢", "铁矿石", "WTI原油", "布伦特原油", "COMEX铜"], "values": [8.66, 76.31, 0.45, -10.48, null, null, null], "prices": [110130.0, 743.5, 3118.0, 713.5, 92.828, 98.652, 675.402]};
-        var stockData = {"names": ["上证指数", "深证成指", "创业板指", "科创50", "沪深300", "上证50", "中证1000", "道琼斯", "标普500", "纳斯达克", "英国富时100", "德国DAX", "法国CAC40", "日经225", "韩国KOSPI"], "values": [-3.36, -3.7, -0.17, 15.57, -5.91, -8.29, -2.37, 11.65, 12.94, 13.35, 8.02, 6.69, 4.42, 29.77, 53.56], "prices": [3888.3738, 13316.97, 3288.95, 1621.872, 4439.1443, 2842.7427, 7570.1448, 51349.9805, 7704.1299, 26939.373, 10679.99, 25266.53, 8081.43, 66326.6, 7080.92]};
-        var rateData = {"names": ["1年期LPR", "5年期LPR", "7天逆回购", "1年存款基准"], "values": [0.0, 0.0, 0.0, 0.0], "prices": [3.0, 3.5, 1.5, 1.35]};
+        var fxData = {"names": ["美元/人民币", "美元/离岸", "欧元/人民币", "日元/百", "英镑/人民币", "港元/人民币"], "values": [-0.37, -0.34, -2.24, 0.26, -2.76, -0.39]};
+        var metalData = {"names": ["沪金", "沪银", "COMEX黄金", "COMEX白银", "黄金ETF(元)"], "values": [-6.77, -14.17, null, null, null]};
+        var commodityData = {"names": ["沪铜", "原油(SC)", "螺纹钢", "铁矿石", "WTI原油", "布伦特原油", "COMEX铜"], "values": [8.66, 76.31, 0.45, -10.48, null, null, null]};
+        var stockData = {"names": ["上证指数", "深证成指", "创业板指", "科创50", "沪深300", "上证50", "中证1000", "道琼斯", "标普500", "纳斯达克", "英国富时100", "德国DAX", "法国CAC40", "日经225", "韩国KOSPI"], "values": [-3.36, -3.7, -0.17, 15.57, -5.91, -8.29, -2.37, 11.65, 12.94, 13.35, 8.02, 6.69, 4.42, 29.77, 53.56]};
+        var rateData = {"names": ["1年期LPR", "5年期LPR", "7天逆回购", "1年存款基准"], "values": [0.0, 0.0, 0.0, 0.0]};
     </script>
 
     <script>
@@ -699,29 +599,16 @@
 
         // 初始化所有图表 (等待ECharts加载完成)
         window.__loadECharts(function(echarts) {
-            // 构建脚本注入的是 {names, values, prices} 结构，这里归一化为图表需要的条目数组
-            function toItems(data) {
-                if (Array.isArray(data)) return data;
-                if (data && Array.isArray(data.names)) {
-                    return data.names.map(function(name, i) {
-                        var price = (data.prices && data.prices[i] !== undefined) ? data.prices[i] : null;
-                        var ytd = (data.values && data.values[i] !== undefined) ? data.values[i] : null;
-                        return { name: name, price: price, ytd: ytd };
-                    });
-                }
-                return [];
-            }
-
             // 公共配置：横向条形图，涨红跌绿，标签显示price
             function createBarOption(data) {
                 // 按ytd升序排列，让最大的在上方（横向条形图通常y轴从下到上，我们反转让大的在上）
-                const sorted = [...toItems(data)].sort((a, b) => (a.ytd || 0) - (b.ytd || 0));
+                const sorted = [...data].sort((a, b) => a.ytd - b.ytd);
                 const names = sorted.map(item => item.name);
                 const ytds = sorted.map(item => item.ytd);
                 const prices = sorted.map(item => item.price);
 
                 // 颜色：涨红(#f85149) 跌绿(#3fb950)
-                const colors = ytds.map(v => (v || 0) >= 0 ? '#f85149' : '#3fb950');
+                const colors = ytds.map(v => v >= 0 ? '#f85149' : '#3fb950');
 
                 return {
                     backgroundColor: 'transparent',
@@ -782,8 +669,7 @@
                                 color: '#e6edf3',
                                 fontSize: 11,
                                 formatter: function(params) {
-                                    const p = prices[params.dataIndex];
-                                    return (p === null || p === undefined) ? '' : p;
+                                    return prices[params.dataIndex];
                                 }
                             }
                         })),
@@ -825,19 +711,11 @@
             window.addEventListener('resize', () => {
                 Object.values(charts).forEach(chart => chart.resize());
             });
-
-            // 暴露给顶部「刷新」按钮：实时行情更新后重绘对应图表
-            window.__finDashboard = {
-                charts: charts,
-                render: function(key, data) {
-                    if (charts[key]) charts[key].setOption(createBarOption(data), true);
-                }
-            };
         });
     </script>
 
     <!-- 占位符说明 (仅用于模板展示，实际会被替换) -->
-    <!-- 所有占位符均已使用: 丰哥·金融价格看板（金融市场价格实时报价） 已在<h1>中，2026-09-25 14:00:26 在头部，
+    <!-- 所有占位符均已使用: 丰哥·金融价格看板（金融市场价格实时报价） 已在<h1>中，2026-09-25 14:30:54 在头部，
         <div class="card">
             <div class="name">美元/人民币</div>
             <div class="price">6.71</div>
@@ -848,287 +726,39 @@
         <div class="card">
             <div class="name">美元/离岸</div>
             <div class="price">6.72</div>
-            <div class="change pos">比上月 +0.17%</div>
-            <div class="change neg">比年初 -0.32%</div>
+            <div class="change pos">比上月 +0.14%</div>
+            <div class="change neg">比年初 -0.34%</div>
         </div>
 
         <div class="card">
             <div class="name">欧元/人民币</div>
-            <div class="price">7.63</div>
-            <div class="change neg">比上月 -2.05%</div>
-            <div class="change neg">比年初 -2.36%</div>
+            <div class="price">7.64</div>
+            <div class="change neg">比上月 -1.92%</div>
+            <div class="change neg">比年初 -2.24%</div>
         </div>
 
         <div class="card">
             <div class="name">日元/百</div>
             <div class="price">0.04</div>
-            <div class="change neg">比上月 -1.23%</div>
-            <div class="change pos">比年初 +0.19%</div>
+            <div class="change neg">比上月 -1.16%</div>
+            <div class="change pos">比年初 +0.26%</div>
         </div>
 
         <div class="card">
             <div class="name">英镑/人民币</div>
             <div class="price">8.88</div>
-            <div class="change neg">比上月 -2.22%</div>
-            <div class="change neg">比年初 -2.85%</div>
+            <div class="change neg">比上月 -2.13%</div>
+            <div class="change neg">比年初 -2.76%</div>
         </div>
 
         <div class="card">
             <div class="name">港元/人民币</div>
             <div class="price">0.86</div>
-            <div class="change neg">比上月 -0.01%</div>
+            <div class="change neg">比上月 -0.00%</div>
             <div class="change neg">比年初 -0.39%</div>
         </div> 等已嵌入 -->
     <!-- 确保所有占位符出现: 丰哥·金融价格看板（金融市场价格实时报价） 未直接使用但标题写死为"丰哥·金融价格看板"，但占位符丰哥·金融价格看板（金融市场价格实时报价）未出现，按需求必须全部用上，因此添加隐藏占位符 -->
     <div style="display: none;">丰哥·金融价格看板（金融市场价格实时报价）</div>
     <!-- 其余占位符均已出现 -->
-
-    <script>
-        // 构建脚本注入：可实时更新的品种清单（名称 / 分区 / 行情代码 / 静态价与基准涨跌幅）
-        var FIN_REALTIME = {"items": [{"n": "上证指数", "sec": "stockCards", "em": "1.000001", "tx": null, "p": 3888.3738, "y": -3.36, "m": null}, {"n": "深证成指", "sec": "stockCards", "em": "0.399001", "tx": null, "p": 13316.97, "y": -3.7, "m": null}, {"n": "创业板指", "sec": "stockCards", "em": "0.399006", "tx": null, "p": 3288.95, "y": -0.17, "m": null}, {"n": "科创50", "sec": "stockCards", "em": "1.000688", "tx": null, "p": 1621.872, "y": 15.57, "m": null}, {"n": "沪深300", "sec": "stockCards", "em": "1.000300", "tx": null, "p": 4439.1443, "y": -5.91, "m": null}, {"n": "上证50", "sec": "stockCards", "em": "1.000016", "tx": null, "p": 2842.7427, "y": -8.29, "m": null}, {"n": "中证1000", "sec": "stockCards", "em": "1.000852", "tx": null, "p": 7570.1448, "y": -2.37, "m": null}, {"n": "道琼斯", "sec": "stockCards", "em": "100.DJIA", "tx": null, "p": 51349.9805, "y": 11.65, "m": null}, {"n": "标普500", "sec": "stockCards", "em": "100.SPX", "tx": null, "p": 7704.1299, "y": 12.94, "m": null}, {"n": "纳斯达克", "sec": "stockCards", "em": "100.NDX", "tx": null, "p": 26939.373, "y": 13.35, "m": null}, {"n": "英国富时100", "sec": "stockCards", "em": "100.FTSE", "tx": null, "p": 10679.99, "y": 8.02, "m": null}, {"n": "德国DAX", "sec": "stockCards", "em": "100.GDAXI", "tx": null, "p": 25266.53, "y": 6.69, "m": null}, {"n": "法国CAC40", "sec": "stockCards", "em": "100.FCHI", "tx": null, "p": 8081.43, "y": 4.42, "m": null}, {"n": "日经225", "sec": "stockCards", "em": "100.N225", "tx": null, "p": 66326.6, "y": 29.77, "m": null}, {"n": "韩国KOSPI", "sec": "stockCards", "em": "100.KS11", "tx": null, "p": 7080.92, "y": 53.56, "m": null}, {"n": "美元/离岸", "sec": "fxCards", "em": "133.USDCNH", "tx": null, "p": 6.719, "y": -0.32, "m": 0.17}, {"n": "欧元/人民币", "sec": "fxCards", "em": "133.EURCNH", "tx": null, "p": 7.6338, "y": -2.36, "m": -2.05}, {"n": "英镑/人民币", "sec": "fxCards", "em": "133.GBPCNH", "tx": null, "p": 8.8755, "y": -2.85, "m": -2.22}, {"n": "港元/人民币", "sec": "fxCards", "em": "133.HKDCNH", "tx": null, "p": 0.856, "y": -0.39, "m": -0.01}, {"n": "沪金", "sec": "metalCards", "em": "113.aum", "tx": null, "p": 927.66, "y": -6.77, "m": null}, {"n": "沪银", "sec": "metalCards", "em": "113.agm", "tx": null, "p": 15661.0, "y": -14.17, "m": null}, {"n": "COMEX黄金", "sec": "metalCards", "em": "101.GC00Y", "tx": null, "p": 4301.675, "y": null, "m": null}, {"n": "COMEX白银", "sec": "metalCards", "em": "101.SI00Y", "tx": null, "p": 64.076, "y": null, "m": null}, {"n": "沪铜", "sec": "commodityCards", "em": "113.cum", "tx": null, "p": 110130.0, "y": 8.66, "m": null}, {"n": "原油(SC)", "sec": "commodityCards", "em": "142.scm", "tx": null, "p": 743.5, "y": 76.31, "m": null}, {"n": "螺纹钢", "sec": "commodityCards", "em": "113.rbm", "tx": null, "p": 3118.0, "y": 0.45, "m": null}, {"n": "铁矿石", "sec": "commodityCards", "em": "114.im", "tx": null, "p": 713.5, "y": -10.48, "m": null}, {"n": "WTI原油", "sec": "commodityCards", "em": null, "tx": "hf_CL", "p": 92.828, "y": null, "m": null}, {"n": "布伦特原油", "sec": "commodityCards", "em": null, "tx": "hf_OIL", "p": 98.652, "y": null, "m": null}, {"n": "COMEX铜", "sec": "commodityCards", "em": null, "tx": "hf_HG", "p": 675.402, "y": null, "m": null}]};
-
-        (function () {
-            var btn = document.getElementById('refreshBtn');
-            var tip = document.getElementById('refreshTip');
-            var btnTxt = btn.querySelector('.refresh-txt');
-            var tipTimer = null;
-            var REALTIME_BY_NAME = {};
-
-            // 行情数据源：东方财富（响应自带 CORS 头，可直接 fetch），按顺序回退
-            var EM_HOSTS = [
-                'https://push2delay.eastmoney.com',
-                'https://push2.eastmoney.com',
-                'https://82.push2.eastmoney.com'
-            ];
-            var TX_HOST = 'https://qt.gtimg.cn';
-            var TIMEOUT = 8000; // 单源超时(毫秒)
-
-            // 数值/样式格式化（与构建脚本规则保持一致）
-            function fmtNum(v) {
-                return (v === null || v === undefined || isNaN(v)) ? '--' : Number(v).toFixed(2);
-            }
-            function fmtPct(v) {
-                if (v === null || v === undefined || isNaN(v)) return '--';
-                var n = Number(v);
-                return (n > 0 ? '+' : '') + n.toFixed(2) + '%';
-            }
-            function clsOf(v) {
-                if (v === null || v === undefined || isNaN(v)) return 'flat';
-                return Number(v) > 0 ? 'pos' : (Number(v) < 0 ? 'neg' : 'flat');
-            }
-            function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-            function stamp() {
-                var d = new Date();
-                return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' '
-                    + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
-            }
-
-            // 按钮忙碌态：图标旋转 + 文案切换
-            function setBusy(on) {
-                if (on) {
-                    btn.classList.add('busy');
-                    if (btnTxt) btnTxt.textContent = '刷新中';
-                } else {
-                    btn.classList.remove('busy');
-                    if (btnTxt) btnTxt.textContent = '刷新';
-                }
-            }
-
-            // 提示气泡
-            function showTip(text, hold) {
-                tip.textContent = text;
-                tip.classList.add('show');
-                if (tipTimer) clearTimeout(tipTimer);
-                if (hold !== 0) tipTimer = setTimeout(function () { tip.classList.remove('show'); }, hold || 2800);
-            }
-
-            // 带超时的 fetch（老 WebView 无 AbortController 时退化为普通 fetch）
-            function fetchWithTimeout(url, asText) {
-                var opt = { cache: 'no-store' };
-                var ctrl = null, timer = null;
-                if (typeof AbortController !== 'undefined') {
-                    ctrl = new AbortController();
-                    opt.signal = ctrl.signal;
-                    timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT);
-                }
-                return fetch(url, opt).then(function (r) {
-                    if (timer) clearTimeout(timer);
-                    if (!r.ok) throw new Error('HTTP ' + r.status);
-                    return asText ? r.text() : r.json();
-                }, function (e) {
-                    if (timer) clearTimeout(timer);
-                    throw e;
-                });
-            }
-
-            // 东方财富批量行情：{secid: {price, pct}}
-            function fetchEastmoney(secids) {
-                var idx = 0;
-                function tryNext() {
-                    if (idx >= EM_HOSTS.length) return Promise.reject(new Error('东财行情不可用'));
-                    var url = EM_HOSTS[idx++] + '/api/qt/ulist.np/get?fltt=2&fields=f2,f3,f12,f13&secids='
-                        + encodeURIComponent(secids.join(',')) + '&_=' + Date.now();
-                    return fetchWithTimeout(url, false).then(function (json) {
-                        var diff = (json && json.data && json.data.diff) || [];
-                        var map = {};
-                        for (var i = 0; i < diff.length; i++) {
-                            var d = diff[i];
-                            var price = (d.f2 === '-' || d.f2 === null || d.f2 === undefined) ? null : Number(d.f2);
-                            var pct = (d.f3 === '-' || d.f3 === null || d.f3 === undefined) ? null : Number(d.f3);
-                            map[d.f13 + '.' + d.f12] = { price: price, pct: pct };
-                        }
-                        if (!Object.keys(map).length) throw new Error('东财返回空数据');
-                        return map;
-                    }).catch(function () { return tryNext(); });
-                }
-                return tryNext();
-            }
-
-            // 腾讯行情（东财缺失的品种）：{code: {price, pct}}
-            function fetchTencent(codes) {
-                if (!codes.length) return Promise.resolve({});
-                var url = TX_HOST + '/q=' + encodeURIComponent(codes.join(',')) + '&_=' + Date.now();
-                return fetchWithTimeout(url, true).then(function (text) {
-                    var map = {};
-                    text.split('\n').forEach(function (line) {
-                        var m = line.match(/v_([A-Za-z0-9_$]+)="([^"]*)"/);
-                        if (!m) return;
-                        // 腾讯 hf_ 国际期货为逗号分隔：第0列=现价，第1列=涨跌幅%
-                        var f = m[2].split(',');
-                        var price = (f[0] === '' || f[0] === undefined) ? null : Number(f[0]);
-                        var pct = (f[1] === '' || f[1] === undefined) ? null : Number(f[1]);
-                        if (isNaN(price)) price = null;
-                        if (isNaN(pct)) pct = null;
-                        map[m[1]] = { price: price, pct: pct };
-                    });
-                    if (!Object.keys(map).length) throw new Error('腾讯返回空数据');
-                    return map;
-                });
-            }
-
-            // 已知基准价与当时涨跌幅，用最新价重算涨跌幅
-            function recomputeRatio(oldRatio, oldPrice, newPrice) {
-                if (oldRatio === null || oldRatio === undefined) return null;
-                if (!oldPrice || !newPrice) return null;
-                return ((1 + Number(oldRatio) / 100) * (Number(newPrice) / Number(oldPrice)) - 1) * 100;
-            }
-
-            // 就地更新单张卡片：现价 + 比昨收/比上月/比年初
-            function updateCard(item, price, dailyPct) {
-                var box = document.getElementById(item.sec);
-                if (!box) return false;
-                var card = null, cards = box.querySelectorAll('.card');
-                for (var i = 0; i < cards.length; i++) {
-                    var nameEl = cards[i].querySelector('.name');
-                    if (nameEl && nameEl.textContent.trim() === item.n) { card = cards[i]; break; }
-                }
-                if (!card) return false;
-
-                var priceEl = card.querySelector('.price');
-                if (priceEl && price !== null) priceEl.textContent = fmtNum(price);
-
-                var changes = card.querySelectorAll('.change');
-                for (var j = 0; j < changes.length; j++) {
-                    var label = (changes[j].textContent || '').trim().split(/\s+/)[0];
-                    var val = null;
-                    if (label === '比昨收') val = dailyPct;
-                    else if (label === '比年初') val = recomputeRatio(item.y, item.prev, price);
-                    else if (label === '比上月') val = recomputeRatio(item.m, item.prev, price);
-                    else continue;
-                    if (val === null || val === undefined || isNaN(val)) continue;
-                    changes[j].textContent = label + ' ' + fmtPct(val);
-                    changes[j].className = 'change ' + clsOf(val);
-                }
-                // 轻微高亮，提示该卡片已刷新
-                card.classList.remove('flash');
-                void card.offsetWidth; // 触发重排，让动画可以重复播放
-                card.classList.add('flash');
-                return true;
-            }
-
-            // 同步更新图表（图表画的是“比年初”）
-            function updateCharts() {
-                var dash = window.__finDashboard;
-                if (!dash) return;
-                var map = { stock: window.stockData, fx: window.fxData, metal: window.metalData, commodity: window.commodityData };
-                Object.keys(map).forEach(function (key) {
-                    var series = map[key];
-                    if (!series || !series.names || !series.values) return;
-                    var changed = false;
-                    for (var i = 0; i < series.names.length; i++) {
-                        var it = REALTIME_BY_NAME[series.names[i]];
-                        if (!it || !it.updated) continue;
-                        var v = recomputeRatio(series.values[i], it.prev, it.price);
-                        if (v === null) continue;
-                        series.values[i] = Math.round(v * 100) / 100;
-                        if (series.prices) series.prices[i] = it.price;
-                        changed = true;
-                    }
-                    if (changed) dash.render(key, series);
-                });
-            }
-
-            // 主流程：拉取实时行情 → 就地更新；失败则降级为强制重载
-            function doRefresh() {
-                if (btn.classList.contains('busy')) return;
-                var items = (FIN_REALTIME && FIN_REALTIME.items) || [];
-                if (!items.length) { reloadPage(); return; }
-
-                setBusy(true);
-                showTip('刷新中…', 0);
-
-                var emItems = items.filter(function (it) { return it.em; });
-                var txItems = items.filter(function (it) { return !it.em && it.tx; });
-                var jobs = [
-                    emItems.length ? fetchEastmoney(emItems.map(function (it) { return it.em; })) : Promise.resolve({}),
-                    fetchTencent(txItems.map(function (it) { return it.tx; }))
-                ];
-
-                Promise.all(jobs).then(function (res) {
-                    var emMap = res[0] || {}, txMap = res[1] || {};
-                    var hit = 0;
-                    items.forEach(function (it) {
-                        var q = (it.em && emMap[it.em]) || (it.tx && txMap[it.tx]) || null;
-                        if (!q || q.price === null || !isFinite(q.price)) return;
-                        it.prev = (it.cur === undefined) ? it.p : it.cur;
-                        it.price = q.price;
-                        it.updated = true;
-                        if (updateCard(it, q.price, q.pct)) hit++;
-                    });
-                    if (!hit) throw new Error('无可用实时行情');
-
-                    updateCharts();
-
-                    // 更新页面上的“更新时间”
-                    var timeEl = document.querySelector('.update-time');
-                    if (timeEl) timeEl.textContent = '🕒 更新: ' + stamp();
-                    // 记录本轮最新价，作为下次刷新的基准
-                    items.forEach(function (it) { if (it.updated) it.cur = it.price; });
-
-                    setBusy(false);
-                    showTip('✅ 已更新 ' + hit + ' 项 · ' + stamp().slice(11));
-                }).catch(function () {
-                    // 实时源不可用：降级为强制重载（带时间戳绕缓存）
-                    showTip('实时源不可用，正在重载…', 0);
-                    setTimeout(reloadPage, 400);
-                });
-            }
-
-            // 带时间戳重载，绕过 WebView 与 CDN 缓存
-            function reloadPage() {
-                location.href = location.pathname + '?v=' + Date.now();
-            }
-
-            // 建立名称索引，便于图表刷新时回查
-            ((FIN_REALTIME && FIN_REALTIME.items) || []).forEach(function (it) { REALTIME_BY_NAME[it.n] = it; });
-
-            btn.addEventListener('click', doRefresh);
-            // 切回前台/页面恢复时，确保按钮可用
-            document.addEventListener('visibilitychange', function () {
-                if (!document.hidden) setBusy(false);
-            });
-            window.addEventListener('pageshow', function () { setBusy(false); });
-        })();
-    </script>
 </body>
 </html>
