@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·数据可视化驾驶舱（2026-09-30收盘）</title>
+<title>丰哥·数据可视化驾驶舱（2026-10-02收盘）</title>
 <script>
 /* ECharts 多CDN动态加载+自动回退（国内网络首选npmmirror，失败依次回退） */
 (function(){
@@ -133,7 +133,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
-    <span id="dataDate">数据：2026-09-30 收盘</span>
+    <span id="dataDate">数据：2026-10-02 收盘</span>
     <span id="clock"></span>
     <div class="switch-wrap" id="switchWrap" title="点击尝试连接新浪行情（需本地服务器或代理）">
       <div class="switch" id="switchBtn"></div>
@@ -250,9 +250,9 @@ plChart.setOption(Object.assign({}, animOpt, {
 
 /* 3. 上证指数当日走势 + 成交额副轴 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
-var lineData = [3830.45, 3830.45, 3839.83, 3838.39, 3842.19, 3842.19];
-var lineLabels = ["manual", "收盘", "早盘", "午盘", "收盘", "收盘"];
-var lineAmts = [6617.0, 6617.0, 773.9, 4419.5, 6794.0, 6794.0];
+var lineData = [3842.19, 3842.19, 3842.19];
+var lineLabels = ["早盘", "午盘", "收盘"];
+var lineAmts = [6794.0, 6794.0, 6794.0];
 lineChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
@@ -265,7 +265,7 @@ lineChart.setOption(Object.assign({}, animOpt, {
   grid: { left: 60, right: 70, top: 36, bottom: 42 },
   xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
   yAxis: [
-    { type: 'value', min: 3825, max: 3847, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+    { type: 'value', min: 3837, max: 3847, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
     { type: 'value', name: '成交额(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: { color: '#d29922', fontSize: 11 }, splitLine: { show: false }, axisLine: { show: false } }
   ],
   series: [
