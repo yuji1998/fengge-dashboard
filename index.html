@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·数据可视化驾驶舱（2026-10-13收盘）</title>
+<title>丰哥·数据可视化驾驶舱（2026-10-14收盘）</title>
 <script>
 /* ECharts 多CDN动态加载+自动回退（国内网络首选npmmirror，失败依次回退） */
 (function(){
@@ -133,7 +133,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <header class="header">
   <h1>丰哥<span class="dot">·</span>数据可视化驾驶舱</h1>
   <div class="header-right">
-    <span id="dataDate">数据：2026-10-13 收盘</span>
+    <span id="dataDate">数据：2026-10-14 收盘</span>
     <span id="clock"></span>
     <div class="switch-wrap" id="switchWrap" title="点击尝试连接新浪行情（需本地服务器或代理）">
       <div class="switch" id="switchBtn"></div>
@@ -146,12 +146,12 @@ main{ display:flex; flex-direction:column; gap:14px; }
 <section class="cards">
   <div class="card">
     <div class="label">总市值</div>
-    <div class="value">¥174,027</div>
+    <div class="value">¥165,545</div>
     <div class="sub">4 只持仓合计</div>
   </div>
   <div class="card">
     <div class="label">总浮亏</div>
-    <div class="value neg">¥-41,866</div>
+    <div class="value neg">¥-50,348</div>
     <div class="sub">较持仓成本</div>
   </div>
   <div class="card">
@@ -161,8 +161,8 @@ main{ display:flex; flex-direction:column; gap:14px; }
   </div>
   <div class="card">
     <div class="label">今日大盘</div>
-    <div class="value pos">+0.10%</div>
-    <div class="sub">上证指数 3,800.86</div>
+    <div class="value neg">-0.89%</div>
+    <div class="sub">上证指数 3,767.23</div>
   </div>
 </section>
 
@@ -171,7 +171,7 @@ main{ display:flex; flex-direction:column; gap:14px; }
   <div class="panel">
     <h2>⚠️ 持仓风险监控</h2>
     <div class="row row-risk" style="margin-top:10px;">
-      <div class="risk-card"><div class="name">亨通光电 </div><div class="metric"><span>Beta</span><span>--</span></div><div class="metric"><span>年化波动率</span><span>--</span></div><div class="metric"><span>止损位</span><span>--</span></div><div class="metric"><span>集中度</span><span>8.6%</span></div><div class="metric"><span>现价</span><span>49.83</span></div></div><div class="risk-card"><div class="name">莱克电气 </div><div class="metric"><span>Beta</span><span>0.88</span></div><div class="metric"><span>年化波动率</span><span>49.9%</span></div><div class="metric"><span>止损位</span><span>25</span></div><div class="metric"><span>集中度</span><span>11.0%</span></div><div class="metric"><span>现价</span><span>31.97</span></div></div><div class="risk-card"><div class="name">立讯精密 <span class="warn">🔴 触及止损</span></div><div class="metric"><span>Beta</span><span>1.99</span></div><div class="metric"><span>年化波动率</span><span>55.9%</span></div><div class="metric"><span>止损位</span><span>50</span></div><div class="metric"><span>集中度</span><span>26.5%</span></div><div class="metric"><span>现价</span><span>46.15</span></div></div><div class="risk-card"><div class="name">天孚通信 <span class="warn">🔴 触及止损</span></div><div class="metric"><span>Beta</span><span>2.85</span></div><div class="metric"><span>年化波动率</span><span>94.0%</span></div><div class="metric"><span>止损位</span><span>255</span></div><div class="metric"><span>集中度</span><span>53.9%</span></div><div class="metric"><span>现价</span><span>246.70</span></div></div>
+      <div class="risk-card"><div class="name">亨通光电 </div><div class="metric"><span>Beta</span><span>--</span></div><div class="metric"><span>年化波动率</span><span>--</span></div><div class="metric"><span>止损位</span><span>--</span></div><div class="metric"><span>集中度</span><span>8.8%</span></div><div class="metric"><span>现价</span><span>48.35</span></div></div><div class="risk-card"><div class="name">莱克电气 </div><div class="metric"><span>Beta</span><span>0.88</span></div><div class="metric"><span>年化波动率</span><span>49.9%</span></div><div class="metric"><span>止损位</span><span>25</span></div><div class="metric"><span>集中度</span><span>11.5%</span></div><div class="metric"><span>现价</span><span>31.80</span></div></div><div class="risk-card"><div class="name">立讯精密 <span class="warn">🔴 触及止损</span></div><div class="metric"><span>Beta</span><span>1.99</span></div><div class="metric"><span>年化波动率</span><span>55.9%</span></div><div class="metric"><span>止损位</span><span>50</span></div><div class="metric"><span>集中度</span><span>27.1%</span></div><div class="metric"><span>现价</span><span>44.94</span></div></div><div class="risk-card"><div class="name">天孚通信 <span class="warn">🔴 触及止损</span></div><div class="metric"><span>Beta</span><span>2.85</span></div><div class="metric"><span>年化波动率</span><span>94.0%</span></div><div class="metric"><span>止损位</span><span>255</span></div><div class="metric"><span>集中度</span><span>52.6%</span></div><div class="metric"><span>现价</span><span>229.00</span></div></div>
     </div>
   </div>
 
@@ -241,7 +241,7 @@ plChart.setOption(Object.assign({}, animOpt, {
   xAxis: { type: 'value', axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false }, splitLine: splitLineDark },
   yAxis: { type: 'category', data: ["亨通光电", "莱克电气", "立讯精密", "天孚通信"], axisLabel: axisLabelLight, axisLine: { show: false }, axisTick: { show: false } },
   series: [{ name: '持仓盈亏', type: 'bar', barWidth: 16,
-    data: [-3089.1, -1428.0, -18729.0, -18620.0],
+    data: [-3533.1, -1530.0, -19939.0, -25346.0],
     itemStyle: { color: '#3fb950', borderRadius: [0, 6, 6, 0] },
     label: { show: true, position: 'right', color: '#3fb950', fontSize: 12,
       formatter: function(p){ return '¥' + p.value.toLocaleString('zh-CN'); } }
@@ -250,9 +250,9 @@ plChart.setOption(Object.assign({}, animOpt, {
 
 /* 3. 上证指数当日走势 + 成交额副轴 */
 var lineChart = echarts.init(document.getElementById('lineChart'));
-var lineData = [3760.95, 3803.52, 3800.86];
+var lineData = [3788.13, 3794.35, 3767.23];
 var lineLabels = ["早盘", "午盘", "收盘"];
-var lineAmts = [985.6, 5009.4, 7793.0];
+var lineAmts = [730.2, 4094.4, 6624.9];
 lineChart.setOption(Object.assign({}, animOpt, {
   backgroundColor: 'transparent',
   tooltip: Object.assign({}, tooltipDark, { trigger: 'axis',
@@ -265,7 +265,7 @@ lineChart.setOption(Object.assign({}, animOpt, {
   grid: { left: 60, right: 70, top: 36, bottom: 42 },
   xAxis: { type: 'category', boundaryGap: false, data: lineLabels, axisLabel: axisLabelMuted, axisLine: { lineStyle: { color: '#30363d' } }, axisTick: { show: false } },
   yAxis: [
-    { type: 'value', min: 3756, max: 3809, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
+    { type: 'value', min: 3762, max: 3799, axisLabel: axisLabelMuted, axisLine: { show: false }, axisTick: { show: false }, splitLine: splitLineDark },
     { type: 'value', name: '成交额(亿)', nameTextStyle: { color: '#8b949e' }, axisLabel: { color: '#d29922', fontSize: 11 }, splitLine: { show: false }, axisLine: { show: false } }
   ],
   series: [
@@ -293,7 +293,7 @@ donutChart.setOption(Object.assign({}, animOpt, {
     itemStyle: { borderRadius: 6, borderColor: '#0d1117', borderWidth: 2 },
     label: { show: true, color: '#e6edf3', fontSize: 11, formatter: '{b}\n¥{c}  {d}%' },
     emphasis: { label: { show: true, fontWeight: 'bold', fontSize: 14 } },
-    data: [{"value": 14949, "name": "亨通光电", "itemStyle": {"color": "#58a6ff"}}, {"value": 19182, "name": "莱克电气", "itemStyle": {"color": "#f85149"}}, {"value": 46150, "name": "立讯精密", "itemStyle": {"color": "#f0b429"}}, {"value": 93746, "name": "天孚通信", "itemStyle": {"color": "#3fb950"}}]
+    data: [{"value": 14505, "name": "亨通光电", "itemStyle": {"color": "#58a6ff"}}, {"value": 19080, "name": "莱克电气", "itemStyle": {"color": "#f85149"}}, {"value": 44940, "name": "立讯精密", "itemStyle": {"color": "#f0b429"}}, {"value": 87020, "name": "天孚通信", "itemStyle": {"color": "#3fb950"}}]
   }]
 }));
 
