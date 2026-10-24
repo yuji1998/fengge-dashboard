@@ -106,64 +106,201 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
  body{max-width:680px;margin:0 auto;box-shadow:0 0 40px var(--shadow);min-height:100vh}
  .title{font-size:34px}
 }
+
+.tabs{position:sticky;top:0;z-index:30;display:flex;gap:0;overflow-x:auto;
+ background:var(--paper2);border-bottom:1px solid var(--rule);
+ font-family:"Helvetica Neue",Arial,sans-serif;-webkit-overflow-scrolling:touch;
+ scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:1 0 auto;text-align:center;white-space:nowrap;padding:11px 13px;
+ font-size:13.5px;color:var(--ink2);border-bottom:2px solid transparent;cursor:pointer}
+.tabs a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 </style></head><body>
 <header class="masthead">
 <div class="brand">Daily Briefing</div>
 <h1 class="title">每日要闻</h1>
-<div class="sub"><span>2026-10-24 星期六 · 生成 2026-10-24 10:32</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
+<div class="sub"><span>2026-10-24 星期六 · 生成 2026-10-24 11:35</span><button class="btn" id="rf" onclick="refresh()">↻ 刷新</button></div>
 </header>
+<nav class="tabs" id="tabs">
+<a href="#sec-market" data-t="sec-market">全球市场</a>
+<a href="#sec-pbc" data-t="sec-pbc">央行动态</a>
+<a href="#sec-nfra" data-t="sec-nfra">金监动态</a>
+<a href="#sec-szfin" data-t="sec-szfin">苏州金融</a>
+<a href="#sec-invest" data-t="sec-invest">投资动态</a>
+<a href="#sec-data" data-t="sec-data">最新数据</a>
+<a href="#sec-leader" data-t="sec-leader">领导动态</a>
+<a href="#sec-tasks" data-t="sec-tasks">凌晨任务</a>
+</nav>
 <nav class="nav">
 <a href="https://www.chineseft.net/" target="_blank" rel="noopener">FT中文网</a>
 <a href="https://www.subaonet.com/list/szyw/" target="_blank" rel="noopener">苏州要闻</a>
 <a href="https://m.yicai.com/" target="_blank" rel="noopener">第一财经</a>
 <a href="https://www.media.xinhuamm.net/statics/h5-news-media/index.html#/?siteId=2b0cbbb1d563414393513f147f7e9799" target="_blank" rel="noopener">参考消息</a>
 </nav>
-<section><h2><span class="cn">全球市场</span><span>Global Markets</span></h2>
+<section id="sec-market"><h2><span class="cn">全球市场</span><span>Global Markets</span></h2>
 <table class="mkt">
-<tr><td class="mk-name" colspan="2">🔴 道琼斯  52,215   -1.23%</td></tr>
-<tr><td class="mk-name" colspan="2">🔴 纳斯达克  25,955   -0.21%</td></tr>
-<tr><td class="mk-name" colspan="2">🌍 美元/人民币  6.6702</td></tr>
-<tr><td class="mk-name" colspan="2">🌍 美元/日元  156.860</td></tr>
-<tr><td class="mk-name" colspan="2">🌍 欧元/美元  1.1202</td></tr>
-<tr><td class="mk-name" colspan="2">🥇 人民币黄金  ¥859.5/克</td></tr>
-<tr><td class="mk-name" colspan="2">🖋 WTI原油  $103.49</td></tr>
-<tr><td class="mk-name" colspan="2">🟢 上证指数  3690.48   +0.89%</td></tr>
-<tr><td class="mk-name" colspan="2">🟢 深证成指  11673.83   +2.79%</td></tr>
-<tr><td class="mk-name" colspan="2">📉 中国10年期国债  2.0675%   -18.54bp(较年初)</td></tr>
-<tr><td class="mk-name" colspan="2">📈 美国10年期国债  5.0000%   +126.00bp(较年初)</td></tr>
+<tr><td class="mk-name" colspan="2">🔴 道琼斯  52,215   较昨天 -1.23%</td></tr>
+<tr><td class="mk-name" colspan="2">🔴 纳斯达克  25,955   较昨天 -0.21%</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 美元/人民币  6.67</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 美元/日元  156.86</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 欧元/美元  1.12</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 人民币黄金  859.50</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 WTI原油  103.49</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 上证指数  3,690.48   较昨天 +0.89%   较年初 -7.01%</td></tr>
+<tr><td class="mk-name" colspan="2">🟢 深证成指  11,674   较昨天 +2.79%   较年初 -13.69%</td></tr>
 </table></section>
-<section><h2><span class="cn">金融财经</span><span>Finance</span></h2>
-<p class="lead">AI巨头财报引爆科技股抛售，资金密集加仓港股创新药，白酒持续承压。</p>
+<section id="sec-pbc"><h2><span class="cn">央行动态</span><span>Central Bank</span></h2>
 <article>
-<h3>海航控股与零重空间签署战略合作协议 共拓飞机通信服务领域</h3>
+<a class="ilink" href="https://www.pbc.gov.cn/en/3688006/index.html" target="_blank" rel="noopener"><h3>English Version</h3></a>
+<div class="note">面向海外投资者的英文资讯板块</div>
+<div class="src">中国人民银行</div>
+</article>
+<article>
+<a class="ilink" href="http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026101918374958873/index.html" target="_blank" rel="noopener"><h3>中国人民银行行长潘功胜在2026金融街论坛年会上的主题演讲</h3></a>
+<div class="note">央行释放最新货币政策信号，关注稳增长与防风险部署</div>
+<div class="src">中国人民银行</div>
+</article>
+<article>
+<a class="ilink" href="http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026102319181359636/index.html" target="_blank" rel="noopener"><h3>中国人民银行行长潘功胜会见意大利前总理、欧央行前行长马里奥·德拉吉一行</h3></a>
+<div class="note">中欧央行高层互动，或涉金融合作与汇率稳定议题</div>
+<div class="src">中国人民银行</div>
+</article>
+<article>
+<a class="ilink" href="http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026102311181835420/index.html" target="_blank" rel="noopener"><h3>中国人民银行公告﹝2026﹞第26号</h3></a>
+<div class="note">央行新政落地，关注对利率、信贷或外汇市场的影响</div>
+<div class="src">中国人民银行</div>
+</article>
+<article>
+<a class="ilink" href="http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/2026102318114323169/index.html" target="_blank" rel="noopener"><h3>中国人民银行副行长宣昌能会见法国财政总署署长杜蒙</h3></a>
+<div class="note">中法财政金融高层对接，释放双边货币合作信号</div>
+<div class="src">中国人民银行</div>
+</article>
+</section>
+<section id="sec-nfra"><h2><span class="cn">金监动态</span><span>Regulation</span></h2>
+<article>
+<h3>大成基金拟发红利ETF!拟任经理任职回报全部亏损，红利策略能否扭转?</h3>
+<div class="note">经理过往回报全数为负，红利策略成翻盘关键变量。</div>
+<div class="src">金融监管动态</div>
+</article>
+<article>
+<h3>百亿明星基金经理郑巍山卸任，任职期间年化回报超19%</h3>
+<div class="note">年化近两成的高光下离职，百亿规模印证业绩成色。</div>
+<div class="src">金融监管动态</div>
 </article>
 <article>
 <h3>公募、外资密集出手！持续布局港股创新药</h3>
+<div class="note">内外资同步加仓，港股创新药成机构共识配置方向。</div>
+<div class="src">金融监管动态</div>
 </article>
 <article>
 <h3>操纵股价，香港证监会出手！严查三高管</h3>
+<div class="note">港证监会亮剑市场操纵，三高管面临调查合规风险。</div>
+<div class="src">金融监管动态</div>
+</article>
+<article>
+<h3>CFTC：对冲基金削减日元空头 增持澳元多头</h3>
+<div class="note">日元空头削减暗示贬值预期降温，澳元加多押注风险偏好回升</div>
+<div class="src">金融监管动态</div>
+</article>
+</section>
+<section id="sec-szfin"><h2><span class="cn">苏州金融</span><span>Suzhou Finance</span></h2>
+<article>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/3dd96c2d544d4077a266e48215e43615.shtml" target="_blank" rel="noopener"><h3>范波会见浦发银行行长谢伟一行</h3></a>
+<div class="note">无锡政银高层对接，传递金融深度服务地方产业的明确信号</div>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/d32d1a0e661040a7ba211051d9e82e3d.shtml" target="_blank" rel="noopener"><h3>铁近科技吴江三期项目开工 总投资25亿元 王维出席</h3></a>
+<div class="note">连续三期布局，铁近科技以真金白银押注吴江产业生态</div>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/4615633e8f304cbcab56e02932ec9cda.shtml" target="_blank" rel="noopener"><h3>清陶动力固态动力电池项目投产仪式举行 总投资80亿元 范波出席</h3></a>
+<div class="note">固态电池量产破冰，清陶80亿投资卡位新能源前沿</div>
+<div class="src">苏州市要闻</div>
+</article>
+</section>
+<section id="sec-invest"><h2><span class="cn">投资动态</span><span>Investment</span></h2>
+<article>
+<h3>大成基金拟发红利ETF!拟任经理任职回报全部亏损，红利策略能否扭转?</h3>
+<div class="note">拟任经理过往业绩全亏成硬伤，红利策略能否翻身待市场检验</div>
+<div class="src">财经市场</div>
+</article>
+<article>
+<h3>百亿明星基金经理郑巍山卸任，任职期间年化回报超19%</h3>
+<div class="note">百亿明星经理高收益离任，产品交接与风格延续是最大悬念</div>
+<div class="src">财经市场</div>
+</article>
+<article>
+<h3>公募、外资密集出手！持续布局港股创新药</h3>
+<div class="note">内外资同步加仓港股创新药，产业趋势与估值修复共振可期</div>
+<div class="src">财经市场</div>
+</article>
+<article>
+<h3>操纵股价，香港证监会出手！严查三高管</h3>
+<div class="note">港股操纵股价遭监管亮剑，三名高管被查彰显执法零容忍</div>
+<div class="src">财经市场</div>
 </article>
 <article>
 <h3>暴跌，腰斩！国际巨头，跌穿信仰！发生了什么？</h3>
-</article>
-<article>
-<h3>英国承诺出资1亿英镑设立生物安全实验室 OpenAI、Anthropic参与合作</h3>
-<div class="note">英国掏1亿英镑拉AI巨头共建生物安全，AI跨界治理成新棋局</div>
-</article>
-<article>
-<h3>美股科技巨头一份财报，引爆AI股抛售潮</h3>
-<div class="note">一份财报砸穿AI估值泡沫，市场从讲故事转向要利润</div>
-</article>
-<article>
-<h3>首创防疲劳模型、加强医保补贴、推广外卖接力……淘宝闪购开展年度协商，给骑士更多托举</h3>
-<div class="note">平台与骑手首次年度协商落地，劳动权益从对抗走向共建</div>
-</article>
-<article>
-<h3>飞天茅台零售均价小涨 洋河梦之蓝M6+三连跌创月新低 古井贡古20、青花郎四连阴</h3>
-<div class="note">高端白酒现分化：茅台扛旗，次高端集体失速，消费降级显形</div>
+<div class="note">国际巨头股价腰斩，高估值信仰遭基本面彻底瓦解</div>
+<div class="src">财经市场</div>
 </article>
 </section>
-<section><h2><span class="cn">领导动态</span><span>Leadership</span></h2>
+<section id="sec-data"><h2><span class="cn">最新数据</span><span>Latest Data</span></h2>
+<article>
+<a class="ilink" href="https://www.stats.gov.cn/sj/zxfb/202610/t20261023_1965677.html" target="_blank" rel="noopener"><h3>2025年中国创新指数比上年增长6.4%</h3></a>
+<div class="note">创新指数增6.4%，研发转化为实际成果提速明显。</div>
+<div class="src">国家统计局</div>
+</article>
+<article>
+<a class="ilink" href="https://www.stats.gov.cn/sj/zxfb/202610/t20261019_1965617.html" target="_blank" rel="noopener"><h3>2026年9月份规模以上工业增加值增长5.5%</h3></a>
+<div class="note">工业增5.5%稳中有升，反映下半年制造业需求边际改善。</div>
+<div class="src">国家统计局</div>
+</article>
+<article>
+<a class="ilink" href="https://www.stats.gov.cn/sj/zxfb/202610/t20261019_1965616.html" target="_blank" rel="noopener"><h3>2026年1—9月份全国固定资产投资基本情况</h3></a>
+<div class="note">前三季度固投表现，是观察基建托底与地产拖累的关键窗口。</div>
+<div class="src">国家统计局</div>
+</article>
+<article>
+<a class="ilink" href="https://www.stats.gov.cn/sj/zxfb/202610/t20261019_1965614.html" target="_blank" rel="noopener"><h3>2026年1—9月份社会消费品零售总额增长1.1%</h3></a>
+<div class="note">社零增速仅1.1%，居民消费信心偏弱仍是主要拖累。</div>
+<div class="src">国家统计局</div>
+</article>
+<article>
+<a class="ilink" href="https://www.stats.gov.cn/sj/zxfb/202610/t20261019_1965612.html" target="_blank" rel="noopener"><h3>2026年前三季度居民收入和消费支出情况</h3></a>
+<div class="note">核心看增收与消费支出增速差，判断内需修复成色</div>
+<div class="src">国家统计局</div>
+</article>
+</section>
+<section id="sec-leader"><h2><span class="cn">领导动态</span><span>Leadership</span></h2>
+<article>
+<h3>全球首家50万亿银行！直击工商银行股东会：境外资产超5700亿美元，刚获准担任非洲人民币联合清算行</h3>
+<div class="src">人物专题库·最新收录</div>
+</article>
+<article>
+<h3>你可能还不知道，这些银行背后的真正老板都是谁？1.工商银行：实控是财政部2.农业银行：财政部+中央汇金</h3>
+<div class="src">人物专题库·最新收录</div>
+</article>
+<article>
+<h3>刘珺出席2026陆家嘴论坛并作主题发言</h3>
+<div class="src">人物专题库·最新收录</div>
+</article>
+<article>
+<h3>工行行长刘珺：以科技思维重构金融产品和服务，在中国科技自立自强进程中一定拿出工行的标准化答案</h3>
+<div class="src">人物专题库·最新收录</div>
+</article>
+<article>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/de3fe06b40bc4885a523591da7e69a7a.shtml" target="_blank" rel="noopener"><h3>苏州召开防御台风“蔷琵”调度会 范波主持 王维出席</h3></a>
+<div class="src">苏州市要闻</div>
+</article>
+<article>
+<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/df7610b21cf14b248e58f15dcd720f82.shtml" target="_blank" rel="noopener"><h3>中国－葡萄牙文化遗产保护科学“一带一路” 联合实验室三方一体化建设合作会议举办 范波出席并见证签约</h3></a>
+<div class="src">苏州市要闻</div>
+</article>
+</section>
+<section id="sec-suzhou"><h2><span class="cn">苏州要闻</span><span>Suzhou</span></h2>
 <article>
 <a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/de3fe06b40bc4885a523591da7e69a7a.shtml" target="_blank" rel="noopener"><h3>苏州召开防御台风“蔷琵”调度会 范波主持 王维出席</h3></a>
 <div class="src">苏州市要闻</div>
@@ -184,8 +321,6 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/d32d1a0e661040a7ba211051d9e82e3d.shtml" target="_blank" rel="noopener"><h3>铁近科技吴江三期项目开工 总投资25亿元 王维出席</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
-</section>
-<section><h2><span class="cn">苏州要闻</span><span>Suzhou</span></h2>
 <article>
 <a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/e98fd601b2374b99936c256b043028b8.shtml" target="_blank" rel="noopener"><h3>千帆竞逐，一场赛事激活水岸活力</h3></a>
 <div class="src">苏州市要闻</div>
@@ -198,36 +333,8 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/9ba79a3482d34cbfa5f7d6a30f11fe54.shtml" target="_blank" rel="noopener"><h3>苏州市委常委会召开会议</h3></a>
 <div class="src">苏州市要闻</div>
 </article>
-<article>
-<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/be98431df56043d589969d58d0e34aea.shtml" target="_blank" rel="noopener"><h3>部署防御台风“蔷琵”工作 紧盯秋台风与冷空气叠加风险</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
-<article>
-<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/874946f5ec574ba6891eb11ebc01c05e.shtml" target="_blank" rel="noopener"><h3>促进集成电路产业高能级发展 苏州工业园区海关推出惠企措施3.0版</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
-<article>
-<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/017eb89265114e9092b00089b4111d24.shtml" target="_blank" rel="noopener"><h3>中国厨师节“苏州开席” 非遗美食保护联合倡议发布</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
-<article>
-<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/5bc5073995804a4d9e31ff9c2595778c.shtml" target="_blank" rel="noopener"><h3>53处老宅成功牵手“合伙人” 姑苏区持续推进古城保护更新</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
-<article>
-<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/19bceec3ad434fd5bd9698e7806ea91a.shtml" target="_blank" rel="noopener"><h3>霜降至 台风来 周末开启“风雨”模式</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
-<article>
-<a class="ilink" href="https://www.suzhou.gov.cn/szsrmzf/szyw/202610/89da7a59c94c4272ab845a1858863cc9.shtml" target="_blank" rel="noopener"><h3>第二十一届省运会昨天落幕 苏州代表团奖牌总数团体总分双登顶</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
-<article>
-<a class="ilink" href="http://www.snd.gov.cn" target="_blank" rel="noopener"><h3>苏州高新区管委会（虎丘区人民政府）</h3></a>
-<div class="src">苏州市要闻</div>
-</article>
 </section>
-<div class="tasks"><h2><span class="cn">凌晨任务</span><span>Nightly</span></h2>
+<div class="tasks" id="sec-tasks"><h2><span class="cn">凌晨任务</span><span>Nightly</span></h2>
 <p class="lead">人物观点采集：昨日新增 10 篇，累计 562 篇</p>
 <div class="persons">
 <span class="pn">范波 <b>7</b>/234</span>
@@ -235,7 +342,7 @@ footer{padding:22px 16px 0;border-top:3px double var(--rule);margin-top:8px;
 <span class="pn">廖林 <b>0</b>/104</span>
 <span class="pn">刘珺 <b>0</b>/135</span>
 </div></div>
-<footer>生成时间 2026-10-24 10:32 ｜ 数据源 同花顺 iFinD · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
+<footer>生成时间 2026-10-24 11:35 ｜ 数据源 中国人民银行 · 金融监管总局 · 国家统计局 · 苏州政务融媒 ｜ 本地 27B 编审<br>本页为本地生成，仅限自用；点击顶部「↻ 刷新」可手动更新（需电脑开机）</footer>
 <div class="toast" id="toast"></div>
 <script>
 var S='';
@@ -243,6 +350,24 @@ function toast(t,ms){var e=document.getElementById('toast');e.textContent=t;e.cl
  clearTimeout(window._tt);window._tt=setTimeout(function(){e.classList.remove('on')},ms||4200);}
 function setBusy(b){var k=document.getElementById('rf');
  if(b){k.disabled=true;k.textContent='刷新中…';}else{k.disabled=false;k.textContent='↻ 刷新';}}
+var tabs=document.querySelectorAll('.tabs a');
+tabs.forEach(function(a){
+ a.addEventListener('click',function(ev){
+  ev.preventDefault();
+  var el=document.getElementById(a.getAttribute('data-t'));
+  if(el){var y=el.getBoundingClientRect().top+window.scrollY-52;
+   window.scrollTo({top:y,behavior:'smooth'});}
+ });
+});
+function syncTabs(){
+ var best=null;
+ document.querySelectorAll('section[id],div.tasks[id]').forEach(function(s){
+  var r=s.getBoundingClientRect();
+  if(r.top<=70&&r.bottom>70){best=s.id;}
+ });
+ tabs.forEach(function(a){a.classList.toggle('on',a.getAttribute('data-t')===best);});
+}
+window.addEventListener('scroll',syncTabs,{passive:true});syncTabs();
 async function probe(){
  var hs=['http://127.0.0.1:8707','http://100.121.209.120:8707','http://192.168.2.61:8707'];
  for(var i=0;i<hs.length;i++){
@@ -263,7 +388,7 @@ async function refresh(){
     if(!j.running){clearInterval(iv);
      if(j.ok){toast('已更新，正在重载…');setTimeout(function(){location.reload()},800);}
      else{setBusy(false);toast('⚠ 生成失败：'+(j.error||'未知错误'));}}}catch(e){}
-   if(n>90){clearInterval(iv);setBusy(false);toast('⚠ 超时，请稍后手动刷新页面');}
+   if(n>120){clearInterval(iv);setBusy(false);toast('⚠ 超时，请稍后手动刷新页面');}
   },2000);
  }catch(e){setBusy(false);toast('⚠ 请求失败：'+e.message);}
 }
