@@ -1,0 +1,13 @@
+{
+  "daily": {
+    "date": "2026-10-12",
+    "total": 386,
+    "new_home": 135,
+    "second_hand": 251,
+    "new_supply": 0,
+    "inventory": 43048
+  },
+  "dailyHistory": [
+    { "date": "2026-10-12", "total": 386, "new_home": 135, "second_hand": 251 }
+  ]
+}

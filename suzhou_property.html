@@ -83,6 +83,13 @@ body{
 .note b{ color:#7a5e22; }
 .empty{ text-align:center; color:var(--muted); padding:40px; }
 footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; }
+/* 顶栏右侧操作区 + 刷新按钮（与每日要闻同款） */
+.topact{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.rfbtn{ background:rgba(255,255,255,.18); color:#fff; border:1px solid rgba(255,255,255,.55); border-radius:20px; padding:6px 14px; font-size:13px; cursor:pointer; font-family:inherit; transition:background .15s,color .15s; }
+.rfbtn:active{ background:#fff; color:var(--brand-d); }
+.rfbtn[disabled]{ opacity:.5; cursor:default; }
+.toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:26px; z-index:99; background:var(--text); color:var(--bg); font-size:13.5px; padding:9px 18px; border-radius:99px; opacity:0; pointer-events:none; transition:opacity .25s; box-shadow:0 6px 22px rgba(0,0,0,.18); max-width:88vw; text-align:center; }
+.toast.on{ opacity:1; }
 @media(max-width:560px){
   .grid{ grid-template-columns:repeat(2,1fr); }
   .daily{ grid-template-columns:repeat(2,1fr); }
@@ -99,14 +106,17 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
       <div class="t1">🏠 苏州楼市 · 成交周报看板</div>
       <div class="t2" id="upd">加载中…</div>
     </div>
-    <div class="tag">住宅口径 · 全市六区</div>
+    <div class="topact">
+      <button class="rfbtn" id="rf" onclick="refresh()">↻ 刷新</button>
+      <span class="tag">住宅口径 · 全市六区</span>
+    </div>
   </div>
 
   <div id="content">
     <div class="empty">正在读取苏州楼市数据…</div>
   </div>
 
-  <footer>数据来源：网易「楼市周报」+ 中指院「苏州房地产市场周报」 · 家庭导航看板</footer>
+  <footer>数据来源：网易「楼市周报」+ 中指院「苏州房地产市场周报」 · 家庭导航看板<br>在家时点右上「↻ 刷新」可重新生成并发布（需电脑开机）</footer>
 </div>
 
 <script src="suzhou_property.js"></script>
@@ -249,6 +259,35 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
     window.addEventListener('resize',function(){ v.resize(); q.resize(); });
   });
 })();
+</script>
+
+<div class="toast" id="toast"></div>
+<script>
+/* 同「每日要闻」：戳家里电脑本地服务(:8707)重新生成并推送，再 reload */
+var _host=null;
+function toast(t,ms){var e=document.getElementById('toast');if(!e)return;e.textContent=t;e.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(function(){e.classList.remove('on')},ms||4200);}
+function setBusy(b){var k=document.getElementById('rf');if(!k)return;if(b){k.disabled=true;k.textContent='刷新中…';}else{k.disabled=false;k.textContent='↻ 刷新';}}
+async function probe(){
+  var hs=['http://127.0.0.1:8707','http://100.121.209.120:8707','http://192.168.2.61:8707'];
+  for(var i=0;i<hs.length;i++){try{var c=new AbortController();var t=setTimeout(function(){c.abort()},2500);
+    var r=await fetch(hs[i]+'/status',{signal:c.signal});clearTimeout(t);if(r.ok){window._host=hs[i];return true;}}catch(e){}}
+  return false;
+}
+async function refresh(){
+  setBusy(true);toast('正在重新生成楼市看板，约 1-2 分钟…');
+  var ok=await probe();
+  if(!ok){setBusy(false);toast('⚠ 家里的刷新服务没开，请确认电脑开机（或稍后再试）');return;}
+  try{
+    await fetch(window._host+'/suzhou_refresh?t='+Date.now(),{method:'POST'});
+    var n=0,iv=setInterval(async function(){n++;
+      try{var r=await fetch(window._host+'/suzhou_status?t='+Date.now());var j=await r.json();
+        if(!j.running){clearInterval(iv);
+          if(j.ok){toast('已更新，正在重载…');setTimeout(function(){location.reload()},800);}
+          else{setBusy(false);toast('⚠ 生成失败：'+(j.error||'未知错误'));}}}catch(e){}
+      if(n>90){clearInterval(iv);setBusy(false);toast('⚠ 超时，请稍后手动刷新页面');}
+    },2000);
+  }catch(e){setBusy(false);toast('⚠ 请求失败：'+e.message);}
+}
 </script>
 </body>
 </html>
