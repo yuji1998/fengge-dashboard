@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>苏州楼市 · 成交周报看板</title>
+<script>
+/* ECharts 多CDN动态加载+自动回退（与家庭导航其他看板一致） */
+(function(){
+  var CDNS = {
+    'npmmirror': 'https://registry.npmmirror.com/echarts/5.5.0/files/dist/echarts.min.js',
+    'bootcdn':   'https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js',
+    'unpkg':     'https://unpkg.com/echarts@5.5.0/dist/echarts.min.js',
+    'jsdelivr':  'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js',
+    'staticfile': 'https://cdn.staticfile.org/echarts/5.5.0/echarts.min.js'
+  };
+  var keys = Object.keys(CDNS);
+  function tryLoad(i, cb){
+    if(i >= keys.length){ cb(false); return; }
+    var k = keys[i];
+    if(window.echarts){ cb(true); return; }
+    var s = document.createElement('script');
+    s.src = CDNS[k];
+    s.onload = function(){ cb(true); };
+    s.onerror = function(){ s.remove(); tryLoad(i+1, cb); };
+    document.head.appendChild(s);
+  }
+  window.__loadECharts = function(cb){ tryLoad(0, cb); };
+})();
+</script>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --border:#e8edf2; --text:#1f2d3d; --muted:#8a97a8;
+  --brand:#00ae66; --brand-d:#00925a; --blue:#2b7de9; --red:#e8463a; --green:#00ae66;
+  --shadow:0 2px 10px rgba(31,45,61,.06);
+}
+*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  padding:14px 14px 40px; line-height:1.5;
+}
+.wrap{ max-width:920px; margin:0 auto; }
+/* 顶栏 */
+.topbar{
+  background:linear-gradient(135deg,var(--brand) 0%,var(--brand-d) 100%);
+  color:#fff; border-radius:14px; padding:16px 18px; box-shadow:var(--shadow);
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+}
+.topbar .t1{ font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.topbar .t2{ font-size:12px; opacity:.92; margin-top:3px; }
+.topbar .tag{ background:rgba(255,255,255,.2); border-radius:20px; padding:3px 10px; font-size:11px; }
+/* 卡片网格 */
+.grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px; }
+.card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; box-shadow:var(--shadow); }
+.card .lab{ font-size:12px; color:var(--muted); }
+.card .val{ font-size:26px; font-weight:700; margin-top:4px; }
+.card .sub{ font-size:12px; margin-top:4px; color:var(--muted); }
+.card .sub b{ font-weight:700; }
+.up{ color:var(--red); }   /* 涨=红 */
+.down{ color:var(--green); } /* 跌=绿 */
+.flat{ color:var(--muted); }
+/* 区块标题 */
+.sec{ margin-top:18px; }
+.sec h2{ font-size:16px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.sec h2::before{ content:""; width:4px; height:16px; background:var(--brand); border-radius:2px; display:inline-block; }
+/* 图表容器 */
+.chart{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px; box-shadow:var(--shadow); }
+.chart .ct{ font-size:13px; color:var(--muted); padding:2px 4px 6px; }
+/* 表格 */
+.tbl{ width:100%; border-collapse:collapse; background:var(--card); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); font-size:12.5px; }
+.tbl thead th{ background:#eef5f1; color:#1f2d3d; font-weight:600; padding:9px 6px; text-align:right; white-space:nowrap; border-bottom:1px solid var(--border); }
+.tbl thead th:first-child{ text-align:left; }
+.tbl tbody td{ padding:9px 6px; text-align:right; border-bottom:1px solid #f0f3f6; white-space:nowrap; }
+.tbl tbody td:first-child{ text-align:left; font-weight:600; }
+.tbl tbody tr:last-child td{ border-bottom:none; }
+.tbl tbody tr:nth-child(even){ background:#fafcfe; }
+/* 单日快照 */
+.daily{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.daily .card .val{ font-size:22px; }
+/* 说明 */
+.note{ margin-top:18px; background:#fff8e8; border:1px solid #ffe2a8; border-radius:10px; padding:12px 14px; font-size:12px; color:#8a6d2f; }
+.note b{ color:#7a5e22; }
+.empty{ text-align:center; color:var(--muted); padding:40px; }
+footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; }
+@media(max-width:560px){
+  .grid{ grid-template-columns:repeat(2,1fr); }
+  .daily{ grid-template-columns:repeat(2,1fr); }
+  .card .val{ font-size:22px; }
+  .tbl{ font-size:11px; }
+  .tbl thead th,.tbl tbody td{ padding:7px 4px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <div class="t1">🏠 苏州楼市 · 成交周报看板</div>
+      <div class="t2" id="upd">加载中…</div>
+    </div>
+    <div class="tag">住宅口径 · 全市六区</div>
+  </div>
+
+  <div id="content">
+    <div class="empty">正在读取苏州楼市数据…</div>
+  </div>
+
+  <footer>数据来源：网易「楼市周报」+ 中指院「苏州房地产市场周报」 · 家庭导航看板</footer>
+</div>
+
+<script src="suzhou_property.js"></script>
+<script>
+(function(){
+  var D = window.SUZHOU_PROPERTY;
+  var C = document.getElementById('content');
+  if(!D){
+    C.innerHTML = '<div class="empty">未找到数据文件 suzhou_property.js</div>';
+    document.getElementById('upd').textContent = '数据缺失';
+    return;
+  }
+  document.getElementById('upd').textContent = '最近更新：' + (D.updated_at||'—') + (D.note? '　·　'+D.note : '');
+
+  var weekly = (D.weekly||[]).slice();
+  var daily  = D.daily || null;
+  var dailyHistory = D.dailyHistory || [];
+
+  function pct(v){ // 转数字
+    var n = parseFloat(v); return isNaN(n)? null : n;
+  }
+  function fmtPct(v){
+    var n = pct(v); if(n===null) return '—';
+    var s = (n>0?'+':'') + n.toFixed(2) + '%';
+    var cls = n>0?'up':(n<0?'down':'flat');
+    return '<span class="'+cls+'">'+s+'</span>';
+  }
+  function num(v){ var n=parseFloat(v); return isNaN(n)? '—' : n.toLocaleString('zh-CN'); }
+
+  if(!weekly.length && !daily){
+    C.innerHTML = '<div class="empty">暂无楼市成交数据</div>';
+    return;
+  }
+
+  var w = weekly[weekly.length-1]; // 最新周
+
+  // 摘要卡片
+  var cards = '';
+  if(w){
+    cards += card('最新周·新房成交', num(w.new_home)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', '环比 '+fmtPct(w.new_qoq)+'　同比 '+fmtPct(w.new_yoy));
+    cards += card('最新周·二手成交', num(w.second_hand)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', '环比 '+fmtPct(w.second_qoq)+'　同比 '+fmtPct(w.second_yoy));
+    cards += card('新房日均', num(w.new_avg)+'<span style="font-size:13px;color:var(--muted)"> 套/日</span>', '成交面积 '+num(w.new_area)+' 万㎡');
+    cards += card('二手日均', num(w.second_avg)+'<span style="font-size:13px;color:var(--muted)"> 套/日</span>', '成交面积 '+num(w.second_area)+' 万㎡');
+  }
+  // 单日快照卡片（若有）
+  if(daily){
+    cards += card('单日·总成交', num(daily.total)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', daily.date+' 单日播报');
+    cards += card('单日·新房', num(daily.new_home)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', '供应 '+num(daily.new_supply)+' 套');
+    cards += card('单日·二手', num(daily.second_hand)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', '库存 '+num(daily.inventory)+' 套');
+  }
+
+  function card(lab,val,sub){
+    return '<div class="card"><div class="lab">'+lab+'</div><div class="val">'+val+'</div><div class="sub">'+sub+'</div></div>';
+  }
+
+  // 周度成交趋势图
+  var weeks = weekly.map(function(x){return x.week;});
+  var trendHtml = '';
+  if(weekly.length){
+    trendHtml =
+      '<div class="sec"><h2>周度成交量走势</h2>'+
+      '<div class="chart"><div class="ct">新房 vs 二手 周成交套数</div><div id="chartVol" style="width:100%;height:260px;"></div></div>'+
+      '<div class="chart" style="margin-top:10px;"><div class="ct">环比变化（%）· 红涨绿跌</div><div id="chartQoq" style="width:100%;height:240px;"></div></div>'+
+      '</div>';
+  }
+
+  // 分析表（贝壳风格）
+  var tableHtml = '';
+  if(weekly.length){
+    var rows = weekly.map(function(x){
+      return '<tr>'+
+        '<td>'+x.week+'</td>'+
+        '<td>'+num(x.new_home)+'</td>'+
+        '<td>'+fmtPct(x.new_qoq)+'</td>'+
+        '<td>'+fmtPct(x.new_yoy)+'</td>'+
+        '<td>'+num(x.new_avg)+'</td>'+
+        '<td>'+num(x.new_area)+'</td>'+
+        '<td>'+num(x.second_hand)+'</td>'+
+        '<td>'+fmtPct(x.second_qoq)+'</td>'+
+        '<td>'+fmtPct(x.second_yoy)+'</td>'+
+        '<td>'+num(x.second_avg)+'</td>'+
+        '<td>'+num(x.second_area)+'</td>'+
+        '<td style="color:var(--muted)">'+(x.source||'—')+'</td>'+
+      '</tr>';
+    }).join('');
+    tableHtml =
+      '<div class="sec"><h2>楼市成交分析表</h2>'+
+      '<div style="overflow-x:auto;"><table class="tbl"><thead><tr>'+
+        '<th>统计周</th><th>新房(套)</th><th>新房环比</th><th>新房同比</th><th>新房日均</th><th>新房面积(万㎡)</th>'+
+        '<th>二手(套)</th><th>二手环比</th><th>二手同比</th><th>二手日均</th><th>二手面积(万㎡)</th><th>来源</th>'+
+      '</tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+  }
+
+  // 单日历史表
+  var dailyHtml = '';
+  if(dailyHistory.length){
+    var drows = dailyHistory.slice().reverse().map(function(x){
+      return '<tr><td>'+x.date+'</td><td>'+num(x.total)+'</td><td>'+num(x.new_home)+'</td><td>'+num(x.second_hand)+'</td></tr>';
+    }).join('');
+    dailyHtml =
+      '<div class="sec"><h2>单日成交快照（公众号播报）</h2>'+
+      '<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>日期</th><th>总成交</th><th>新房</th><th>二手</th></tr></thead><tbody>'+drows+'</tbody></table></div>'+
+      '<div class="note" style="margin-top:10px;">单日口径与周报（住宅/全市）不同，受工作日/假期影响大，<b>请勿直接相加或跨口径对比</b>。</div></div>';
+  }
+
+  C.innerHTML =
+    '<div class="grid">'+cards+'</div>'+
+    trendHtml + tableHtml + dailyHtml +
+    '<div class="note"><b>口径说明：</b>周报为「住宅」口径，含苏州市区六区；环比=较上周，同比=较上年同期。'+
+    '单日播报为公众号裸数字，与周报口径不同。去化周期等衍生指标仅供参考。'+
+    (D.note? '<br>'+D.note : '')+'</div>';
+
+  // 渲染图表
+  window.__loadECharts(function(ok){
+    if(!ok || !weekly.length) return;
+    var v = echarts.init(document.getElementById('chartVol'));
+    v.setOption({
+      tooltip:{trigger:'axis'},
+      legend:{data:['新房','二手'],top:0,textStyle:{color:'#1f2d3d'}},
+      grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
+      xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97a8',interval:0,rotate:weeks.length>6?30:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
+      yAxis:{type:'value',axisLabel:{color:'#8a97a8'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
+      series:[
+        {name:'新房',type:'bar',data:weekly.map(function(x){return x.new_home;}),itemStyle:{color:'#2b7de9',borderRadius:[4,4,0,0]},barMaxWidth:26},
+        {name:'二手',type:'bar',data:weekly.map(function(x){return x.second_hand;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:26}
+      ]
+    });
+    var q = echarts.init(document.getElementById('chartQoq'));
+    q.setOption({
+      tooltip:{trigger:'axis',valueFormatter:function(v){return (v>0?'+':'')+v+'%';}},
+      legend:{data:['新房环比','二手环比'],top:0,textStyle:{color:'#1f2d3d'}},
+      grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
+      xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97a8',interval:0,rotate:weeks.length>6?30:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
+      yAxis:{type:'value',axisLabel:{color:'#8a97a8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
+      series:[
+        {name:'新房环比',type:'bar',data:weekly.map(function(x){return x.new_qoq;}),itemStyle:{color:'#e8463a',borderRadius:[4,4,0,0]},barMaxWidth:22},
+        {name:'二手环比',type:'bar',data:weekly.map(function(x){return x.second_qoq;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:22}
+      ]
+    });
+    window.addEventListener('resize',function(){ v.resize(); q.resize(); });
+  });
+})();
+</script>
+</body>
+</html>
