@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二十届五中全会精神 · 学习汇编【资料库版】</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:#f2f4f8; color:#2b3445; line-height:1.75; font-size:16px; }
+.hero { background:linear-gradient(135deg,#0d2b52 0%,#14417e 55%,#1b5aa8 100%); color:#fff;
+  padding:44px 20px 36px; text-align:center; }
+.hero .tag { display:inline-block; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35);
+  border-radius:999px; padding:3px 14px; font-size:13px; letter-spacing:1px; margin-bottom:14px; }
+.hero h1 { font-size:26px; font-weight:700; letter-spacing:.5px; }
+.hero .sub { margin-top:10px; font-size:14px; opacity:.85; }
+.hero .meta { margin-top:18px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+.hero .meta span { background:rgba(255,255,255,.12); border-radius:6px; padding:4px 12px; font-size:12.5px; }
+.wrap { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
+.toc { background:#fff; border-radius:12px; padding:18px 20px; margin-top:-22px; box-shadow:0 4px 18px rgba(13,43,82,.10); }
+.toc h2 { font-size:15px; color:#0d2b52; margin-bottom:10px; }
+.toc ol { margin-left:20px; }
+.toc a { color:#1b5aa8; text-decoration:none; font-size:14.5px; line-height:2; }
+.toc a:hover { text-decoration:underline; }
+.card { background:#fff; border-radius:12px; padding:26px 24px; margin-top:18px;
+  box-shadow:0 2px 10px rgba(13,43,82,.06); }
+h2 { font-size:21px; color:#0d2b52; border-left:5px solid #d4a017; padding-left:12px; margin:34px 0 16px; }
+h3 { font-size:18px; color:#14417e; margin:26px 0 12px; }
+h4 { font-size:15.5px; color:#1b5aa8; margin:16px 0 6px; }
+p { margin:10px 0; }
+strong { color:#0d2b52; }
+blockquote { background:linear-gradient(90deg,#fdf6e3,#fbf3dc); border-left:4px solid #d4a017;
+  border-radius:0 8px 8px 0; padding:12px 16px; margin:14px 0; color:#5c4a12; font-size:15px; }
+blockquote p { margin:4px 0; }
+ul,ol { margin:8px 0 8px 22px; }
+li { margin:4px 0; }
+table { width:100%; border-collapse:collapse; margin:14px 0; font-size:14px; display:block; overflow-x:auto; }
+th { background:#0d2b52; color:#fff; padding:9px 10px; text-align:left; white-space:nowrap; }
+td { border:1px solid #e3e8f0; padding:8px 10px; vertical-align:top; }
+tr:nth-child(even) td { background:#f7f9fc; }
+hr { border:none; border-top:1px dashed #ccd5e0; margin:34px 0; }
+a { color:#1b5aa8; }
+code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; color:#14417e; }
+.footer { text-align:center; color:#8a94a6; font-size:12.5px; margin-top:30px; line-height:1.8; }
+.warn { background:#fdf0ef; border-left:4px solid #c0392b; border-radius:0 8px 8px 0; padding:10px 16px; margin:14px 0; font-size:14px; color:#7b241c; }
+.note { background:#eef4fb; border-left:4px solid #1b5aa8; border-radius:0 8px 8px 0; padding:10px 16px; margin:14px 0; font-size:14px; color:#14417e; }
+@media (max-width:600px){ .hero h1{font-size:21px;} .card{padding:20px 16px;} h2{font-size:19px;} body{font-size:15px;} }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="tag">学习专题 · 2026 · 资料库版</div>
+  <h1>二十届五中全会精神<br>学习汇编</h1>
+  <div class="sub">治国必先治党 · 治党务必从严</div>
+  <div class="meta">
+    <span>2026.10.26 — 10.29</span>
+    <span>《决定》+ 习近平党建思想</span>
+    <span>v3 资料库版</span>
+  </div>
+</div>
+<div class="wrap">
+<div class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#overview">全会概况</a></li>
+    <li><a href="#essence">核心要义（含七项任务逐条要点）</a></li>
+    <li><a href="#signals">核心信号速览</a></li>
+    <li><a href="#glossary">应知应会 · 名词卡</a></li>
+    <li><a href="#howto">部门组织学习 · 工作建议</a></li>
+    <li><a href="#bank">对银行业的影响</a></li>
+    <li><a href="#speech">配套演讲稿</a></li>
+    <li><a href="#reading">微信文章收录清单</a></li>
+    <li><a href="#bg">背景关联</a></li>
+    <li><a href="#src">原文来源</a></li>
+  </ol>
+</div>
+
+<div class="card">
+<blockquote>
+<p><strong>整理时间</strong>：2026 年 11 月 1 日（v3）
+<strong>资料来源</strong>：新华社《公报》（via「共产党员」）、中共中央新闻发布会（10.30）、工商银行党委扩大会通稿（10.30）、苏州日报、新华日报；均经 EasyClaw 采集入库
+<strong>使用建议</strong>：组织学习看第五节；写材料看 2.6—2.8 与收录清单；备党课看第七节配套演讲稿；速查名词看第四节</p>
+</blockquote>
+<div class="note">本专题为"活文档"：.md 为母本，本页与 .docx 均由此生成，内容可随时补充、调整、优化。</div>
+<blockquote><p><strong>三句话摘要</strong>：五中全会（2026.10.26—29）审议通过《中共中央关于持之以恒推进全面从严治党若干重大问题的决定》，首次系统概括"习近平党建思想"；《决定》按"总论—七项战略任务—两项保障"部署，强调"增强党性是全面从严治党的根本性任务"；对国有银行而言，关键是把全面从严治党成效转化为做优做强实效，党建引领经营转型，确保"十五五"良好开局。</p></blockquote>
+</div>
+
+<h2 id="overview">一、全会概况</h2>
+<div class="card">
+<ul>
+<li><strong>时间</strong>：2026 年 10 月 26 日—29 日</li>
+<li><strong>出席</strong>：中央委员 162 人、候补中央委员 117 人</li>
+<li><strong>议程</strong>：听取和讨论习近平总书记受中央政治局委托所作的工作报告；审议通过《决定》；习近平就《决定（讨论稿）》向全会作了说明</li>
+<li><strong>核心成果</strong>：《中共中央关于持之以恒推进全面从严治党若干重大问题的决定》——"持续推进新时代党的建设新的伟大工程的纲领性文件"</li>
+<li><strong>重大理论成果</strong>：首次系统概括"<strong>习近平党建思想</strong>"</li>
+<li><strong>人事事项</strong>：增选张升民为中央政治局委员；刘珺（工行行长）等 10 人递补中央委员；二十一大定于 2027 年下半年</li>
+</ul>
+<div class="warn">⚠️ <strong>易混警示</strong>："十五五"规划《建议》是 <strong>2025 年 10 月二十届四中全会</strong>审议通过的；五中全会主题是全面从严治党。写材料勿再混用。</div>
+</div>
+
+<h2 id="essence">二、核心要义</h2>
+<div class="card">
+<h3>2.1 一句话定性</h3>
+<p>治国必先治党，治党务必从严。围绕"建设什么样的长期执政的马克思主义政党、怎样建设长期执政的马克思主义政党"，首次提出"习近平党建思想"。</p>
+<blockquote><p><strong>定调金句</strong>："越是长期执政，越是承平日久，越是环境复杂，越要以强烈的忧患意识持之以恒推进全面从严治党。"</p></blockquote>
+<h3>2.2 七条重大原则</h3>
+<p>服务使命任务｜以党的政治建设为统领｜全面从严｜问题导向｜守正创新｜以上率下｜依规治党</p>
+<h3>2.3 三大板块结构（写材料按此搭骨架）</h3>
+<p>① <strong>总论</strong>（5 方面）② <strong>分论（7 项战略任务）</strong>③ <strong>保障</strong>（完善监督体系＋压实政治责任）</p>
+<h3>2.4 七项战略任务逐条要点</h3>
+<h4>（1）增强共产党人的党性——根本性任务</h4>
+<p>六个努力方向：坚定理想信念、铸牢对党忠诚、厚植为民情怀、坚持实事求是、纯正道德品质、保持清正廉洁。五方面部署：对党忠诚教育／创新理论凝心铸魂／优良传统涵养党性／实践中锤炼党性（处理"是和非、公和私、得和失"）／党性鉴别（纳入干部考察与民主评议）。</p>
+<h4>（2）严格贯彻执行民主集中制</h4>
+<p>坚持党中央集中统一领导；提高党内民主质量；严格执行决策议事规则（合规合法性审查、<strong>"三重一大"</strong>监督）；规范<strong>"一把手"履职用权</strong>。</p>
+<h4>（3）锻造高素质干部队伍</h4>
+<p>总要求：<strong>政治过硬、本领高强、作风优良、纪律严明</strong>。正确用人导向（大力选拔"对党忠诚、表里如一、担当尽责、实绩突出、清正廉洁"的干部；<strong>坚决不用</strong>畏难避事、庸懒无为、作风飘浮的人，<strong>坚决清除</strong>对党不忠、阳奉阴违、以权谋私的人）；践行<strong>正确政绩观</strong>（"为人民出政绩、以实干出政绩"）；增强四种本领；管理监督<strong>从高级干部抓起</strong>；严管厚爱结合、激励约束并重。</p>
+<h4>（4）建设严密组织体系</h4>
+<p>机关表率／地方党委功能／各领域基层党组织／<strong>突出抓好新兴领域党建</strong>（"两个覆盖"）／党员队伍建设／组织贯通机制（述职评议考核）。</p>
+<h4>（5）驰而不息正风肃纪</h4>
+<p><strong>党性党风党纪一起抓、正风肃纪反腐相贯通</strong>；走好群众路线；锲而不舍落实中央八项规定精神；作风建设常态化长效化；从严执纪。</p>
+<h4>（6）一体推进不敢腐不能腐不想腐</h4>
+<p>硬数据：十八大以来立案 <strong>810.5 万件</strong>、处分 <strong>792.2 万人</strong>（中管干部 <strong>963 人</strong>）。重点：高压惩治（政商勾连、资本向政治领域渗透、新型腐败隐性腐败）；权力运行制约监督；崇廉拒腐思想根基（廉洁文化）；以案促改促治。</p>
+<h4>（7）坚持制度治党、依规治党</h4>
+<p>定位：<strong>长远之策、根本之策</strong>。完善党内法规制度体系；增强制度执行力；破除潜规则、从立明规矩做起。</p>
+<h3>2.5 两项保障</h3>
+<p><strong>监督体系</strong>：党委（党组）全面监督＋纪律、监察、派驻、巡视监督统筹衔接＋基层监督体系＋内外监督贯通。</p>
+<p><strong>五类责任体系</strong>：党委（党组）主体责任｜纪委监督责任｜书记第一责任人责任｜班子成员"一岗双责"｜党员干部具体责任。<strong>两项硬性频次</strong>：县级以上党委<strong>至少每年</strong>听取一次班子成员履责汇报；下级纪委<strong>至少每半年</strong>报告一次"一把手"履职用权情况。</p>
+<h3>2.6 起草过程的"硬数字"</h3>
+<p>总书记亲自担任起草组组长；16 家单位、23 个重点课题；征求意见 1173 条、吸收 208 条；全会期间提出 100 条、吸收 13 条。</p>
+<h3>2.7 本行与本地传达动态（高价值）</h3>
+<p><strong>工商银行党委扩大会议（10.30，廖林主持）</strong>——本行最高层级表态，分行材料对标母本：</p>
+<ul>
+<li>学习要求："<strong>三个深刻领会和把握</strong>"</li>
+<li>四条硬要求：党中央对金融工作集中统一领导；"立铁规矩、强硬约束"、"一张表"贯通整改；压实"一岗双责"；把从严治党成效<strong>转化为做优做强实效</strong></li>
+<li>经营结合："防风险、强监管、促高质量发展"，坚持<strong>党建引领、经营转型</strong>，抓好岁末收官、提前谋划明年</li>
+<li>⚠️ 本文用"党建引领、经营转型"，未提"五化转型"，分行材料勿混用</li>
+</ul>
+<p><strong>苏州市委常委会扩大会议（10.30，范波主持）</strong>：五个"深刻理解把握"；巩固正确政绩观学习教育成果；传承弘扬苏州"三大法宝"；全力冲刺全年目标。</p>
+<p><strong>江苏独家素材</strong>：2014 年 12 月总书记在镇江丹徒世业镇考察时<strong>首次提出"全面从严治党"</strong>。苏州抓手：新兴领域党建三年行动计划、"三交流三促进"；吴江"红律护新""垂虹律韵"。</p>
+<h3>2.8 高价值提法库（写材料直接可用）</h3>
+<p>"先学一步、学深一层"｜"立铁规矩、强硬约束"｜"一张表"贯通整改｜"主体责任、监督责任、第一责任人责任和一岗双责"｜"把全面从严治党成效转化为做优做强实效"｜"为人民出政绩、以实干出政绩"｜"增强党性是全面从严治党的根本性任务"｜"政治过硬、本领高强、作风优良、纪律严明"｜"坚决不用三类人／坚决清除三类人"｜"党性党风党纪一起抓、正风肃纪反腐相贯通"｜"越是长期执政，越是承平日久，越是环境复杂，越要以强烈的忧患意识持之以恒推进全面从严治党"</p>
+</div>
+
+<h2 id="signals">三、核心信号速览（一页精华）</h2>
+<div class="card">
+<table>
+<thead><tr><th>领域</th><th>关键信号</th><th>出处</th></tr></thead>
+<tbody>
+<tr><td>理论成果</td><td>首次系统概括"习近平党建思想"</td><td>公报/发布会</td></tr>
+<tr><td>文件定性</td><td>《决定》=党的建设新的伟大工程"纲领性文件"</td><td>公报/发布会</td></tr>
+<tr><td>框架</td><td>总论—7 项战略任务—2 项保障</td><td>唐方裕（发布会）</td></tr>
+<tr><td>根本任务</td><td>"增强党性是全面从严治党的根本性任务"</td><td>胡和平（发布会）</td></tr>
+<tr><td>用人导向</td><td>政治过硬、本领高强、作风优良、纪律严明；正确政绩观</td><td>《决定》</td></tr>
+<tr><td>反腐方略</td><td>一体推进三不腐；十八大以来立案 810.5 万件、处分 792.2 万人</td><td>《决定》/发布会</td></tr>
+<tr><td>责任体系</td><td>五类责任；年度听取汇报＋半年报告两项硬性频次</td><td>《决定》</td></tr>
+<tr><td>组织人事</td><td>增选张升民为政治局委员；刘珺递补中央委员；二十一大 2027 下半年</td><td>公报</td></tr>
+<tr><td>经济工作</td><td>稳中求进、挖掘内需潜力，确保完成今年任务、实现"十五五"良好开局</td><td>公报</td></tr>
+<tr><td>本行动员</td><td>三个"深刻领会和把握"+四条硬要求；党建引领、经营转型</td><td>工行党委通稿</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="glossary">四、应知应会 · 名词卡（速查）</h2>
+<div class="card">
+<table>
+<thead><tr><th>名词</th><th>要点</th></tr></thead>
+<tbody>
+<tr><td>习近平党建思想</td><td>五中全会首次系统概括；回答"建设什么样的长期执政的马克思主义政党、怎样建设"；习近平新时代中国特色社会主义思想的重要组成部分</td></tr>
+<tr><td>两个确立 / 两个维护</td><td>确立习近平同志党中央的核心、全党的核心地位，确立习近平新时代中国特色社会主义思想的指导地位；坚决维护核心地位，坚决维护党中央权威和集中统一领导</td></tr>
+<tr><td>《决定》</td><td>《中共中央关于持之以恒推进全面从严治党若干重大问题的决定》简称；总论+7 项战略任务+2 项保障</td></tr>
+<tr><td>一体推进"三不腐"</td><td>不敢腐（高压惩治）、不能腐（制约监督）、不想腐（思想根基）</td></tr>
+<tr><td>五类责任</td><td>党委（党组）主体责任／纪委监督责任／书记第一责任人责任／班子成员"一岗双责"／党员干部具体责任</td></tr>
+<tr><td>"一岗双责"</td><td>领导班子成员对分管业务与分管领域管党治党责任双重担责</td></tr>
+<tr><td>"三重一大"</td><td>重大事项决策、重要干部任免、重大项目安排、大额资金使用，须集体决策并监督</td></tr>
+<tr><td>正确政绩观</td><td>"为人民出政绩、以实干出政绩"；结合换届抓好"一把手"政绩观培训</td></tr>
+<tr><td>新兴领域党建 / 两个覆盖</td><td>新经济组织、新社会组织、新就业群体；组织覆盖＋工作覆盖；苏州抓手"三交流三促进"</td></tr>
+<tr><td>二十一大</td><td>2027 年下半年在北京召开</td></tr>
+<tr><td>从严治党首提地</td><td>2014 年 12 月，总书记在江苏镇江丹徒世业镇考察时首次提出"全面从严治党"</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="howto">五、部门组织学习 · 工作建议（部门负责人实操）</h2>
+<div class="card">
+<h3>5.1 学习安排建议（四步走）</h3>
+<ol>
+<li><strong>第一议题传达</strong>：部门例会/支部委员会第一时间传达总行党委扩大会精神和分行部署；</li>
+<li><strong>支部专题学习</strong>：纳入"三会一课"，按"三大板块"分 2—3 次专题研学；</li>
+<li><strong>交流研讨</strong>：围绕"如何把从严治党成效转化为经营实效"人人发言、结合岗位查摆；</li>
+<li><strong>总结上报</strong>：形成部门学习贯彻情况小结，按分行要求报送。</li>
+</ol>
+<h3>5.2 专题研讨参考题目</h3>
+<ul>
+<li>结合"增强党性是根本性任务"，谈党员立足岗位如何锤炼党性；</li>
+<li>对照五类责任体系，本部门"一岗双责"有哪些具体抓手；</li>
+<li>对照"三重一大"监督和"一把手"用权规范，本部门权力运行还有哪些风险点；</li>
+<li>如何以党建引领条线经营转型，确保"十五五"良好开局。</li>
+</ul>
+<h3>5.3 写材料框架提示（直接套用）</h3>
+<ul>
+<li><strong>学习贯彻工作方案</strong>：总论→七项任务对照落地→保障，与《决定》同构最稳妥；</li>
+<li><strong>主体责任清单</strong>：五类责任＋两项硬性频次，可直接转化为制度条款；</li>
+<li><strong>干部队伍建设段落</strong>："政治过硬、本领高强、作风优良、纪律严明"+"坚决不用三类人／坚决清除三类人"对比句式；</li>
+</ul>
+<div class="warn">⚠️ 合规提示："出卷人"版为自媒体二度梳理，正式行文涉及《决定》表述待全文公开后核对原文；分行材料以本行正式发文口径为准。</div>
+</div>
+
+<h2 id="bank">六、对银行业的影响（部门负责人视角）</h2>
+<div class="card">
+<table>
+<thead><tr><th>维度</th><th>压力</th><th>机遇</th></tr></thead>
+<tbody>
+<tr><td>管党治党</td><td>"一岗双责"压实到部门，廉洁风险、权力约束更硬</td><td>从严环境净化生态，干事创业有制度保障</td></tr>
+<tr><td>经营转型</td><td>防风险、强监管主线，合规成本上升</td><td>党建引领经营转型，把党建势能转化为发展动能</td></tr>
+<tr><td>队伍建设</td><td>增强党性、作风建设要求更高</td><td>锻造高素质队伍，干部在遵规守纪下安心干事、放手干事</td></tr>
+</tbody>
+</table>
+<p><strong>部门行动建议</strong>：①按"三个深刻领会和把握"组织支部学习，先学一步、学深一层；②对照四条硬要求排查本部门权力运行与廉洁风险点（"三重一大"、授权用权）；③用五类责任体系完善部门责任清单；④抓好岁末收官与明年谋划，确保"十五五"良好开局；⑤【请替换：结合分管条线的具体行动项】。</p>
+</div>
+
+<h2 id="speech">七、配套：学习体会演讲稿（党支部学习会分享版）</h2>
+<div class="card">
+<blockquote><p>适用场合：党支部专题学习会·部门负责人学习体会分享（8 分钟）。<code>[真实事例]</code> 为占位，需结合本人实际经历补充。</p></blockquote>
+<p><strong>开场</strong>：同志们："治国必先治党，治党务必从严。"这是《决定》开篇就要立住的一句话。今天我用八分钟，汇报三点学习体会。</p>
+<p><strong>一、认清这次全会的分量</strong>：党的二十届五中全会，10 月 26 日至 29 日在北京召开。全会最重要的成果，是审议通过了《中共中央关于持之以恒推进全面从严治党若干重大问题的决定》——持续推进新时代党的建设新的伟大工程的纲领性文件。全会还有一大理论贡献：首次系统概括了"习近平党建思想"。我们党成立 105 周年、"十五五"开局、民族复兴关键时期——三个时间坐标叠在一起，这次全会的分量就清楚了。</p>
+<p><strong>二、把握《决定》的骨架</strong>：学《决定》，先记结构：三大板块——总论讲重要性紧迫性和总体要求；分论是七项战略任务，第一项就是"增强共产党人的党性"，全会明确"增强党性是全面从严治党的根本性任务"；最后两项保障，完善监督体系、压实政治责任。起草过程也见分量：总书记亲自任起草组组长，16 家单位、23 个课题，收意见 1173 条、吸收 208 条。集中全党智慧，这不是一句空话。</p>
+<p><strong>三、落到我们部门怎么干</strong>：作为国有银行区域分行的部门负责人，我想到三个"抓"。</p>
+<ul>
+<li>一是<strong>抓学习传达</strong>，做到"先学一步、学深一层"。总行党委扩大会已经定了调，我们要按"三个深刻领会和把握"组织好支部学习，不能以上传下达代替真学真懂。</li>
+<li>二是<strong>抓结合融入</strong>，把从严治党成效转化为经营实效。行里讲"党建引领、经营转型"，落到部门，就是按"防风险、强监管、促高质量发展"这条主线，抓好岁末收官、提前谋划明年，把党的领导贯穿经营转型全过程。</li>
+<li>三是<strong>抓责任落实</strong>，扛牢"一岗双责"。管业务必须管队伍、管风险、管廉洁。"立铁规矩、强硬约束"，把权力关进制度笼子，这既是对组织负责，也是对同志们负责。</li>
+</ul>
+<p>这里我想讲一个身边的事例。【请替换：你所在部门在党建与业务融合、廉洁风险防控上的一个真实事例，一两句话即可，越具体越好。】</p>
+<p><strong>收尾</strong>：同志们，"全面从严治党"这个重大命题，最早就是 2014 年 12 月总书记在江苏镇江考察时提出的。这是江苏的独家记忆，也是我们的责任起点。把从严治党成效转化为做优做强实效——这条路，总行在走，我们部门也要走在前面。从今天起，把手里的每一件事，都做成"为人民出政绩、以实干出政绩"的注脚。谢谢大家！</p>
+</div>
+
+<h2 id="reading">八、延伸阅读：微信文章收录清单（EasyClaw 采集）</h2>
+<div class="card">
+<blockquote><p>收录位置：<code>F:\金融知识库\公众号文章\</code>（部分在 <code>学习素材库\政策解读\</code>）。以下与五中全会直接相关，均已过本地 27B 打标。</p></blockquote>
+<table>
+<thead><tr><th>文件</th><th>来源/日期</th><th>价值定位</th></tr></thead>
+<tbody>
+<tr><td><code>2026-10-29_党建_二十届五中全会公报_全文.md</code></td><td>共产党员/新华社</td><td>总纲性文件；含人事事项与"习近平党建思想"</td></tr>
+<tr><td><code>2026-10-30_党建_解读二十届五中全会精神新闻发布会.md</code></td><td>中央政法委长安剑</td><td>《决定》三大板块权威口径（唐方裕/胡和平）</td></tr>
+<tr><td><code>2026-10-31_党建_读懂决定二十届五中全会精神解读_出卷人版.md</code></td><td>出卷人</td><td>《决定》框架"导航图"+七项任务逐条细则+起草硬数字</td></tr>
+<tr><td><code>2026-10-30_党建_学习笔记二十届五中全会公报.md</code></td><td>办公室主任</td><td>办公室条线视角；学习笔记写法范式、必背句标注</td></tr>
+<tr><td><code>2026-10-30_党建_工商银行党委扩大会议传达学习五中全会精神.md</code></td><td>中国工商银行</td><td><strong>本行最高层级表态稿</strong>，分行材料对标母本</td></tr>
+<tr><td><code>2026-10-30_党建_苏州市委常委会扩大会议传达学习五中全会精神.md</code></td><td>苏州政府网/苏州日报</td><td>本地传达：五个"深刻理解把握"</td></tr>
+<tr><td><code>2026-10-31_党建_新华日报江苏全省热议五中全会精神.md</code></td><td>微讯江苏</td><td>省级反响稿范式+"从严治党首提地"独家素材</td></tr>
+<tr><td><code>2026-10-30_中宣部召开学习宣传贯彻二十届五中全会精神会议.md</code></td><td>—</td><td>宣传口径</td></tr>
+<tr><td><code>2026-10-30_金融_建设银行党委传达学习贯彻五中全会精神.md</code></td><td>建设银行</td><td>同业对照（建行"七个深刻把握"，勿与工行混用）</td></tr>
+<tr><td><code>2026-10-30_党建_国家外汇管理局党组传达学习五中全会精神.md</code></td><td>—</td><td>监管条线动态</td></tr>
+<tr><td><code>2026-10-31_党建_范波吴中调研暨开发区乡镇街道工作专题座谈会.md</code></td><td>苏州</td><td>本地落实动态</td></tr>
+<tr><td><code>2026-07-30_政治局会议通稿全文——决定召开二十届五中全会+部署下半年经济.md</code></td><td>学习素材库</td><td>前置脉络：全会召开的决定过程</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="bg">九、背景关联：与"十五五"规划的关系</h2>
+<div class="card">
+<ul>
+<li><strong>二十届四中全会（2025 年 10 月）</strong>：审议通过"十五五"规划《建议》——高质量发展为主线，新质生产力为钥匙。</li>
+<li><strong>二十届五中全会（2026 年 10 月）</strong>：全面从严治党专题，通过《决定》。</li>
+<li><strong>衔接点</strong>：五中全会要求"确保完成今年经济社会发展主要目标任务，实现'十五五'良好开局"，并结合换届抓好"一把手"政绩观培训。</li>
+</ul>
+</div>
+
+<h2 id="src">十、原文来源附录</h2>
+<div class="card">
+<ol>
+<li>《中国共产党第二十届中央委员会第五次全体会议公报》（新华社，via「共产党员」2026-10-29）</li>
+<li>中共中央新闻发布会介绍解读五中全会精神（人民网直播实录 2026-10-30；「出卷人」二度梳理）</li>
+<li>《中国工商银行党委召开扩大会议传达学习贯彻党的二十届五中全会精神》（工行官方公众号 2026-10-30）</li>
+<li>《苏州市委常委会召开扩大会议 传达学习党的二十届五中全会精神》（苏州日报 2026-10-30）</li>
+<li>新华日报《江苏全省党员干部群众热议党的二十届五中全会精神》（2026-10-31）</li>
+</ol>
+<blockquote><p>免责声明：本汇编为公开信息的学习性整理，内容以官方发布为准；正式行文涉及《决定》表述待全文公开后核对原文；写分行材料以本行正式发文口径为准。不构成任何投资或经营建议。</p></blockquote>
+</div>
+
+<div class="footer">二十届五中全会精神学习整理版 v3 资料库版 · 生成于 2026-11-01<br>内容以官方发布为准 · 不构成投资建议 · 活文档可随时补充优化</div>
+</div>
+</body>
+</html>
