@@ -19,7 +19,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaH
 .wrap { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
 .card { background:#fff; border-radius:12px; padding:24px 22px; margin-top:18px;
   box-shadow:0 2px 10px rgba(74,43,13,.06); }
-h2 { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
+h2, summary.sec-h { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
 h3 { font-size:17px; color:#7a4a14; margin:22px 0 10px; }
 p { margin:10px 0; }
 ul,ol { margin:8px 0 8px 22px; }
@@ -34,6 +34,17 @@ code { background:#f5efe2; border-radius:4px; padding:1px 6px; font-size:13px; c
 a { color:#a8611b; }
 .footer { text-align:center; color:#8a94a6; font-size:12.5px; margin-top:30px; }
 @media (max-width:600px) { .hero h1{font-size:20px;} .card{padding:18px 14px;} body{font-size:15px;} }
+
+details.sec { margin-top:6px; }
+summary.sec-h { cursor:pointer; list-style:none; }
+summary.sec-h::-webkit-details-marker { display:none; }
+details.sec > summary.sec-h .arr { float:right; font-size:12px; color:#9aa4b8; font-weight:normal; padding-top:8px; }
+details.sec[open] > summary.sec-h .arr::after { content:"收起 ▲"; }
+details.sec:not([open]) > summary.sec-h .arr::after { content:"展开 ▼"; }
+.fab-back { position:fixed; bottom:24px; right:16px; z-index:99; background:#0d2b52; color:#fff;
+  text-decoration:none; border-radius:999px; padding:11px 18px; font-size:14px; font-weight:600;
+  box-shadow:0 4px 16px rgba(13,43,82,.40); display:flex; align-items:center; gap:6px; }
+.fab-back:active { transform:scale(.94); }
 </style>
 </head>
 <body>
@@ -48,7 +59,7 @@ a { color:#a8611b; }
 <p>归属：<code>F:\专题\演讲\03_著名演讲拆解\</code>
 选篇原则：<strong>不选"听起来爽"的，选"结构最值得抄"的</strong>——每篇代表一种可迁移的结构类型。</p>
 </blockquote>
-<h2>一、七篇演讲话应收录</h2>
+<details class="sec"><summary class="sec-h"><span class="sec-t">一、七篇演讲话应收录</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -111,7 +122,7 @@ a { color:#a8611b; }
 </tr>
 </tbody>
 </table>
-<h2>二、拆解统一框架（每篇都按此读）</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">二、拆解统一框架（每篇都按此读）</span><span class="arr"></span></summary>
 <ol>
 <li><strong>背景档案</strong>：时间、场合、听众、时长——决定"为什么这么说"</li>
 <li><strong>结构逐段拆解</strong>：骨架图 + 每段的功能</li>
@@ -119,14 +130,31 @@ a { color:#a8611b; }
 <li><strong>金句与出处</strong>：可直接引用的"弹药"</li>
 <li><strong>可迁移点</strong>：3–5 条能用到汇报/致辞/发言里的东西</li>
 </ol>
-<h2>三、跨篇总规律（先剧透）</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">三、跨篇总规律（先剧透）</span><span class="arr"></span></summary>
 <ul>
 <li><strong>结构永远先于金句</strong>：名篇的金句都长在结构的关键位置（开场定调/转折立论/结尾收束），不是散落的漂亮话；</li>
 <li><strong>时间维度是万能骨架</strong>：葛底斯堡"过去—现在—未来"、乔布斯"过去的故事—现在的选择"，几乎所有名篇都在操纵时间感；</li>
 <li><strong>情感要升级不要平均</strong>：名篇的情绪都是"爬坡式"的（里根：悲痛→敬意→希望；乔布斯：好奇→挫折→死亡），最后一幕最重；</li>
 <li><strong>短是奢侈品</strong>：272 词 vs 2 小时（葛底斯堡），5 分钟（挑战者号），15 分钟（乔布斯）——长度从来不是力量。</li>
 </ul>
-<div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
+</details><div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
 </div>
+<a class="fab-back" href="../index.html">📚 目录</a>
+<script>
+(function(){
+  function expandHash(){
+    var h = location.hash.slice(1);
+    if(!h) return;
+    var ds = document.querySelectorAll('details.sec');
+    for(var i=0;i<ds.length;i++){
+      if(ds[i].id===h || ds[i].querySelector('summary#'+h) || ds[i].querySelector('#'+h)) ds[i].open=true;
+    }
+    var el = document.getElementById(h);
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+  }
+  window.addEventListener('hashchange', expandHash);
+  if(location.hash) expandHash();
+})();
+</script>
 </body>
 </html>

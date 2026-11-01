@@ -19,7 +19,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaH
 .wrap { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
 .card { background:#fff; border-radius:12px; padding:24px 22px; margin-top:18px;
   box-shadow:0 2px 10px rgba(74,43,13,.06); }
-h2 { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
+h2, summary.sec-h { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
 h3 { font-size:17px; color:#7a4a14; margin:22px 0 10px; }
 p { margin:10px 0; }
 ul,ol { margin:8px 0 8px 22px; }
@@ -34,6 +34,17 @@ code { background:#f5efe2; border-radius:4px; padding:1px 6px; font-size:13px; c
 a { color:#a8611b; }
 .footer { text-align:center; color:#8a94a6; font-size:12.5px; margin-top:30px; }
 @media (max-width:600px) { .hero h1{font-size:20px;} .card{padding:18px 14px;} body{font-size:15px;} }
+
+details.sec { margin-top:6px; }
+summary.sec-h { cursor:pointer; list-style:none; }
+summary.sec-h::-webkit-details-marker { display:none; }
+details.sec > summary.sec-h .arr { float:right; font-size:12px; color:#9aa4b8; font-weight:normal; padding-top:8px; }
+details.sec[open] > summary.sec-h .arr::after { content:"收起 ▲"; }
+details.sec:not([open]) > summary.sec-h .arr::after { content:"展开 ▼"; }
+.fab-back { position:fixed; bottom:24px; right:16px; z-index:99; background:#0d2b52; color:#fff;
+  text-decoration:none; border-radius:999px; padding:11px 18px; font-size:14px; font-weight:600;
+  box-shadow:0 4px 16px rgba(13,43,82,.40); display:flex; align-items:center; gap:6px; }
+.fab-back:active { transform:scale(.94); }
 </style>
 </head>
 <body>
@@ -47,7 +58,7 @@ a { color:#a8611b; }
 <blockquote>
 <p>拆解框架见 <code>00_著名演讲拆解_子册索引.md</code></p>
 </blockquote>
-<h2>一、背景档案</h2>
+<details class="sec"><summary class="sec-h"><span class="sec-t">一、背景档案</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -79,7 +90,7 @@ a { color:#a8611b; }
 </tbody>
 </table>
 <p><strong>为什么学它</strong>：这是<strong>"三故事结构"的全球样板</strong>——用叙事替代说教，且开场就把结构亮给听众。The Speaking Guild 的逐帧拆解给出了各段时间戳，本篇大量引用。</p>
-<h2>二、结构逐段拆解（含时间轴）</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">二、结构逐段拆解（含时间轴）</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -128,7 +139,7 @@ a { color:#a8611b; }
 故事三：失败后怎么做 → 用死亡逼出当下选择（紧迫感）
 </code></pre>
 <p><strong>每个故事都在改写前一个故事的意义</strong>：好奇 → 坚持 → 迫切。层层加码，最后收束成一句可带走的话。</p>
-<h2>三、修辞手法清单</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">三、修辞手法清单</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -162,14 +173,14 @@ a { color:#a8611b; }
 <blockquote>
 <p>不足处（virtualspeechcoach 点评）：全程读稿、开场前 30 秒有 3 次"uh"、摸嘴唇——<strong>名篇也有硬伤，但结构强到可以原谅</strong>。</p>
 </blockquote>
-<h2>四、金句与出处</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">四、金句与出处</span><span class="arr"></span></summary>
 <ul>
 <li>"You can't connect the dots looking forward; you can only connect them backward."（无法预知串联，只能回看）</li>
 <li>"I'm convinced that the only thing that kept me going was that I loved what I did. You've got to find what you love."（热爱是唯一的燃料）</li>
 <li>"Remembering that you are going to die is the best way I know to avoid the trap of thinking you have something to lose."（记住你会死，是避开"患得患失"的最好方法）</li>
 <li>"Stay Hungry. Stay Foolish."（求知若饥，虚心若愚——出自《全球概览》）</li>
 </ul>
-<h2>五、可迁移点</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">五、可迁移点</span><span class="arr"></span></summary>
 <ol>
 <li><strong>开场就交结构</strong>："我今天讲三点"——看似平淡，实为减负；听众有了地图就不迷路。</li>
 <li><strong>故事必须"带货"</strong>：每个故事收尾时给一条可带走的"规则句"。讲完不点题 = 白讲。</li>
@@ -177,13 +188,30 @@ a { color:#a8611b; }
 <li><strong>结尾借一句话并注明出处</strong>：借力 + 归因，比自己硬凑金句更稳。</li>
 <li><strong>自贬是入场券</strong>：面对"听众比你弱"的场合（毕业典礼/下属），先自贬一次，后面的道理才听得进去。</li>
 </ol>
-<h2>附：来源</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">附：来源</span><span class="arr"></span></summary>
 <ul>
 <li>斯坦福大学官方 YouTube 全程视频（时间戳来源：The Speaking Guild 逐帧拆解）</li>
 <li>virtualspeechcoach: <em>Public Speaking Lessons from TED Talks</em>（照稿宣读、开场瑕疵点评）</li>
 <li>新华思客/微信公众号全中文译文</li>
 </ul>
-<div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
+</details><div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
 </div>
+<a class="fab-back" href="../index.html">📚 目录</a>
+<script>
+(function(){
+  function expandHash(){
+    var h = location.hash.slice(1);
+    if(!h) return;
+    var ds = document.querySelectorAll('details.sec');
+    for(var i=0;i<ds.length;i++){
+      if(ds[i].id===h || ds[i].querySelector('summary#'+h) || ds[i].querySelector('#'+h)) ds[i].open=true;
+    }
+    var el = document.getElementById(h);
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+  }
+  window.addEventListener('hashchange', expandHash);
+  if(location.hash) expandHash();
+})();
+</script>
 </body>
 </html>

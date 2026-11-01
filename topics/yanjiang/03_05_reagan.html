@@ -19,7 +19,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaH
 .wrap { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
 .card { background:#fff; border-radius:12px; padding:24px 22px; margin-top:18px;
   box-shadow:0 2px 10px rgba(74,43,13,.06); }
-h2 { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
+h2, summary.sec-h { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
 h3 { font-size:17px; color:#7a4a14; margin:22px 0 10px; }
 p { margin:10px 0; }
 ul,ol { margin:8px 0 8px 22px; }
@@ -34,6 +34,17 @@ code { background:#f5efe2; border-radius:4px; padding:1px 6px; font-size:13px; c
 a { color:#a8611b; }
 .footer { text-align:center; color:#8a94a6; font-size:12.5px; margin-top:30px; }
 @media (max-width:600px) { .hero h1{font-size:20px;} .card{padding:18px 14px;} body{font-size:15px;} }
+
+details.sec { margin-top:6px; }
+summary.sec-h { cursor:pointer; list-style:none; }
+summary.sec-h::-webkit-details-marker { display:none; }
+details.sec > summary.sec-h .arr { float:right; font-size:12px; color:#9aa4b8; font-weight:normal; padding-top:8px; }
+details.sec[open] > summary.sec-h .arr::after { content:"收起 ▲"; }
+details.sec:not([open]) > summary.sec-h .arr::after { content:"展开 ▼"; }
+.fab-back { position:fixed; bottom:24px; right:16px; z-index:99; background:#0d2b52; color:#fff;
+  text-decoration:none; border-radius:999px; padding:11px 18px; font-size:14px; font-weight:600;
+  box-shadow:0 4px 16px rgba(13,43,82,.40); display:flex; align-items:center; gap:6px; }
+.fab-back:active { transform:scale(.94); }
 </style>
 </head>
 <body>
@@ -48,7 +59,7 @@ a { color:#a8611b; }
 <p>拆解框架见 <code>00_著名演讲拆解_子册索引.md</code>
 中文课本译名：《真正的英雄》</p>
 </blockquote>
-<h2>一、背景档案</h2>
+<details class="sec"><summary class="sec-h"><span class="sec-t">一、背景档案</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -80,7 +91,7 @@ a { color:#a8611b; }
 </tbody>
 </table>
 <p><strong>为什么学它</strong>：它是<strong>危机沟通的全球教材案例</strong>——事发当天晚上就要对全国讲话，撰稿人 Peggy Noonan 在几小时内交稿。核心难题：既要哀悼，又要给一个"敢不敢继续上天"的答案。</p>
-<h2>二、结构逐段拆解（总—分—总）</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">二、结构逐段拆解（总—分—总）</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -122,7 +133,7 @@ a { color:#a8611b; }
 </tr>
 </tbody>
 </table>
-<h2>三、修辞手法清单</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">三、修辞手法清单</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -156,13 +167,13 @@ a { color:#a8611b; }
 <blockquote>
 <p>关键决策点：<strong>取消国情咨文、改发 5 分钟电视讲话</strong>。场合选择本身就是最大的修辞决策——灾难当晚谈政策 = 冷血。</p>
 </blockquote>
-<h2>四、金句与出处</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">四、金句与出处</span><span class="arr"></span></summary>
 <ul>
 <li>"The future doesn't belong to the fainthearted; it belongs to the brave."（未来不属于胆怯者，而属于勇敢者）</li>
 <li>"We will never forget them, nor the last time we saw them, this morning, as they prepared for their journey and waved goodbye and 'slipped the surly bonds of earth' to 'touch the face of God.'"（结尾句）</li>
 <li>"Sometimes painful things like this happen."（对孩子说的话——简单到近乎笨拙，但恰如其分）</li>
 </ul>
-<h2>五、可迁移点</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">五、可迁移点</span><span class="arr"></span></summary>
 <ol>
 <li><strong>危机回应三原则在这 5 分钟里全齐</strong>：承认痛苦 → 具名致敬 → 给出下一步。顺序不能乱——没有前两步直接给方向，是冷血；只有前两步不给方向，是无能。</li>
 <li><strong>不追责的克制</strong>：当天讲话不谈技术原因，把调查留给调查——<strong>道歉的场合先别急着归因</strong>。</li>
@@ -170,14 +181,31 @@ a { color:#a8611b; }
 <li><strong>借一句诗收尾</strong>：平实语言铺垫够了，最后一句可以飞——但前提是前面"配得上"这一飞。</li>
 <li><strong>换场合</strong>：取消原定议程、选更小的场合、更短的时长——危机中的"退半步"往往比"照常营业"更得体。</li>
 </ol>
-<h2>附：来源</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">附：来源</span><span class="arr"></span></summary>
 <ul>
 <li>里根总统图书馆官方文稿与录音</li>
 <li>Pulse 复盘文：<em>Reagan's Challenger Address — Text and Why It Endures</em>（Magee 诗《High Flight》出处考证、对儿童喊话分析）</li>
 <li>百度百科《真正的英雄》词条（总分总结构）</li>
 <li>危机沟通课程通用案例（多家商学院列为标准案例）</li>
 </ul>
-<div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
+</details><div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
 </div>
+<a class="fab-back" href="../index.html">📚 目录</a>
+<script>
+(function(){
+  function expandHash(){
+    var h = location.hash.slice(1);
+    if(!h) return;
+    var ds = document.querySelectorAll('details.sec');
+    for(var i=0;i<ds.length;i++){
+      if(ds[i].id===h || ds[i].querySelector('summary#'+h) || ds[i].querySelector('#'+h)) ds[i].open=true;
+    }
+    var el = document.getElementById(h);
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+  }
+  window.addEventListener('hashchange', expandHash);
+  if(location.hash) expandHash();
+})();
+</script>
 </body>
 </html>

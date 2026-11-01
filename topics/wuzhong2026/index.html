@@ -19,13 +19,13 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans
 .hero .meta span { background:rgba(255,255,255,.12); border-radius:6px; padding:4px 12px; font-size:12.5px; }
 .wrap { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
 .toc { background:#fff; border-radius:12px; padding:18px 20px; margin-top:-22px; box-shadow:0 4px 18px rgba(13,43,82,.10); }
-.toc h2 { font-size:15px; color:#0d2b52; margin-bottom:10px; }
+.toc h2, summary.sec-h { font-size:15px; color:#0d2b52; margin-bottom:10px; }
 .toc ol { margin-left:20px; }
 .toc a { color:#1b5aa8; text-decoration:none; font-size:14.5px; line-height:2; }
 .toc a:hover { text-decoration:underline; }
 .card { background:#fff; border-radius:12px; padding:26px 24px; margin-top:18px;
   box-shadow:0 2px 10px rgba(13,43,82,.06); }
-h2 { font-size:21px; color:#0d2b52; border-left:5px solid #d4a017; padding-left:12px; margin:34px 0 16px; }
+h2, summary.sec-h { font-size:21px; color:#0d2b52; border-left:5px solid #d4a017; padding-left:12px; margin:34px 0 16px; }
 h3 { font-size:18px; color:#14417e; margin:26px 0 12px; }
 h4 { font-size:15.5px; color:#1b5aa8; margin:16px 0 6px; }
 p { margin:10px 0; }
@@ -45,7 +45,18 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 .footer { text-align:center; color:#8a94a6; font-size:12.5px; margin-top:30px; line-height:1.8; }
 .warn { background:#fdf0ef; border-left:4px solid #c0392b; border-radius:0 8px 8px 0; padding:10px 16px; margin:14px 0; font-size:14px; color:#7b241c; }
 .note { background:#eef4fb; border-left:4px solid #1b5aa8; border-radius:0 8px 8px 0; padding:10px 16px; margin:14px 0; font-size:14px; color:#14417e; }
-@media (max-width:600px){ .hero h1{font-size:21px;} .card{padding:20px 16px;} h2{font-size:19px;} body{font-size:15px;} }
+@media (max-width:600px){ .hero h1{font-size:21px;} .card{padding:20px 16px;} h2, summary.sec-h{font-size:19px;} body{font-size:15px;} }
+
+details.sec { margin-top:6px; }
+summary.sec-h { cursor:pointer; list-style:none; }
+summary.sec-h::-webkit-details-marker { display:none; }
+details.sec > summary.sec-h .arr { float:right; font-size:12px; color:#9aa4b8; font-weight:normal; padding-top:8px; }
+details.sec[open] > summary.sec-h .arr::after { content:"收起 ▲"; }
+details.sec:not([open]) > summary.sec-h .arr::after { content:"展开 ▼"; }
+.fab-back { position:fixed; bottom:24px; right:16px; z-index:99; background:#0d2b52; color:#fff;
+  text-decoration:none; border-radius:999px; padding:11px 18px; font-size:14px; font-weight:600;
+  box-shadow:0 4px 16px rgba(13,43,82,.40); display:flex; align-items:center; gap:6px; }
+.fab-back:active { transform:scale(.94); }
 </style>
 </head>
 <body>
@@ -61,7 +72,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 </div>
 <div class="wrap">
 <div class="toc">
-  <h2>目录</h2>
+  <details class="sec"><summary class="sec-h"><span class="sec-t">目录</span><span class="arr"></span></summary>
   <ol>
     <li><a href="#overview">全会概况</a></li>
     <li><a href="#essence">核心要义（含七项任务逐条要点）</a></li>
@@ -86,7 +97,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <blockquote><p><strong>三句话摘要</strong>：五中全会（2026.10.26—29）审议通过《中共中央关于持之以恒推进全面从严治党若干重大问题的决定》，首次系统概括"习近平党建思想"；《决定》按"总论—七项战略任务—两项保障"部署，强调"增强党性是全面从严治党的根本性任务"；对国有银行而言，关键是把全面从严治党成效转化为做优做强实效，党建引领经营转型，确保"十五五"良好开局。</p></blockquote>
 </div>
 
-<h2 id="overview">一、全会概况</h2>
+</details><details class="sec" id="overview"><summary class="sec-h"><span class="sec-t">一、全会概况</span><span class="arr"></span></summary>
 <div class="card">
 <ul>
 <li><strong>时间</strong>：2026 年 10 月 26 日—29 日</li>
@@ -99,7 +110,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <div class="warn">⚠️ <strong>易混警示</strong>："十五五"规划《建议》是 <strong>2025 年 10 月二十届四中全会</strong>审议通过的；五中全会主题是全面从严治党。写材料勿再混用。</div>
 </div>
 
-<h2 id="essence">二、核心要义</h2>
+</details><details class="sec" id="essence"><summary class="sec-h"><span class="sec-t">二、核心要义</span><span class="arr"></span></summary>
 <div class="card">
 <h3>2.1 一句话定性</h3>
 <p>治国必先治党，治党务必从严。围绕"建设什么样的长期执政的马克思主义政党、怎样建设长期执政的马克思主义政党"，首次提出"习近平党建思想"。</p>
@@ -142,7 +153,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <p>"先学一步、学深一层"｜"立铁规矩、强硬约束"｜"一张表"贯通整改｜"主体责任、监督责任、第一责任人责任和一岗双责"｜"把全面从严治党成效转化为做优做强实效"｜"为人民出政绩、以实干出政绩"｜"增强党性是全面从严治党的根本性任务"｜"政治过硬、本领高强、作风优良、纪律严明"｜"坚决不用三类人／坚决清除三类人"｜"党性党风党纪一起抓、正风肃纪反腐相贯通"｜"越是长期执政，越是承平日久，越是环境复杂，越要以强烈的忧患意识持之以恒推进全面从严治党"</p>
 </div>
 
-<h2 id="signals">三、核心信号速览（一页精华）</h2>
+</details><details class="sec" id="signals"><summary class="sec-h"><span class="sec-t">三、核心信号速览（一页精华）</span><span class="arr"></span></summary>
 <div class="card">
 <table>
 <thead><tr><th>领域</th><th>关键信号</th><th>出处</th></tr></thead>
@@ -161,7 +172,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 </table>
 </div>
 
-<h2 id="glossary">四、应知应会 · 名词卡（速查）</h2>
+</details><details class="sec" id="glossary"><summary class="sec-h"><span class="sec-t">四、应知应会 · 名词卡（速查）</span><span class="arr"></span></summary>
 <div class="card">
 <table>
 <thead><tr><th>名词</th><th>要点</th></tr></thead>
@@ -181,7 +192,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 </table>
 </div>
 
-<h2 id="howto">五、部门组织学习 · 工作建议（部门负责人实操）</h2>
+</details><details class="sec" id="howto"><summary class="sec-h"><span class="sec-t">五、部门组织学习 · 工作建议（部门负责人实操）</span><span class="arr"></span></summary>
 <div class="card">
 <h3>5.1 学习安排建议（四步走）</h3>
 <ol>
@@ -206,7 +217,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <div class="warn">⚠️ 合规提示："出卷人"版为自媒体二度梳理，正式行文涉及《决定》表述待全文公开后核对原文；分行材料以本行正式发文口径为准。</div>
 </div>
 
-<h2 id="bank">六、对银行业的影响（部门负责人视角）</h2>
+</details><details class="sec" id="bank"><summary class="sec-h"><span class="sec-t">六、对银行业的影响（部门负责人视角）</span><span class="arr"></span></summary>
 <div class="card">
 <table>
 <thead><tr><th>维度</th><th>压力</th><th>机遇</th></tr></thead>
@@ -219,7 +230,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <p><strong>部门行动建议</strong>：①按"三个深刻领会和把握"组织支部学习，先学一步、学深一层；②对照四条硬要求排查本部门权力运行与廉洁风险点（"三重一大"、授权用权）；③用五类责任体系完善部门责任清单；④抓好岁末收官与明年谋划，确保"十五五"良好开局；⑤【请替换：结合分管条线的具体行动项】。</p>
 </div>
 
-<h2 id="speech">七、配套：学习体会演讲稿（党支部学习会分享版）</h2>
+</details><details class="sec" id="speech"><summary class="sec-h"><span class="sec-t">七、配套：学习体会演讲稿（党支部学习会分享版）</span><span class="arr"></span></summary>
 <div class="card">
 <blockquote><p>适用场合：党支部专题学习会·部门负责人学习体会分享（8 分钟）。<code>[真实事例]</code> 为占位，需结合本人实际经历补充。</p></blockquote>
 <p><strong>开场</strong>：同志们："治国必先治党，治党务必从严。"这是《决定》开篇就要立住的一句话。今天我用八分钟，汇报三点学习体会。</p>
@@ -235,7 +246,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <p><strong>收尾</strong>：同志们，"全面从严治党"这个重大命题，最早就是 2014 年 12 月总书记在江苏镇江考察时提出的。这是江苏的独家记忆，也是我们的责任起点。把从严治党成效转化为做优做强实效——这条路，总行在走，我们部门也要走在前面。从今天起，把手里的每一件事，都做成"为人民出政绩、以实干出政绩"的注脚。谢谢大家！</p>
 </div>
 
-<h2 id="reading">八、延伸阅读：微信文章收录清单（EasyClaw 采集）</h2>
+</details><details class="sec" id="reading"><summary class="sec-h"><span class="sec-t">八、延伸阅读：微信文章收录清单（EasyClaw 采集）</span><span class="arr"></span></summary>
 <div class="card">
 <blockquote><p>收录位置：<code>F:\金融知识库\公众号文章\</code>（部分在 <code>学习素材库\政策解读\</code>）。以下与五中全会直接相关，均已过本地 27B 打标。</p></blockquote>
 <table>
@@ -257,7 +268,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 </table>
 </div>
 
-<h2 id="bg">九、背景关联：与"十五五"规划的关系</h2>
+</details><details class="sec" id="bg"><summary class="sec-h"><span class="sec-t">九、背景关联：与"十五五"规划的关系</span><span class="arr"></span></summary>
 <div class="card">
 <ul>
 <li><strong>二十届四中全会（2025 年 10 月）</strong>：审议通过"十五五"规划《建议》——高质量发展为主线，新质生产力为钥匙。</li>
@@ -266,7 +277,7 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 </ul>
 </div>
 
-<h2 id="src">十、原文来源附录</h2>
+</details><details class="sec" id="src"><summary class="sec-h"><span class="sec-t">十、原文来源附录</span><span class="arr"></span></summary>
 <div class="card">
 <ol>
 <li>《中国共产党第二十届中央委员会第五次全体会议公报》（新华社，via「共产党员」2026-10-29）</li>
@@ -278,7 +289,24 @@ code { background:#eef2f8; border-radius:4px; padding:1px 6px; font-size:13px; c
 <blockquote><p>免责声明：本汇编为公开信息的学习性整理，内容以官方发布为准；正式行文涉及《决定》表述待全文公开后核对原文；写分行材料以本行正式发文口径为准。不构成任何投资或经营建议。</p></blockquote>
 </div>
 
-<div class="footer">二十届五中全会精神学习整理版 v3 资料库版 · 生成于 2026-11-01<br>内容以官方发布为准 · 不构成投资建议 · 活文档可随时补充优化</div>
+</details><div class="footer">二十届五中全会精神学习整理版 v3 资料库版 · 生成于 2026-11-01<br>内容以官方发布为准 · 不构成投资建议 · 活文档可随时补充优化</div>
 </div>
+<a class="fab-back" href="../index.html">📚 目录</a>
+<script>
+(function(){
+  function expandHash(){
+    var h = location.hash.slice(1);
+    if(!h) return;
+    var ds = document.querySelectorAll('details.sec');
+    for(var i=0;i<ds.length;i++){
+      if(ds[i].id===h || ds[i].querySelector('summary#'+h) || ds[i].querySelector('#'+h)) ds[i].open=true;
+    }
+    var el = document.getElementById(h);
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+  }
+  window.addEventListener('hashchange', expandHash);
+  if(location.hash) expandHash();
+})();
+</script>
 </body>
 </html>

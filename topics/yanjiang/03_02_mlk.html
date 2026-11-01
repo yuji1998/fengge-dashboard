@@ -19,7 +19,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaH
 .wrap { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
 .card { background:#fff; border-radius:12px; padding:24px 22px; margin-top:18px;
   box-shadow:0 2px 10px rgba(74,43,13,.06); }
-h2 { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
+h2, summary.sec-h { font-size:20px; color:#4a2b0d; border-left:5px solid #d4a017; padding-left:12px; margin:32px 0 14px; }
 h3 { font-size:17px; color:#7a4a14; margin:22px 0 10px; }
 p { margin:10px 0; }
 ul,ol { margin:8px 0 8px 22px; }
@@ -34,6 +34,17 @@ code { background:#f5efe2; border-radius:4px; padding:1px 6px; font-size:13px; c
 a { color:#a8611b; }
 .footer { text-align:center; color:#8a94a6; font-size:12.5px; margin-top:30px; }
 @media (max-width:600px) { .hero h1{font-size:20px;} .card{padding:18px 14px;} body{font-size:15px;} }
+
+details.sec { margin-top:6px; }
+summary.sec-h { cursor:pointer; list-style:none; }
+summary.sec-h::-webkit-details-marker { display:none; }
+details.sec > summary.sec-h .arr { float:right; font-size:12px; color:#9aa4b8; font-weight:normal; padding-top:8px; }
+details.sec[open] > summary.sec-h .arr::after { content:"收起 ▲"; }
+details.sec:not([open]) > summary.sec-h .arr::after { content:"展开 ▼"; }
+.fab-back { position:fixed; bottom:24px; right:16px; z-index:99; background:#0d2b52; color:#fff;
+  text-decoration:none; border-radius:999px; padding:11px 18px; font-size:14px; font-weight:600;
+  box-shadow:0 4px 16px rgba(13,43,82,.40); display:flex; align-items:center; gap:6px; }
+.fab-back:active { transform:scale(.94); }
 </style>
 </head>
 <body>
@@ -47,7 +58,7 @@ a { color:#a8611b; }
 <blockquote>
 <p>拆解框架见 <code>00_著名演讲拆解_子册索引.md</code></p>
 </blockquote>
-<h2>一、背景档案</h2>
+<details class="sec"><summary class="sec-h"><span class="sec-t">一、背景档案</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -79,7 +90,7 @@ a { color:#a8611b; }
 </tbody>
 </table>
 <p><strong>关键背景</strong>：金是牧师，黑人教堂布道传统是他的母语。这篇演讲最独特的地方是——<strong>前半用白人主流听得懂的法理语言讲，后半切换成黑人教堂的语言唱出来</strong>。两种语体的切换点就是 "I have a dream" 的出现。</p>
-<h2>二、结构逐段拆解</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">二、结构逐段拆解</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -124,7 +135,7 @@ a { color:#a8611b; }
 <blockquote>
 <p>结构本质：<strong>控诉（账单）→ 定性（时刻）→ 边界（和平）→ 愿景（梦想）→ 升华（灵歌）</strong>。</p>
 </blockquote>
-<h2>三、修辞手法清单</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">三、修辞手法清单</span><span class="arr"></span></summary>
 <table>
 <thead>
 <tr>
@@ -155,13 +166,13 @@ a { color:#a8611b; }
 </tr>
 </tbody>
 </table>
-<h2>四、金句与出处</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">四、金句与出处</span><span class="arr"></span></summary>
 <ul>
 <li>"I have a dream that my four little children will one day live in a nation where they will not be judged by the color of their skin but by the content of their character."（我梦想有一天，我的四个孩子将生活在一个不以肤色、而以品格评判他们的国家）——<strong>用自家孩子把宏大议题私人化</strong>。</li>
 <li>"…justice rolls down like waters, and righteousness like a mighty stream."（公义如水奔流，公正如江河滔滔）</li>
 <li>"Free at last, free at last, thank God Almighty, we are free at last!"（终于自由了）</li>
 </ul>
-<h2>五、可迁移点</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">五、可迁移点</span><span class="arr"></span></summary>
 <ol>
 <li><strong>重复不是口误，是架构</strong>：挑一个核心短语（"我有一个梦想"），在结构最高处连续使用，把听众"钉"住——汇报里可对应"最关键的一句话"在结尾三连。</li>
 <li><strong>给诉求找一个"生活化比喻"</strong>：支票之喻是全篇最大功臣——做汇报时把抽象指标翻译成"欠账/记账/对账"这类人人懂的词。</li>
@@ -169,13 +180,30 @@ a { color:#a8611b; }
 <li><strong>愿景要具体到画面</strong>：不说"平等很好"，说"同桌而坐"——画面感决定感染力。</li>
 <li><strong>借场地/借历史</strong>：站在林肯纪念堂讲林肯——场合本身就是修辞。</li>
 </ol>
-<h2>附：来源</h2>
+</details><details class="sec"><summary class="sec-h"><span class="sec-t">附：来源</span><span class="arr"></span></summary>
 <ul>
 <li>美国国家档案馆/Nobel 官网演讲全文</li>
 <li>American Rhetoric Top 100 Speeches（#1）</li>
 <li>公开修辞分析（anaphora 计数、支票比喻、灵歌引用等，各家一致）</li>
 </ul>
-<div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
+</details><div class="footer">演讲知识库 · 生成于 2026-11-01 · 本地 F:\专题\演讲 为权威源</div>
 </div>
+<a class="fab-back" href="../index.html">📚 目录</a>
+<script>
+(function(){
+  function expandHash(){
+    var h = location.hash.slice(1);
+    if(!h) return;
+    var ds = document.querySelectorAll('details.sec');
+    for(var i=0;i<ds.length;i++){
+      if(ds[i].id===h || ds[i].querySelector('summary#'+h) || ds[i].querySelector('#'+h)) ds[i].open=true;
+    }
+    var el = document.getElementById(h);
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+  }
+  window.addEventListener('hashchange', expandHash);
+  if(location.hash) expandHash();
+})();
+</script>
 </body>
 </html>

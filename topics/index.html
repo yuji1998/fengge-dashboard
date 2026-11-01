@@ -27,6 +27,16 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaH
 .topic-desc { font-size:13px; color:#68738a; margin-top:3px; }
 .topic-date { font-size:11.5px; color:#9aa4b8; margin-top:4px; }
 .topic-arrow { color:#c3ccdb; font-size:20px; margin-left:8px; flex:none; }
+.wx-box { background:#fff; border-radius:0 0 14px 14px; margin:-6px 0 2px; padding:2px 16px 10px;
+  box-shadow:0 2px 12px rgba(13,43,82,.06); }
+.topic-card.wrapped { border-radius:14px 14px 0 0; margin-bottom:0; }
+.wx-box summary { cursor:pointer; list-style:none; font-size:13px; color:#1b5aa8; padding:9px 0 4px; font-weight:600; }
+.wx-box summary::-webkit-details-marker { display:none; }
+.wx-box summary::after { content:" ▸"; }
+.wx-box[open] summary::after { content:" ▾"; }
+.wx-box a { display:block; font-size:13.5px; color:#2b3445; text-decoration:none; padding:7px 0;
+  border-top:1px dashed #e3e8f0; line-height:1.5; }
+.wx-box a .d { color:#9aa4b8; font-size:11px; margin-right:8px; }
 .empty { text-align:center; color:#8a94a6; padding:50px 0; }
 .err { background:#fdf0ef; color:#7b241c; border-radius:10px; padding:14px 16px; margin-top:16px; font-size:14px; }
 </style>
@@ -51,13 +61,21 @@ body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaH
       var items = data.topics || [];
       if(!items.length){ listEl.innerHTML = '<div class="empty">暂无专题</div>'; return; }
       listEl.innerHTML = items.map(function(t){
-        return '<a class="topic-card" href="' + t.url + '?v=' + (t.ts || data.updated) + '">'
+        var wx = t.wx || [];
+        var wxHtml = '';
+        if(wx.length){
+          wxHtml = '<details class="wx-box"><summary>📎 相关微信文章（' + wx.length + ' 篇）</summary>'
+            + wx.map(function(w){
+              return '<a href="' + w.u + '?v=' + (t.ts || data.updated) + '"><span class="d">' + (w.d||'') + '</span>' + w.t + '</a>';
+            }).join('') + '</details>';
+        }
+        return '<a class="topic-card' + (wx.length ? ' wrapped' : '') + '" href="' + t.url + '?v=' + (t.ts || data.updated) + '">'
           + '<div class="topic-emoji">' + (t.emoji || '📄') + '</div>'
           + '<div class="topic-info">'
           + '<div class="topic-title">' + t.title + '</div>'
           + (t.desc ? '<div class="topic-desc">' + t.desc + '</div>' : '')
           + (t.date ? '<div class="topic-date">更新于 ' + t.date + '</div>' : '')
-          + '</div><div class="topic-arrow">›</div></a>';
+          + '</div><div class="topic-arrow">›</div></a>' + wxHtml;
       }).join('');
       document.getElementById('syncTip').textContent = '清单版本：' + data.updated + ' · 本地更新 push 后手机即见最新';
     })
