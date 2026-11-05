@@ -102,6 +102,8 @@ TOPIC_META = [
      "desc": "年会主要精神要点 + 重要演讲汇编（金融监管/资本市场信号）", "date": "2026-10-20"},
     {"dir": "yanjiang", "title": "演讲知识库", "emoji": "🎤",
      "desc": "主持人风格图谱 / 总统演讲结构 / 7 篇著名演讲拆解（10 个子册）", "date": "2026-11-01"},
+    {"dir": "renwu2026", "title": "人物观点 · 四位领导", "emoji": "👤",
+     "desc": "范波 / 王维 / 廖林 / 刘珺 四人观点专辑（持续收集，27B 本地归纳）｜总览 + 四人分册，一句话可重建", "date": "2026-11-06"},
 ]
 
 # ============ 专题学习材料全文 -> HTML（2026-11-05 新增） ============
@@ -116,6 +118,17 @@ MATERIAL = {
                     "苏州·开放兴市｜专题学习材料全文", "2026-11-05"),
     "wuzhen2026": (r"F:\金融知识库\学习素材库\专题学习\2026世界互联网大会乌镇峰会_专辑.md",
                    "2026 世界互联网大会乌镇峰会·专辑全文", "2026-11-05"),
+    "renwu2026": (r"F:\金融知识库\学习素材库\专题学习\人物观点\00_人物观点_专题总览.md",
+                  "人物观点｜四人观点专辑·专题总览", "2026-11-06"),
+}
+
+# ============ 人物观点专题：四人分册 -> 独立页面（2026-11-06 新增） ============
+# value = (F盘分册路径, 页面标题, 输出目录名, 归属日期, emoji)
+PERSON_PAGES = {
+    "范波": (r"F:\金融知识库\学习素材库\专题学习\人物观点\01_范波_观点专辑.md", "范波 · 观点专辑", "fanbo", "2026-11-06", "🏙️"),
+    "王维": (r"F:\金融知识库\学习素材库\专题学习\人物观点\02_王维_观点专辑.md", "王维 · 观点专辑", "wangwei", "2026-11-06", "🏛️"),
+    "廖林": (r"F:\金融知识库\学习素材库\专题学习\人物观点\03_廖林_观点专辑.md", "廖林 · 观点专辑", "liaolin", "2026-11-06", "🏦"),
+    "刘珺": (r"F:\金融知识库\学习素材库\专题学习\人物观点\04_刘珺_观点专辑.md", "刘珺 · 观点专辑", "liujun", "2026-11-06", "📈"),
 }
 
 # ============ 模板 ============
@@ -336,6 +349,29 @@ for meta in TOPIC_META:
                     f.write(m_html)
             wxlist.append({"t": "📖 " + mtitle, "u": "%s/material.html" % tdir, "d": mdate})
             report.append("MAT %s/material.html 折叠%d段" % (tdir, m_fold))
+
+    # ---- 0b) 人物观点专题：四人分册 -> 独立页面（2026-11-06 新增）----
+    if tdir == "renwu2026":
+        for person, (src_md, ptitle, subdir, pdate, pemoji) in PERSON_PAGES.items():
+            if not os.path.exists(src_md):
+                report.append("SKIP(缺分册) %s" % src_md)
+                continue
+            p_meta, p_body = parse_md(src_md)[1:]
+            p_meta = (p_meta + '<br><b>更新</b>：' + pdate) if p_meta else ('<b>更新</b>：' + pdate)
+            p_html = WX_TPL.format(title=ptitle, topic_emoji=pemoji, topic_title=meta["title"],
+                                   meta=p_meta, body=p_body, gen_date=GEN_DATE, fab='../../index.html')
+            p_html, p_fold = inject_page(p_html, '../../index.html')
+            p_out_dir = os.path.join(tpath, 'persons', subdir)
+            os.makedirs(p_out_dir, exist_ok=True)
+            with open(os.path.join(p_out_dir, 'index.html'), 'w', encoding='utf-8') as f:
+                f.write(p_html)
+            wxlist.append({"t": "%s %s" % (pemoji, ptitle), "u": "%s/persons/%s/index.html" % (tdir, subdir), "d": pdate})
+            report.append("PERSON %s/persons/%s/index.html 折叠%d段" % (tdir, subdir, p_fold))
+        # 分册页作为专题落地主页
+        r_idx = os.path.join(tpath, 'index.html')
+        if not os.path.exists(r_idx):
+            with open(r_idx, 'w', encoding='utf-8') as f:
+                f.write(p_html)
 
     # ---- 1) 微信文章转换 ----
     for fn in WX_MAP.get(tdir, []):
