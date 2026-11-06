@@ -89,6 +89,25 @@ WX_MAP = {
     ],
 }
 
+# ============ 专题自动同步：合并路由表 auto_wx（2026-11-06 康哥定·永久） ============
+# 单一事实源：F:\金融知识库\学习素材库\专题学习\_专题同步路由.json
+# wx_onepass.py 命中专题后把归档文件名写入对应 route 的 auto_wx；这里自动合并进 WX_MAP，
+# App「专题学习」下即自动出现单篇页面，无需再手工往 WX_MAP 加行。
+# 路由表读取失败时静默降级到手工清单，保证导航构建不被阻断。
+try:
+    _ROUTE_FILE = r"F:\金融知识库\学习素材库\专题学习\_专题同步路由.json"
+    with open(_ROUTE_FILE, encoding="utf-8") as _f:
+        _ROUTE = json.load(_f)
+    for _k, _v in _ROUTE.get("routes", {}).items():
+        if not _v.get("auto") or not _v.get("nav_dir"):
+            continue
+        _dst = WX_MAP.setdefault(_v["nav_dir"], [])
+        for _fn in _v.get("auto_wx", []):
+            if _fn not in _dst:
+                _dst.append(_fn)
+except Exception as _e:
+    print("WARN 专题路由表读取失败（沿用手工清单）:", _e)
+
 TOPIC_META = [
     {"dir": "wuzhong2026", "title": "二十届五中全会精神 · 学习汇编", "emoji": "📕",
      "desc": "学习要点摘编 · 资料库版（学习路径 / 信号清单 / 汇报用法）｜11-05 已补齐至 29 篇底稿 + 专题学习材料全文", "date": "2026-11-05"},
