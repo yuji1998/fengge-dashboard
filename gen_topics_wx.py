@@ -150,6 +150,24 @@ PERSON_PAGES = {
     "刘珺": (r"F:\金融知识库\学习素材库\专题学习\人物观点\04_刘珺_观点专辑.md", "刘珺 · 观点专辑", "liujun", "2026-11-06", "📈"),
 }
 
+# ============ 人物观点：总览 md 四人分册链接 -> 导航内 HTML 页（2026-11-06 修复） ============
+# 00_总览.md 用 markdown 相对链接 [范波 · 观点专辑](01_范波_观点专辑.md)，
+# markdown 转 HTML 后成 href="01_范波_观点专辑.md"，App 里点会 404
+# （远端只有 topics/renwu2026/persons/<拼音>/index.html）。
+# 总览页位于 topics/renwu2026/，故映射为 persons/<拼音>/index.html。
+# 丰哥 2026-11-06 报「人物专题里四人分册打不开」，根因即此。
+PERSON_LINK_MAP = {
+    "01_范波_观点专辑.md": "persons/fanbo/index.html",
+    "02_王维_观点专辑.md": "persons/wangwei/index.html",
+    "03_廖林_观点专辑.md": "persons/liaolin/index.html",
+    "04_刘珺_观点专辑.md": "persons/liujun/index.html",
+}
+
+def rewrite_person_links(html):
+    for md, page in PERSON_LINK_MAP.items():
+        html = html.replace('href="%s"' % md, 'href="%s"' % page)
+    return html
+
 # ============ 模板 ============
 WX_TPL = """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -356,6 +374,8 @@ for meta in TOPIC_META:
         src_md, mtitle, mdate = MATERIAL[tdir]
         if os.path.exists(src_md):
             m_meta, m_body = parse_md(src_md)[1:]
+            if tdir == "renwu2026":
+                m_body = rewrite_person_links(m_body)
             m_meta = (m_meta + '<br><b>更新</b>：' + mdate) if m_meta else ('<b>更新</b>：' + mdate)
             m_html = WX_TPL.format(title=mtitle, topic_emoji=meta["emoji"], topic_title=meta["title"],
                                    meta=m_meta, body=m_body, gen_date=GEN_DATE, fab='../index.html')
@@ -421,13 +441,22 @@ for meta in TOPIC_META:
     if os.path.exists(idx):
         with open(idx, encoding='utf-8') as f:
             html = f.read()
+        dirty = False
+        # 落地主页是早期从总览 md 生成的副本，同样带坏链接；每次重建一并修
+        if tdir == "renwu2026":
+            fixed = rewrite_person_links(html)
+            if fixed != html:
+                html, dirty = fixed, True
+                report.append("FIX %s/index.html 四人分册链接 -> persons/*.html" % tdir)
         if 'fab-back' not in html:
             html, folded = inject_page(html, '../index.html')
-            with open(idx, 'w', encoding='utf-8') as f:
-                f.write(html)
+            dirty = True
             report.append("INJECT %s/index.html  折叠%d段" % (tdir, folded))
         else:
             report.append("SKIP(已注入) %s/index.html" % tdir)
+        if dirty:
+            with open(idx, 'w', encoding='utf-8') as f:
+                f.write(html)
 
     # ---- 3) 演讲子册页也注入 ----
     if tdir == 'yanjiang':
