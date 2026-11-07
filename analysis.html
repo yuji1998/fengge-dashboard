@@ -94,6 +94,14 @@ details .inner{padding:0 14px 14px;}
 .disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
 @media (max-width:1080px){.row-two{grid-template-columns:1fr;}}
 
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
+.nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:.15s;}
+.nav a span{font-size:13px;}
+.nav a:hover{color:var(--text);border-color:#3d4a5c;}
+.nav a.on{color:var(--accent);border-color:var(--accent);background:#12233b;}
+@media (max-width:1080px){.nav a{padding:5px 9px;font-size:11px;}}
+
 .meta a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);margin-left:6px;}
 .lead{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;line-height:1.85;}
 .lead b{color:var(--accent);}
@@ -105,16 +113,57 @@ details .inner{padding:0 14px 14px;}
 .bar{display:flex;height:18px;border-radius:5px;overflow:hidden;margin:8px 0;border:1px solid var(--border);font-size:10px;font-weight:700;color:#0d1117;}
 .bar div{display:flex;align-items:center;justify-content:center;}
 .disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
+.nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:.15s;}
+.nav a span{font-size:13px;}
+.nav a:hover{color:var(--text);border-color:#3d4a5c;}
+.nav a.on{color:var(--accent);border-color:var(--accent);background:#12233b;}
+@media (max-width:1080px){.nav a{padding:5px 9px;font-size:11px;}}
 </style>
 </head>
 <body>
+<!-- ===== 访问密码锁（与首页共用 fg_dash_v2，一次解锁全站通用） ===== -->
+<div id="lock">
+  <div class="lock-box">
+    <div style="font-size:40px;margin-bottom:10px;">🔒</div>
+    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·投资看板</div>
+    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">策略与预警 · 请输入访问密码</div>
+    <input type="password" id="lockInput" placeholder="访问密码" autocomplete="off" style="width:200px;padding:10px 14px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:15px;text-align:center;outline:none;" />
+    <div id="lockMsg" style="color:#f85149;font-size:12px;height:18px;margin-top:8px;"></div>
+    <button id="lockBtn" style="margin-top:6px;padding:9px 34px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">进入</button>
+  </div>
+  <style>
+    #lock{position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;align-items:center;justify-content:center;}
+    .lock-box{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:36px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  </style>
+</div>
+<script>
+(function(){
+  var LOCK='fg_dash_v2', btn=document.getElementById('lockBtn'), inp=document.getElementById('lockInput'),
+      msg=document.getElementById('lockMsg'), lk=document.getElementById('lock'), PASS='fg2026';
+  function go(){ if(inp.value===PASS){ try{localStorage.setItem(LOCK,'1');}catch(e){} lk.style.display='none'; }
+                else { msg.textContent='密码错误，请重试'; inp.select(); } }
+  try{ if(localStorage.getItem(LOCK)==='1') lk.style.display='none'; }catch(e){}
+  btn.addEventListener('click',go); inp.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+})();
+</script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
-  <div class="meta">更新于 <b>2026-11-07 09:19:09</b>　·　<a href="index.html">当前看板</a>　<a href="archive.html">投资档案（数字）</a></div>
+  <div class="meta">更新于 <b>2026-11-07 09:35:10</b>　·　持续化 · 逐轮沉淀</div>
 </header>
+<nav class="nav">
+<a href="index.html?v=20261107c"><span>📈</span>总览</a>
+<a href="holdings.html?v=20261107c"><span>📊</span>持股分析</a>
+<a href="funds.html?v=20261107c"><span>🧾</span>基金分析</a>
+<a href="alerts.html?v=20261107c"><span>🚨</span>实时预警</a>
+<a href="archive.html?v=20261107c"><span>📚</span>投资档案</a>
+<a class="on" href="analysis.html?v=20261107c"><span>🧭</span>投资分析</a>
+</nav>
 
 <div class="lead"><b>规则</b>：以新为准 + 每轮明确范围的增量综合分析；旧结论进台账不删除<br>
-<b>两层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料与当轮新信息。</div>
+<b>三层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）；<b>策略与预警</b>＝前瞻层（每日持股策略／基金策略／事件预警，见顶部菜单）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料、已挂起事件与当轮新信息。</div>
 
 <section class="cards">
   <div class="card"><div class="label">累计轮次</div><div class="value">2</div><div class="sub">逐轮追加，旧结论不删</div></div>

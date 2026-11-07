@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丰哥·基金分析（20261107c）</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--green:#3fb950;--red:#f85149;--accent:#58a6ff;--warn:#e3b341;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;padding:20px 22px 40px;min-height:100vh;}
+.wrap{max-width:1240px;margin:0 auto;}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;}
+h1{font-size:22px;font-weight:600;letter-spacing:1px;}
+h1 .dot{color:var(--accent);}
+.version{font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 8px;border-radius:12px;margin-left:8px;vertical-align:middle;}
+.meta{color:var(--muted);font-size:12px;} .meta b{color:var(--accent);}
+/* nav 规则见下方 NAV_CSS（全站共用） */
+main{display:flex;flex-direction:column;gap:14px;}
+.tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;}
+.tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
+.tldr .main{font-size:14px;line-height:1.8;} .tldr b{color:var(--text);}
+.tldr ul{margin:8px 0 0 16px;font-size:12px;line-height:1.8;color:var(--muted);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 15px;}
+.card .label{color:var(--muted);font-size:11px;margin-bottom:6px;}
+.card .value{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;}
+.card .sub{color:var(--muted);font-size:10px;margin-top:5px;line-height:1.5;}
+.pos{color:var(--red);} .neg{color:var(--green);} .warn{color:var(--warn);}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.panel h2{font-size:15px;font-weight:600;margin-bottom:3px;}
+.panel h3{font-size:13px;font-weight:600;margin:12px 0 5px;color:var(--text);}
+.panel .p-sub{color:var(--muted);font-size:11px;margin-bottom:10px;line-height:1.6;}
+.panel p{font-size:12px;line-height:1.85;color:var(--text);margin-bottom:6px;}
+.panel ul,.panel ol{margin:4px 0 8px 18px;font-size:12px;line-height:1.8;color:var(--muted);}
+.panel li{margin-bottom:3px;}
+.panel b{color:var(--text);}
+.panel code{background:#0d1117;border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:11px;color:var(--accent);}
+.panel blockquote{border-left:2px solid var(--accent);padding-left:10px;margin:6px 0 10px;color:var(--muted);font-size:12px;line-height:1.8;}
+.row-two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.row-three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{color:var(--muted);font-weight:500;text-align:left;font-size:10px;padding:6px;border-bottom:1px solid var(--border);}
+td{padding:7px 6px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.tag{display:inline-block;font-size:10px;border-radius:4px;padding:1px 6px;margin-right:5px;border:1px solid var(--border);color:var(--muted);}
+.tag.hot{color:var(--red);border-color:#6e2b28;} .tag.wait{color:var(--warn);border-color:#6e5a1f;}
+.tag.ok{color:var(--green);border-color:#2d5a34;} .tag.info{color:var(--accent);border-color:#2d4a72;}
+.item{border:1px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:10px;background:#0d1117;}
+.item .ttl{font-size:13px;font-weight:600;margin-bottom:5px;line-height:1.5;}
+.item .kv{font-size:11px;color:var(--muted);line-height:1.8;}
+.item .kv b{color:var(--text);}
+.item .lbl{color:var(--accent);font-size:10px;font-weight:600;letter-spacing:1px;margin:8px 0 3px;}
+.bar{display:flex;height:20px;border-radius:5px;overflow:hidden;margin:8px 0;border:1px solid var(--border);font-size:10px;font-weight:700;color:#0d1117;}
+.bar div{display:flex;align-items:center;justify-content:center;white-space:nowrap;}
+.legend{font-size:11px;color:var(--muted);line-height:1.8;}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;}
+details{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:0;}
+details summary{cursor:pointer;padding:12px 15px;font-size:13px;font-weight:600;color:var(--accent);list-style:none;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▸ ';color:var(--accent);}
+details[open] summary::before{content:'▾ ';}
+details .inner{padding:0 15px 14px;}
+.disc{font-size:11px;line-height:1.85;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+.note{font-size:11px;line-height:1.8;color:var(--muted);}
+@media (max-width:1080px){.row-two,.row-three{grid-template-columns:1fr;}}
+
+
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
+.nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:.15s;}
+.nav a span{font-size:13px;}
+.nav a:hover{color:var(--text);border-color:#3d4a5c;}
+.nav a.on{color:var(--accent);border-color:var(--accent);background:#12233b;}
+@media (max-width:1080px){.nav a{padding:5px 9px;font-size:11px;}}
+</style>
+</head>
+<body>
+<!-- ===== 访问密码锁（与首页共用 fg_dash_v2，一次解锁全站通用） ===== -->
+<div id="lock">
+  <div class="lock-box">
+    <div style="font-size:40px;margin-bottom:10px;">🔒</div>
+    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·投资看板</div>
+    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">策略与预警 · 请输入访问密码</div>
+    <input type="password" id="lockInput" placeholder="访问密码" autocomplete="off" style="width:200px;padding:10px 14px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:15px;text-align:center;outline:none;" />
+    <div id="lockMsg" style="color:#f85149;font-size:12px;height:18px;margin-top:8px;"></div>
+    <button id="lockBtn" style="margin-top:6px;padding:9px 34px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">进入</button>
+  </div>
+  <style>
+    #lock{position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;align-items:center;justify-content:center;}
+    .lock-box{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:36px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  </style>
+</div>
+<script>
+(function(){
+  var LOCK='fg_dash_v2', btn=document.getElementById('lockBtn'), inp=document.getElementById('lockInput'),
+      msg=document.getElementById('lockMsg'), lk=document.getElementById('lock'), PASS='fg2026';
+  function go(){ if(inp.value===PASS){ try{localStorage.setItem(LOCK,'1');}catch(e){} lk.style.display='none'; }
+                else { msg.textContent='密码错误，请重试'; inp.select(); } }
+  try{ if(localStorage.getItem(LOCK)==='1') lk.style.display='none'; }catch(e){}
+  btn.addEventListener('click',go); inp.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+})();
+</script>
+<div class="wrap">
+<header class="header">
+  <h1>丰哥<span class="dot">·</span>基金分析<span class="version">20261107c · 策略与预警</span></h1>
+  <div class="meta">数据时点：<b>2026-11-07 08:14–08:19 三张截图</b>　·　按轮次更新</div>
+</header>
+<nav class="nav">
+<a href="index.html?v=20261107c"><span>📈</span>总览</a>
+<a href="holdings.html?v=20261107c"><span>📊</span>持股分析</a>
+<a class="on" href="funds.html?v=20261107c"><span>🧾</span>基金分析</a>
+<a href="alerts.html?v=20261107c"><span>🚨</span>实时预警</a>
+<a href="archive.html?v=20261107c"><span>📚</span>投资档案</a>
+<a href="analysis.html?v=20261107c"><span>🧭</span>投资分析</a>
+</nav>
+<main>
+<section class="tldr"><div class="lead">结论先行 · 基金下步策略</div><div class="main">10 只基金合计 <b>186,508.85</b> 元。按名称粗归类，<b>主动成长/科技创新占 75.0%</b>，宽基仅 11.4%，固收现金 6.6%——标的数量看着分散，风险因子仍集中在这一条成长主线上，且与股票端天孚通信（算力链）双层叠加。本页给的是<b>结构问题、观察条件与待确认项</b>，不是申赎或择时建议。</div><ul><li>狭义科创/AI 指数工具重复暴露 12,956.39（占理财通 34.9%）；并入主动科技创新后扩展口径 58,903.55（占基金 31.6%）。</li><li>天孚通信 + 融通产业趋势合计 -91,586.03，占三账户总浮亏 83.9%。</li><li>代码来自 EasyClaw 历史映射，招商 A500 截图截断，未确认前不纳入自动净值跟踪。</li></ul></section>
+<div class="cards"><div class="card"><div class="label">基金合计</div><div class="value ">186,508.85</div><div class="sub">理财通 37,116.99 + 我的基金 149,391.86</div></div><div class="card"><div class="label">基金只数</div><div class="value ">10 只</div><div class="sub">含 1 只货币类活期+</div></div><div class="card"><div class="label">主动成长占比</div><div class="value warn">75.0%</div><div class="sub">按名称粗归类，非穿透</div></div><div class="card"><div class="label">狭义科创/AI 重复暴露</div><div class="value warn">12,956.39</div><div class="sub">占理财通 34.9%</div></div></div>
+<section class="panel"><h2>🧩 主题聚类与暴露分布</h2><div class="p-sub">按基金名称粗分，非持仓穿透；穿透需季报数据，已列入待确认。</div>
+<div class="bar">
+<div style="width:6.95%;background:#58a6ff">6.9%</div>
+<div style="width:74.98%;background:#f85149">75.0%</div>
+<div style="width:11.44%;background:#3fb950">11.4%</div>
+<div style="width:6.63%;background:#e3b341">6.6%</div>
+</div><div class="legend">
+<i style="background:#58a6ff"></i>科创 / AI 指数型（狭义重复暴露） 12,956.39　
+<i style="background:#f85149"></i>主动成长 / 科技创新 139,853.36　
+<i style="background:#3fb950"></i>宽基指数 21,342.04　
+<i style="background:#e3b341"></i>固收 / 现金类 12,357.06　
+</div>
+<div class="row-two" style="margin-top:12px">
+<div class="item"><div class="ttl">科创 / AI 指数型（狭义重复暴露）　<span class="tag info">12,956.39</span></div><div class="kv">占全部基金 <b>6.9%</b>　占理财通 <b>34.9%</b></div><div class="lbl">标的</div><ul><li>中欧上证科创板人工智能指数C</li><li>易方达科创50联接C</li></ul><div class="lbl">结构说明</div><div class="kv">两只均为科创/AI 指数工具，标的高度重合，是基金侧最直接的重复暴露。与天孚通信（算力链）形成个股+基金双层叠加。</div></div>
+<div class="item"><div class="ttl">主动成长 / 科技创新　<span class="tag info">139,853.36</span></div><div class="kv">占全部基金 <b>75.0%</b></div><div class="lbl">标的</div><ul><li>工银科技创新混合</li><li>易方达新经济混合</li><li>嘉实主题新动力混合</li><li>摩根新兴动力A</li><li>融通产业趋势股票</li></ul><div class="lbl">结构说明</div><div class="kv">按名称粗归类，5 只主动权益合计占基金 75.0%，是基金账户的主体暴露；实际持仓可能互有重合，需净值/季报穿透后校准。</div></div>
+<div class="item"><div class="ttl">宽基指数　<span class="tag info">21,342.04</span></div><div class="kv">占全部基金 <b>11.4%</b></div><div class="lbl">标的</div><ul><li>招商中证A500ETF发起式联接A</li></ul><div class="lbl">结构说明</div><div class="kv">唯一宽基配置，也是「我的基金」账户里唯一累计盈利的标的（+1,342.04）。代码在截图中被截断，不补不猜，仅引用历史映射并标注待确认。</div></div>
+<div class="item"><div class="ttl">固收 / 现金类　<span class="tag info">12,357.06</span></div><div class="kv">占全部基金 <b>6.6%</b></div><div class="lbl">标的</div><ul><li>广发聚荣一年持有期混合A</li><li>活期+</li></ul><div class="lbl">结构说明</div><div class="kv">广发聚荣为持有期产品，流动性受持有期约束；活期+ 869.35 与券商资金余额 20,146.41 共同构成类现金 21,015.76（占三账户总资产 7.0%）。</div></div>
+</div></section>
+<section class="panel"><h2>🔍 重复暴露与集中度核算</h2><div class="row-two">
+<div class="item"><div class="lbl">量化口径</div><div class="kv">狭义科创/AI 指数型：<b>12,956.39</b><br>扩展（含工银科技创新）：<b>58,903.55</b><br><span class="note">狭义 12,956.39 + 工银科技创新 45,947.16 = 58,903.55，占基金 31.6%；按名称粗归类，非穿透口径</span></div></div>
+<div class="item"><div class="lbl">拖累集中度 / 当日</div><div class="kv">天孚通信 -75,837.98 + 融通产业趋势 -15,748.05 = -91,586.03，占三账户总浮亏 83.9%<br>11-06 当日两个基金账户合计约 -5,002.63；我的基金 5 只当日全负（-3,702.81），但累计仍有两只盈利</div></div>
+</div></section>
+<section class="panel"><h2>📋 10 只基金逐项 · 观察点 / 下一步</h2><div class="p-sub">代码来自 EasyClaw scripts/fund_daily_monitor.py 历史映射，非 11-07 截图；标注待确认者不纳入自动净值跟踪。</div>
+<table><thead><tr><th>基金</th><th>代码</th><th>账户</th><th>持有金额</th><th>累计盈亏</th><th>11-06 当日</th><th>观察点 / 下一步</th></tr></thead><tbody>
+<tr><td><b>融通产业趋势股票</b><br><span class="tag">active_growth</span></td><td><code>009878</code></td><td>腾讯理财通</td><td class="num">11,803.54</td><td class="num neg">-15,748.05</td><td class="num neg">-864.62</td><td>与第二大浮亏源重合，需确认其是否同样重仓算力/光模块链<br><span class="note">待季报穿透后判断与天孚通信是否构成同一风险因子</span></td></tr>
+<tr><td><b>广发聚荣一年持有期混合A</b><br><span class="tag">cash_fixed</span></td><td><code>009525</code></td><td>腾讯理财通</td><td class="num">11,487.71</td><td class="num pos">1,487.71</td><td class="num neg">-18.00</td><td>持有期到期日与流动性窗口<br><span class="note">确认可赎回时点后再讨论现金调度，本轮不给申赎建议</span></td></tr>
+<tr><td><b>中欧上证科创板人工智能指数C</b><br><span class="tag">index_kechuang</span></td><td><code>022111</code></td><td>腾讯理财通</td><td class="num">6,896.00</td><td class="num neg">-3,104.00</td><td class="num neg">-266.00</td><td>科创AI 指数与算力政策、与易方达科创50 的重合度<br><span class="note">纳入重复暴露观察清单</span></td></tr>
+<tr><td><b>易方达科创50联接C</b><br><span class="tag">index_kechuang</span></td><td><code>011609</code></td><td>腾讯理财通</td><td class="num">6,060.39</td><td class="num neg">-1,262.61</td><td class="num neg">-151.22</td><td>科创50 成分与中欧科创AI 的重合度<br><span class="note">纳入重复暴露观察清单</span></td></tr>
+<tr><td><b>活期+</b><br><span class="tag">cash_fixed</span></td><td><code>—</code></td><td>腾讯理财通</td><td class="num">869.35</td><td class="num pos">436.59</td><td class="num pos">0.02</td><td>累计收益口径，与持仓收益不混算<br><span class="note">仅作类现金口径项</span></td></tr>
+<tr><td><b>易方达新经济混合</b><br><span class="tag">active_growth</span></td><td><code>001018</code></td><td>我的基金</td><td class="num">35,951.06</td><td class="num neg">-5,048.94</td><td class="num neg">-450.38</td><td>「新经济」主题与科技成长的重合度、净值回撤幅度<br><span class="note">待穿透后归类</span></td></tr>
+<tr><td><b>工银科技创新混合</b><br><span class="tag">active_growth</span></td><td><code>007353</code></td><td>我的基金</td><td class="num">45,947.16</td><td class="num neg">-7,254.90</td><td class="num neg">-1,547.53</td><td>基金账户内最大单一持仓，11-06 当日跌幅最大；与科创指数工具叠加<br><span class="note">纳入扩展科技成长口径，优先做穿透核验</span></td></tr>
+<tr><td><b>招商中证A500ETF发起式联接A</b><br><span class="tag">broad</span></td><td class="warn"><code>022455</code></td><td>我的基金</td><td class="num">21,342.04</td><td class="num pos">1,342.04</td><td class="num neg">-357.98</td><td>唯一宽基、唯一累计盈利；代码来自历史映射待确认<br><span class="note">核对截图完整代码后再纳入自动净值跟踪</span></td></tr>
+<tr><td><b>嘉实主题新动力混合</b><br><span class="tag">active_growth</span></td><td><code>070021</code></td><td>我的基金</td><td class="num">35,570.51</td><td class="num pos">5,570.51</td><td class="num neg">-872.98</td><td>累计盈利但 11-06 当日回撤较大，关注风格切换<br><span class="note">待穿透后归类</span></td></tr>
+<tr><td><b>摩根新兴动力A</b><br><span class="tag">active_growth</span></td><td><code>377240</code></td><td>我的基金</td><td class="num">10,581.09</td><td class="num neg">-9,418.91</td><td class="num neg">-473.94</td><td>反推成本约 20,000、浮亏率约 -47.1%，为基金侧第三大拖累<br><span class="note">与天孚/融通并列列入集中度观察</span></td></tr>
+</tbody></table></section>
+<section class="panel"><h2>🧭 本轮结论与待确认 · 2026-11-07</h2><div class="p-sub">10 只基金按主题聚类 + 重复暴露量化 + 下步观察条件（首轮框架）　<span class="tag ok">已完成</span></div>
+<div class="row-two"><div><h3>结论</h3><ul><li>基金侧 186,508.85 中，按名称粗归类的主动成长/科技创新占 75.0%，宽基仅 11.4%，固收现金 6.6%，结构明显偏向成长风格</li><li>狭义科创/AI 指数工具重复暴露 12,956.39（占理财通 34.9%）；若把工银科技创新并入，扩展口径达 58,903.55（占基金 31.6%）</li><li>个股与基金双层叠加同一主线：天孚通信（算力链）+ 融通产业趋势合计占总浮亏 83.9%，分散标的数量并未分散风险因子</li><li>11-06 我的基金 5 只当日全负，但嘉实主题新动力与招商A500 累计仍盈利，说明当日回撤属风格性而非个体性</li><li>代码映射来自 EasyClaw 历史脚本，招商A500 截图代码截断，未确认前不纳入自动净值跟踪</li></ul></div><div><h3>待确认</h3><ul><li>10 只基金的季报/持仓穿透，确认主动权益之间是否重仓同一批标的</li><li>招商中证A500 完整代码确认</li><li>广发聚荣持有期到期日确认</li><li>第三账户「我的基金」是否即旧飞书表「第一平台基金/贵金属」板块</li></ul></div></div></section>
+<details><summary>基金代码映射 · 来源与待确认（点击展开）</summary><div class="inner"><h2>基金代码映射（来源与待确认）</h2>
+<blockquote>建立：2026-11-07。11-07 两张基金截图里，招商中证A500 的代码被截断（显示 <code>0224…</code>），当时按「不补不猜」处理。</blockquote>
+<blockquote>本次盘点 EasyClaw 遗产时发现 <code>C:\Users\朱陈康\.easyclaw\workspace\scripts\fund_daily_monitor.py</code> 里存有 10 只持仓基金的完整代码映射，可用于<b>对照</b>，但不自动视为已确认。</blockquote>
+<h3>一、映射表</h3>
+<table><thead><tr><th>#</th><th>基金</th><th>账户</th><th>代码（历史映射）</th><th>截图是否完整显示</th><th>状态</th></tr></thead><tbody>
+<tr><td>1</td><td>易方达新经济混合</td><td>我的基金</td><td><code>001018</code></td><td>是</td><td>与截图一致</td></tr>
+<tr><td>2</td><td>工银科技创新混合</td><td>我的基金</td><td><code>007353</code></td><td>是</td><td>与截图一致</td></tr>
+<tr><td>3</td><td>招商中证A500ETF发起式联接A</td><td>我的基金</td><td><code>022455</code></td><td><b>否，截图为 <code>0224…</code></b></td><td><b>待丰哥确认是否同一只</b></td></tr>
+<tr><td>4</td><td>嘉实主题新动力混合</td><td>我的基金</td><td><code>070021</code></td><td>是</td><td>与截图一致</td></tr>
+<tr><td>5</td><td>摩根新兴动力A</td><td>我的基金</td><td><code>377240</code></td><td>是</td><td>与截图一致</td></tr>
+<tr><td>6</td><td>融通产业趋势股票</td><td>腾讯理财通</td><td><code>009878</code></td><td>否（截图未显示代码）</td><td>待核对</td></tr>
+<tr><td>7</td><td>广发聚荣一年持有期混合A</td><td>腾讯理财通</td><td><code>009525</code></td><td>否（截图未显示代码）</td><td>待核对</td></tr>
+<tr><td>8</td><td>中欧上证科创板人工智能指数C</td><td>腾讯理财通</td><td><code>022111</code></td><td>否（截图未显示代码）</td><td>待核对</td></tr>
+<tr><td>9</td><td>易方达科创50联接C</td><td>腾讯理财通</td><td><code>011609</code></td><td>否（截图未显示代码）</td><td>待核对</td></tr>
+<tr><td>10</td><td>活期+</td><td>腾讯理财通</td><td>—</td><td>—</td><td>货币类，无代码</td></tr>
+</tbody></table>
+<p>来源：<code>fund_daily_monitor.py</code> 的 <code>FUNDS</code> 常量（脚本作用：每晚拉 10 只持仓基金净值、记录更新、异常预警，数据源天天基金网）。</p>
+<h3>二、为什么可用但不能直接当权威</h3>
+<ul>
+<li>这 10 只与 11-07 两张截图的 10 项<b>名称与顺序高度吻合</b>，说明历史映射大概率就是同一批持仓，可作为自动净值跟踪的候选。</li>
+<li>但它是 <b>EasyClaw 时期的配置</b>，不是 11-07 截图里的数字；截图本身没给全代码，不能反向证明。</li>
+<li>因此在 <code>funds.html</code> 与 <code>基金策略台账.json</code> 里，代码一律标注「来自 EasyClaw 历史映射，待确认」，<b>招商A500 未确认前不纳入自动净值跟踪</b>，也不据此补写任何净值、涨跌或估值数字。</li>
+</ul>
+<h3>三、待确认清单</h3>
+<ol>
+<li>招商中证A500ETF发起式联接A 的完整代码是否为 <code>022455</code>；</li>
+<li>理财通 4 只基金在截图未显示代码的情况下，是否沿用历史映射；</li>
+<li>10 只基金是否需要按季报做持仓穿透（判断主动权益之间是否重仓同一批标的）；</li>
+<li>广发聚荣一年持有期混合A 的持有期到期日；</li>
+<li>第三账户「我的基金」是否即飞书投资表旧表里「第一平台基金/贵金属（上次更新 2026-06-18）」板块。</li>
+</ol></div></details>
+<details><summary>策略与预警总索引（点击展开）</summary><div class="inner"><h2>策略与预警 · 总索引</h2>
+<blockquote>建立：2026-11-07 09:20 后，丰哥要求投资看板新增「持股分析 / 基金分析 / 实时预警」三个能力，并「尽可能做强」。</blockquote>
+<blockquote>权威主副本：<code>F:\金融知识库\金融数据\投资档案\策略与预警\</code></blockquote>
+<blockquote>在线派生页：<code>holdings.html</code> / <code>funds.html</code> / <code>alerts.html</code>（<code>https://yuji1998.github.io/fengge-dashboard/</code>）</blockquote>
+<h3>一、与既有档案的关系</h3>
+<p>投资档案此前已有两层：</p>
+<table><thead><tr><th>层</th><th>目录</th><th>在线页</th><th>回答什么</th></tr></thead><tbody>
+<tr><td>事实层</td><td><code>投资档案\</code> 时间线 / 逐日 CSV / 快照</td><td><code>archive.html</code></td><td>当时赚了多少、亏了多少，一路怎么走过来的</td></tr>
+<tr><td>分析层</td><td><code>投资档案\分析档案\</code></td><td><code>analysis.html</code></td><td>观点、纪律、框架、材料、轮次结论</td></tr>
+<tr><td><b>策略与预警层（本层）</b></td><td><code>投资档案\策略与预警\</code></td><td><code>holdings.html</code> / <code>funds.html</code> / <code>alerts.html</code></td><td><b>往前看</b>：每天该关注什么、基金下一步怎么看、什么重大事件会冲击组合</td></tr>
+</tbody></table>
+<p>三层互不覆盖：事实层记过去，分析层记判断，本层记<b>前瞻动作与观察条件</b>。</p>
+<h3>二、三个能力</h3>
+<table><thead><tr><th>按钮</th><th>在线页</th><th>事实源</th><th>频率</th><th>核心产出</th></tr></thead><tbody>
+<tr><td>📊 持股分析</td><td><code>holdings.html</code></td><td><code>持股策略台账.json</code></td><td><b>每天一条</b>（凌晨流水线）</td><td>3 只 A 股的信息面、结构性观察点、触发条件、数据缺口、次日事后校验</td></tr>
+<tr><td>🧾 基金分析</td><td><code>funds.html</code></td><td><code>基金策略台账.json</code></td><td>按轮次（净值更新 / 政策变化 / 新截图时）</td><td>10 只基金主题聚类、重复暴露量化、下步观察条件、待确认项</td></tr>
+<tr><td>🚨 实时预警</td><td><code>alerts.html</code></td><td><code>事件雷达.json</code></td><td><b>每天扫描 + 事件触发即时挂起</b></td><td>中国/全球重大事件、领先指标、传导链、情景推演、历史类比、持仓映射</td></tr>
+</tbody></table>
+<h3>三、文件清单</h3>
+<table><thead><tr><th>文件</th><th>作用</th></tr></thead><tbody>
+<tr><td><code>00_总索引.md</code></td><td>本文件</td></tr>
+<tr><td><code>持股策略台账.json</code></td><td>机器可读：3 只股票基线 + 逐日策略记录</td></tr>
+<tr><td><code>基金策略台账.json</code></td><td>机器可读：分组、10 只逐项、逐轮结论与待确认</td></tr>
+<tr><td><code>事件雷达.json</code></td><td>机器可读：事件条目（含领先指标 / 传导链 / 情景 / 历史类比 / 持仓映射）</td></tr>
+<tr><td><code>基金代码映射.md</code></td><td>10 只基金代码来源与待确认项</td></tr>
+<tr><td><code>事件日历.md</code></td><td>L1 未来时点清单（周期性时点，具体日期待官方日历确认）</td></tr>
+<tr><td><code>历史类比库.md</code></td><td>L4 同类事件回看的观察维度清单</td></tr>
+<tr><td><code>前瞻性机制.md</code></td><td>L1–L5 五层机制 + 11-07 诊断 + 改进清单</td></tr>
+<tr><td><code>素材\</code></td><td>每日凌晨 <code>daily_invest_brief.py --prepare</code> 生成的待研判骨架与 agent 回填文件</td></tr>
+</tbody></table>
+<p>生成器：<code>D:\WorkBuddy\Claw\work\family-nav\fengge-dashboard\build_invest_views.py</code>（渲染三页）、<code>daily_invest_brief.py</code>（每日登记入口）。</p>
+<p>推送：<code>api_push_invest.py</code>（7 文件一次性 commit）。</p>
+<h3>四、铁律</h3>
+<ol>
+<li><b>以新为准 + 逐次留痕</b>：新截图/新信息以最新为准，旧记录不删不覆盖。</li>
+<li><b>不编造</b>：未核实的选举结果、政策原文、行情数字一律标【待核实】/【待补充】；不把丰哥提问中的举例当作既成事实。</li>
+<li><b>只提示不代操作</b>：策略提示 = 信息面 + 观察点 + 触发条件；不含买卖判断、操作价位、仓位调整建议。所有在线页附固定免责声明。</li>
+<li><b>口径隔离</b>：11-07 三账户基准、7–10 月监测名单股票端、5 月分账户台账口径不同，禁止横向比较或相加；活期+ 累计收益不并入浮亏。</li>
+<li><b>数据源可靠性显式标注</b>：腾讯行情可用；东财 push2 失效；iFinD 额度耗尽；北向逐笔净流入自 2024-08-19 不再披露，不猜数。</li>
+<li><b>历史纪律位失效</b>：8–9 月硬止损（天孚 254.50 / 立讯 50 / 莱克 25）对应旧持仓结构，不得照搬为当前组合操作建议。</li>
+</ol></div></details>
+  <div class="panel" style="border-color:#30363d">
+    <div class="disc"><b>免责声明</b>：以上内容基于公开数据、已归档材料与截图实数字整理，仅供参考，<b>不构成投资建议</b>，不含买卖判断、操作价位或仓位调整建议。凡标注【待核实】【待补充】【待调权威源】处均为数据缺口，未以估算值替代。股市有风险，投资需谨慎。</div>
+    <div class="note" style="margin-top:8px">derived_from：<code>F:\金融知识库\金融数据\投资档案\策略与预警\</code>（权威主副本）｜
+    本页为派生视图，不反向修改事实层；看板首页只显示最新，策略与逐轮结论逐次留痕不删。</div>
+  </div>
+</main>
+</div>
+</body>
+</html>

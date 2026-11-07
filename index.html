@@ -94,6 +94,14 @@ details .inner{padding:0 14px 14px;}
 .note{font-size:11px;line-height:1.8;color:var(--muted);}
 .disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
 @media (max-width:1080px){.row-two{grid-template-columns:1fr;}}
+
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
+.nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:.15s;}
+.nav a span{font-size:13px;}
+.nav a:hover{color:var(--text);border-color:#3d4a5c;}
+.nav a.on{color:var(--accent);border-color:var(--accent);background:#12233b;}
+@media (max-width:1080px){.nav a{padding:5px 9px;font-size:11px;}}
 </style>
 </head>
 <body>
@@ -123,8 +131,16 @@ details .inner{padding:0 14px 14px;}
 
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资看板<span class="version">标准视图 · 三账户</span></h1>
-  <div class="meta">数据时点：<b>2026-11-07 08:14–08:19（三张截图）｜周六休市，行情口径对应 11-06 周五收盘</b>　·　<a href="archive.html?v=20261107c">📚 投资档案</a>　<a href="analysis.html?v=20261107c">🧭 投资分析</a></div>
+  <div class="meta">数据时点：<b>2026-11-07 08:14–08:19（三张截图）｜周六休市，行情口径对应 11-06 周五收盘</b>　·　标准视图 · 三账户</div>
 </header>
+<nav class="nav">
+<a class="on" href="index.html?v=20261107c"><span>📈</span>总览</a>
+<a href="holdings.html?v=20261107c"><span>📊</span>持股分析</a>
+<a href="funds.html?v=20261107c"><span>🧾</span>基金分析</a>
+<a href="alerts.html?v=20261107c"><span>🚨</span>实时预警</a>
+<a href="archive.html?v=20261107c"><span>📚</span>投资档案</a>
+<a href="analysis.html?v=20261107c"><span>🧭</span>投资分析</a>
+</nav>
 
 <section class="tldr">
   <div class="lead">结论先行 · TL;DR</div>
