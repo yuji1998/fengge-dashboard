@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丰哥·实时投资监测看板（2026-11-07 08:19）</title>
+<title>丰哥·投资看板（标准视图 2026-11-07 08:19）</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
 :root{--bg:#0d1117;--panel:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--green:#3fb950;--red:#f85149;--accent:#58a6ff;}
@@ -60,16 +60,48 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
 .ten-empty{color:var(--muted);font-size:13px;}
 .sect-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px;margin-right:6px;}
 @media (max-width:1080px){.row-line,.row-two,.row-three{grid-template-columns:1fr;}}
+
+.tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+.tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
+.tldr .main{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:9px;}
+.tldr ul{margin:0 0 0 16px;font-size:12px;line-height:1.8;color:var(--muted);}
+.tldr b{color:var(--text);}
+.hbar{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:9px 0 7px;border:1px solid var(--border);}
+.hbar div{display:flex;align-items:center;justify-content:center;font-size:10px;color:#0d1117;font-weight:700;white-space:nowrap;}
+.legend{font-size:11px;color:var(--muted);line-height:1.7;}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:10px;}
+.kv div{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:9px 11px;}
+.kv span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px;}
+.kv b{font-size:15px;font-variant-numeric:tabular-nums;}
+.fact{font-size:12px;line-height:1.85;color:var(--text);}
+.fact p{margin-bottom:7px;}
+.fact b{color:var(--accent);}
+.tag{display:inline-block;font-size:10px;border-radius:4px;padding:1px 6px;margin-right:5px;border:1px solid var(--border);color:var(--muted);}
+.tag.deep{color:var(--green);border-color:#2d5a34;}
+.tag.win{color:var(--red);border-color:#6e2b28;}
+.switch{float:right;font-size:10px;}
+.switch button{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:5px;padding:2px 9px;cursor:pointer;font-size:10px;}
+.switch button.on{color:var(--accent);border-color:var(--accent);}
+#plChart{height:420px;}
+details{background:var(--panel);border:1px solid #6e3a1f;border-radius:10px;padding:0;}
+details summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:600;color:#e3b341;list-style:none;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▸ ';color:#e3b341;}
+details[open] summary::before{content:'▾ ';}
+details .inner{padding:0 14px 14px;}
+.note{font-size:11px;line-height:1.8;color:var(--muted);}
+.disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+@media (max-width:1080px){.row-two{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
 <!-- ===== 访问密码锁 ===== -->
 <div id="lock">
   <div class="lock-box">
     <div style="font-size:40px;margin-bottom:10px;">🔒</div>
-    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·实时投资监测看板</div>
-    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">7×24 盘前指引 · 请输入访问密码</div>
+    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·投资看板</div>
+    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">标准视图 · 请输入访问密码</div>
     <input type="password" id="lockInput" placeholder="访问密码" autocomplete="off" style="width:200px;padding:10px 14px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:15px;text-align:center;outline:none;" />
     <div id="lockMsg" style="color:#f85149;font-size:12px;height:18px;margin-top:8px;"></div>
     <button id="lockBtn" style="margin-top:6px;padding:9px 34px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">进入</button>
@@ -89,95 +121,143 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
 </script>
 
 <header class="header">
-  <h1>丰哥<span class="dot">·</span>实时投资监测看板<span class="version">7×24 盘前指引</span></h1>
-  <div class="meta">数据更新时间：<b>2026-11-07 08:19（三张截图）｜周六休市，行情口径对应 11-06 周五收盘</b>　访问密码 <b>fg2026</b></div>
+  <h1>丰哥<span class="dot">·</span>投资看板<span class="version">标准视图 · 三账户</span></h1>
+  <div class="meta">数据时点：<b>2026-11-07 08:14–08:19（三张截图）｜周六休市，行情口径对应 11-06 周五收盘</b></div>
 </header>
 
+<section class="tldr">
+  <div class="lead">结论先行 · TL;DR</div>
+  <div class="main">三账户合计 <b>299,359.26</b> 元，权益类 <b>93.0%</b>、类现金仅 <b>7.0%</b>；累计浮亏 <b>-109,183.30</b>（占反推成本约 -28.2%）。13 个标的看似分散，但科技／成长主线高度重合，实质是一笔集中的成长风格暴露。本页只做数据整理与结构呈现，<b>不含买卖判断、操作价位或仓位调整建议</b>。</div>
+  <ul>
+    <li>拖累高度集中：天孚通信 + 融通产业趋势合计 -91,586.03，占总浮亏 <b>83.9%</b>；再加摩根新兴动力A，三只占 <b>92.5%</b>。</li>
+    <li>现金缓冲变薄：类现金 21,015.76，占比由两账户口径 14.0% 降至 <b>7.0%</b>（并入第三账户后分母扩大）。</li>
+    <li>11-06 当日两个基金账户合计 <b>-5,002.63</b>；基金账户 5 只当日全负，但累计有两只仍盈利。</li>
+  </ul>
+</section>
+
 <section class="cards">
-  <div class="card">
-    <div class="label">总资产 · 三账户</div>
-    <div class="value">¥299,359.26</div>
-    <div class="sub">券商 112,850.41 ＋ 理财通 37,116.99 ＋ 基金 149,391.86</div>
-  </div>
-  <div class="card">
-    <div class="label">持仓市值</div>
-    <div class="value">¥279,212.85</div>
-    <div class="sub">股票 92,704.00 ＋ 基金 186,508.85</div>
-  </div>
-  <div class="card">
-    <div class="label">累计浮亏</div>
-    <div class="value neg">¥-109,183.30</div>
-    <div class="sub">占反推成本约 -28.2%（不含活期+累计收益）</div>
-  </div>
-  <div class="card">
-    <div class="label">类现金</div>
-    <div class="value">¥21,015.76</div>
-    <div class="sub">占总资产 7.0%　·　两账户口径为 14.0%</div>
-  </div>
+  <div class="card"><div class="label">总资产 · 三账户</div><div class="value">¥299,359.26</div><div class="sub">券商 112,850.41 ＋ 理财通 37,116.99 ＋ 基金 149,391.86</div></div>
+  <div class="card"><div class="label">持仓市值（含活期+）</div><div class="value">¥279,212.85</div><div class="sub">股票 92,704.00 ＋ 基金及现金类 186,508.85</div></div>
+  <div class="card"><div class="label">累计浮亏</div><div class="value neg">¥-109,183.30</div><div class="sub">占反推成本约 -28.2%　·　不含活期+累计收益</div></div>
+  <div class="card"><div class="label">类现金</div><div class="value">¥21,015.76</div><div class="sub">占总资产 7.0%　·　两账户口径 14.0%</div></div>
 </section>
 
 <main>
-  <div class="row row-two">
-    <div class="panel">
-      <h2><span class="sect-tag">核心</span>券商账户 · 个股持仓</h2>
-      <div class="p-sub">市值 / 累计盈亏 / 盈亏率 / 占持仓　·　截图未提供现价与当日涨跌，故不列</div>
-      <table>
-        <tr><th>名称</th><th class="num">市值</th><th class="num">累计盈亏</th><th class="num">盈亏率</th><th class="num">占持仓</th></tr>
-        <tr><td>莱克电气<div style="font-size:10px;color:#8b949e">603355</div></td><td class="num">19,914</td><td class="num" style="color:#3fb950">-711.05</td><td class="num" style="color:#3fb950">-3.45%</td><td class="num">21.5%</td></tr><tr><td>埃斯顿<div style="font-size:10px;color:#8b949e">002747</div></td><td class="num">14,230</td><td class="num" style="color:#f85149">+802.88</td><td class="num" style="color:#f85149">+5.99%</td><td class="num">15.3%</td></tr><tr><td>天孚通信<div style="font-size:10px;color:#8b949e">300394</div></td><td class="num">58,560</td><td class="num" style="color:#3fb950">-75,837.98</td><td class="num" style="color:#3fb950">-56.44%</td><td class="num">63.2%</td></tr>
-      </table>
-      <div class="stock-tip" style="margin-top:8px;line-height:1.6">账户总资产 112,850.41，持仓市值 92,704.00，资金余额 20,146.41，浮动盈亏 <span style="color:#3fb950">-75,746.15</span>。仅人民币账户；美元／港币账户未在截图内。</div>
-    </div>
-    <div class="panel">
-      <h2>腾讯理财通 · 基金持仓</h2>
-      <div class="p-sub">持有金额 / 持仓收益 / 昨日收益(11-06) / 占基金</div>
-      <table>
-        <tr><th>基金</th><th class="num">持有金额</th><th class="num">持仓收益</th><th class="num">昨日收益</th><th class="num">占基金</th></tr>
-        <tr><td>融通产业趋势股票<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">11,803.54</td><td class="num" style="color:#3fb950">-15,748.05</td><td class="num" style="color:#3fb950">-864.62</td><td class="num">31.8%</td></tr><tr><td>广发聚荣一年持有期混合A<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">11,487.71</td><td class="num" style="color:#f85149">+1,487.71</td><td class="num" style="color:#3fb950">-18.00</td><td class="num">31.0%</td></tr><tr><td>中欧上证科创板人工智能指数C<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">6,896.00</td><td class="num" style="color:#3fb950">-3,104.00</td><td class="num" style="color:#3fb950">-266.00</td><td class="num">18.6%</td></tr><tr><td>易方达科创50联接C<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">6,060.39</td><td class="num" style="color:#3fb950">-1,262.61</td><td class="num" style="color:#3fb950">-151.22</td><td class="num">16.3%</td></tr><tr><td>活期+<div style="font-size:10px;color:#8b949e">累计收益</div></td><td class="num">869.35</td><td class="num" style="color:#f85149">+436.59</td><td class="num" style="color:#f85149">+0.02</td><td class="num">2.3%</td></tr>
-      </table>
-      <div class="stock-tip" style="margin-top:8px;line-height:1.6">合计 37,116.99；前 4 只持仓收益 <span style="color:#3fb950">-18,626.95</span>，昨日收益合计 <span style="color:#3fb950">-1,299.82</span>。活期+ 的 +436.59 是<b>累计收益</b>，与「持仓收益」口径不同，未混算。</div>
-    </div>
-  </div>
-
-
   <div class="row">
     <div class="panel">
-      <h2><span class="sect-tag">新增</span>基金账户 · 我的基金持仓（08:19 截图）</h2>
-      <div class="p-sub">持有金额 / 持有收益 / 最新收益(11-06) / 占该账户　·　截图标注「以上是全部我的持仓」</div>
-      <table>
-        <tr><th>基金</th><th class="num">持有金额</th><th class="num">持有收益</th><th class="num">最新收益(11-06)</th><th class="num">占该账户</th></tr>
-        <tr><td>易方达新经济混合<div style="font-size:10px;color:#8b949e">001018</div></td><td class="num">35,951.06</td><td class="num" style="color:#3fb950">-5,048.94</td><td class="num" style="color:#3fb950">-450.38</td><td class="num">24.1%</td></tr><tr><td>工银科技创新混合<div style="font-size:10px;color:#8b949e">007353</div></td><td class="num">45,947.16</td><td class="num" style="color:#3fb950">-7,254.90</td><td class="num" style="color:#3fb950">-1,547.53</td><td class="num">30.8%</td></tr><tr><td>招商中证A500ETF发起式联接A<div style="font-size:10px;color:#8b949e">0224…（截图截断）</div></td><td class="num">21,342.04</td><td class="num" style="color:#f85149">+1,342.04</td><td class="num" style="color:#3fb950">-357.98</td><td class="num">14.3%</td></tr><tr><td>嘉实主题新动力混合<div style="font-size:10px;color:#8b949e">070021</div></td><td class="num">35,570.51</td><td class="num" style="color:#f85149">+5,570.51</td><td class="num" style="color:#3fb950">-872.98</td><td class="num">23.8%</td></tr><tr><td>摩根新兴动力A<div style="font-size:10px;color:#8b949e">377240</div></td><td class="num">10,581.09</td><td class="num" style="color:#3fb950">-9,418.91</td><td class="num" style="color:#3fb950">-473.94</td><td class="num">7.1%</td></tr>
-      </table>
-      <div class="stock-tip" style="margin-top:8px;line-height:1.6">该账户合计 <b>149,391.86</b>；持有收益 <span style="color:#3fb950">-14,810.20</span>，最新收益(11-06) 合计 <span style="color:#3fb950">-3,702.81</span>；反推成本 164,202.06，反推浮亏率 -9.0%。招商中证A500ETF发起式联接A 的代码在截图中显示为「0224…」被截断，未补未猜；工银科技创新混合截图带「产品风险变动提醒」标记，一并如实保留。</div>
+      <h2><span class="sect-tag">一</span>组合总体画像</h2>
+      <div class="p-sub">账户结构 / 资产分布 / 集中度　·　来源：三张截图 2026-11-07 08:14–08:19（对应 11-06 收盘）</div>
+      <div class="hbar"><div style="width:37.70%;background:#58a6ff">券商人民币 37.7%</div><div style="width:12.40%;background:#bc8cff">腾讯理财通 12.4%</div><div style="width:49.90%;background:#f0b429">基金账户 49.9%</div></div><div class="legend"><i style="background:#58a6ff"></i>券商人民币 112,850.41（37.7%）　<i style="background:#bc8cff"></i>腾讯理财通 37,116.99（12.4%）　<i style="background:#f0b429"></i>基金账户 149,391.86（49.9%）　</div>
+      <table><tr><th>账户</th><th class=num>总资产</th><th class=num>占比</th><th class=num>持仓市值</th><th class=num>资金余额</th><th class=num>累计盈亏</th></tr><tr><td>券商人民币账户</td><td class="num">112,850.41</td><td class="num">37.7%</td><td class="num">92,704.00</td><td class="num">20,146.41</td><td class="num" style="color:#3fb950">-75,746.15</td></tr><tr><td>腾讯理财通</td><td class="num">37,116.99</td><td class="num">12.4%</td><td class="num">37,116.99</td><td class="num">0.00</td><td class="num" style="color:#3fb950">-18,626.95</td></tr><tr><td>基金账户（我的基金）</td><td class="num">149,391.86</td><td class="num">49.9%</td><td class="num">149,391.86</td><td class="num">0.00</td><td class="num" style="color:#3fb950">-14,810.20</td></tr></table>
+      <div class="kv">
+        <div><span>标的数</span><b>13 个</b></div>
+        <div><span>账户数</span><b>3 个</b></div>
+        <div><span>权益类</span><b>278,343.50（93.0%）</b></div>
+        <div><span>反推总成本</span><b>387,526.80</b></div>
+        <div><span>最大单只市值</span><b>天孚通信 58,560.00</b></div>
+        <div><span>盈利 / 亏损只数</span><b>4 盈 / 8 亏</b></div>
+      </div>
+      <div class="stock-tip" style="margin-top:9px;line-height:1.6">最大单只市值占总资产 19.6%、占股票端 63.2%；持仓市值含活期+ 869.35，扣除后权益类为 278,343.50。</div>
     </div>
   </div>
 
   <div class="row row-two">
     <div class="panel">
-      <h2>持仓累计盈亏</h2>
-      <div id="plChart" class="chart"></div>
+      <h2>持仓市值占比<span class="switch" id="sw1"><button data-m="chart" class="on" onclick="sw(1,'chart')">图</button> <button data-m="table" onclick="sw(1,'table')">表</button></span></h2>
+      <div class="p-sub">13 个标的 + 活期+　·　按截图持有金额</div>
+      <div id="wrapChart1"><div id="donutChart" class="chart"></div></div>
+      <div id="wrapTable1" style="display:none;max-height:300px;overflow:auto"><table><tr><th>标的</th><th class=num>市值</th><th class=num>占持仓市值</th></tr><tr><td>莱克电气</td><td class="num">19,914.00</td><td class="num">7.1%</td></tr><tr><td>埃斯顿</td><td class="num">14,230.00</td><td class="num">5.1%</td></tr><tr><td>天孚通信</td><td class="num">58,560.00</td><td class="num">21.0%</td></tr><tr><td>融通产业趋势股票</td><td class="num">11,803.54</td><td class="num">4.2%</td></tr><tr><td>广发聚荣一年持有期混合A</td><td class="num">11,487.71</td><td class="num">4.1%</td></tr><tr><td>中欧上证科创板人工智能指数C</td><td class="num">6,896.00</td><td class="num">2.5%</td></tr><tr><td>易方达科创50联接C</td><td class="num">6,060.39</td><td class="num">2.2%</td></tr><tr><td>易方达新经济混合</td><td class="num">35,951.06</td><td class="num">12.9%</td></tr><tr><td>工银科技创新混合</td><td class="num">45,947.16</td><td class="num">16.5%</td></tr><tr><td>招商中证A500ETF发起式联接A</td><td class="num">21,342.04</td><td class="num">7.6%</td></tr><tr><td>嘉实主题新动力混合</td><td class="num">35,570.51</td><td class="num">12.7%</td></tr><tr><td>摩根新兴动力A</td><td class="num">10,581.09</td><td class="num">3.8%</td></tr><tr><td>活期+</td><td class="num">869.35</td><td class="num">0.3%</td></tr></table></div>
     </div>
     <div class="panel">
-      <h2>持仓市值占比</h2>
-      <div id="donutChart" class="chart"></div>
+      <h2>累计盈亏贡献<span class="switch" id="sw2"><button data-m="chart" class="on" onclick="sw(2,'chart')">图</button> <button data-m="table" onclick="sw(2,'table')">表</button></span></h2>
+      <div class="p-sub">12 只计入浮亏的标的　·　活期+ 为累计收益口径，不并入</div>
+      <div id="wrapChart2"><div id="plChart" class="chart"></div></div>
+      <div id="wrapTable2" style="display:none;max-height:420px;overflow:auto"><table><tr><th>标的</th><th class=num>累计盈亏</th><th class=num>占总浮亏</th></tr><tr><td>天孚通信</td><td class="num" style="color:#3fb950">-75,837.98</td><td class="num">69.5%</td></tr><tr><td>融通产业趋势股票</td><td class="num" style="color:#3fb950">-15,748.05</td><td class="num">14.4%</td></tr><tr><td>摩根新兴动力A</td><td class="num" style="color:#3fb950">-9,418.91</td><td class="num">8.6%</td></tr><tr><td>工银科技创新混合</td><td class="num" style="color:#3fb950">-7,254.90</td><td class="num">6.6%</td></tr><tr><td>易方达新经济混合</td><td class="num" style="color:#3fb950">-5,048.94</td><td class="num">4.6%</td></tr><tr><td>中欧上证科创板人工智能指数C</td><td class="num" style="color:#3fb950">-3,104.00</td><td class="num">2.8%</td></tr><tr><td>易方达科创50联接C</td><td class="num" style="color:#3fb950">-1,262.61</td><td class="num">1.2%</td></tr><tr><td>莱克电气</td><td class="num" style="color:#3fb950">-711.05</td><td class="num">0.7%</td></tr><tr><td>埃斯顿</td><td class="num" style="color:#f85149">+802.88</td><td class="num">-0.7%</td></tr><tr><td>招商中证A500ETF发起式联接A</td><td class="num" style="color:#f85149">+1,342.04</td><td class="num">-1.2%</td></tr><tr><td>广发聚荣一年持有期混合A</td><td class="num" style="color:#f85149">+1,487.71</td><td class="num">-1.4%</td></tr><tr><td>嘉实主题新动力混合</td><td class="num" style="color:#f85149">+5,570.51</td><td class="num">-5.1%</td></tr></table></div>
     </div>
   </div>
 
-
   <div class="row">
     <div class="panel">
-      <h2><span class="sect-tag">口径</span>本次梳理说明 · 2026-11-07（三账户）</h2>
-      <div class="p-sub">按截图实数字更新，未查外部行情、未补被截断代码</div>
-      <div style="font-size:12px;line-height:1.85;color:var(--text)">
-        <div><b style="color:var(--accent)">数据来源</b>：丰哥三张截图——券商 App「查询持仓」08:14、腾讯理财通「资产明细」08:16、「我的基金」持仓页 08:19；2026-11-07 为周六休市，行情口径对应 11-06 周五收盘。下方消息流／十维框架等模块为自动流水线 07:06 生成，本次未改动，已标注失效。</div>
-        <div style="margin-top:6px"><b style="color:var(--accent)">口径标注</b>：成本按「持有金额 − 持仓收益」反推，未核实成本基数（券商 App 有「修改成本价」按钮，基准可能被调过）；活期+ 的 +436.59 为累计收益，单独口径不并入浮亏；截图未显示现价、当日个股盈亏与部分基金代码，一律不列、不补、不猜。</div>
-        <div style="margin-top:6px"><b style="color:var(--accent)">结构性事实</b>：① 天孚通信 -75,838 与融通产业趋势 -15,748 合计占总浮亏 <b>83.9%</b>，仍是主要拖累；② 新账户中摩根新兴动力A 金额仅 10,581.09、持有收益 <span style="color:#3fb950">-9,418.91</span>，反推成本 20,000.00、约 <b>-47.1%</b>，是基金端最深单只；③ 三账户合计 13 个标的，但科技／成长主线高度重合（股票端天孚 + 理财通科创AI／科创50 + 基金账户工银科技创新、易方达新经济、嘉实主题新动力、摩根新兴动力），属同一风险因子重复暴露，不能按 13 个分散标的看；④ 类现金 21,015.76，占总资产由两账户口径 14.0% 降至 <b>7.0%</b>，权益类约 93.0%，接近满仓、缓冲变薄；⑤ 11-06 当日收益合计 -5,002.63（仅两个基金账户，券商个股当日盈亏截图未提供）。</div>
-        <div style="margin-top:6px"><b style="color:var(--accent)">与台账差异（待确认）</b>：本次截图个股为莱克电气、埃斯顿、天孚通信 3 只；投资表(6-01)与 9-22 监测名单中的亨通光电、立讯精密、世嘉科技、迈为股份、汇川技术未出现，埃斯顿为截图新增。另需确认新基金账户归属渠道、是否还有未截图账户（美元／港币、贵金属）。</div>
-        <div style="margin-top:6px;color:var(--muted)">本页为数据整理与结构呈现，不构成投资建议；不含买卖判断、操作价位或仓位调整建议。</div>
+      <h2><span class="sect-tag">二</span>主要风险暴露</h2>
+      <div class="p-sub">从组合视角看，不逐只点评</div>
+      <div class="fact">
+        <p><b>① 单一标的集中度</b>：天孚通信市值 58,560.00，占股票端 63.2%、占总资产 19.6%；单只累计浮亏 -75,837.98，占总浮亏 69.5%。</p>
+        <p><b>② 同类题材重复暴露</b>：按基金名称与主题标签粗归类（<b>未穿透底层持仓</b>），科技／成长主线 8 个标的合计 211,369.75，占总资产 <b>70.6%</b>；股票端天孚、理财通科创AI／科创50、基金账户 4 只主动成长基金属同一风险因子，不能按 13 个分散标的看待。</p>
+        <p><b>③ 深度亏损标的</b>：反推盈亏率 ≤ -30% 的有 4 只（融通产业趋势 -57.2%、天孚通信 -56.4%、摩根新兴动力A -47.1%、中欧科创AI C -31.0%），合计浮亏 -104,108.94，占总浮亏 95.4%。</p>
+        <p><b>④ 口径风险</b>：所有成本与盈亏率均为「持有金额 − 持仓收益」反推，未核实真实买入成本；券商 App 存在「修改成本价」功能，基准可能被调整过。</p>
       </div>
     </div>
   </div>
 
-  <div class="row row-two">
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">三</span>结构性问题点名</h2>
+      <div class="p-sub">均为截图数字可复核的事实，不含基本面判断</div>
+      <div class="fact">
+        <p>1. <b>龙头缺失、拖累项集中</b>：13 个标的中 4 只深度亏损，3 只合计贡献 92.5% 的浮亏；盈利端最大单只仅 +5,570.51，无法对冲。</p>
+        <p>2. <b>风格高度单一</b>：几乎全是成长／科技风格，仅招商中证A500联接A 一只宽基（21,342.04，占总资产 7.1%）与活期+ 具备稳定器属性，缺少低波动防守仓。</p>
+        <p>3. <b>票数偏多但跟踪失效</b>：3 个账户、13 个标的、两套口径（持仓收益 / 累计收益），靠截图手工合并，容易出现重复计或漏计；本次已按账户分表列示，避免混算。</p>
+        <p>4. <b>台账与截图不一致</b>：投资表(6-01)与 9-22 监测名单中的亨通光电、立讯精密、世嘉科技、迈为股份、汇川技术本次截图未出现，埃斯顿为截图新增；是否清仓或不在该人民币账户，待确认。</p>
+        <p>5. <b>现金缓冲偏薄</b>：类现金 21,015.76，占总资产 7.0%，权益类 93.0%。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">四</span>持仓分层（按反推盈亏率客观分档）</h2>
+      <div class="p-sub">分档依据仅为截图可复核的反推盈亏率；截图不含基本面与趋势数据，故不按「进攻核心／稳定器／观察／问题仓」作逻辑强弱判断</div>
+      <table><tr><th>分档（按反推盈亏率）</th><th class=num>持有金额</th><th class=num>累计盈亏</th><th class=num>反推盈亏率</th></tr><tr><td><span class="tag deep">深度亏损</span>融通产业趋势股票<div style="font-size:10px;color:#8b949e">理财通 · 持仓收益</div></td><td class="num">11,803.54</td><td class="num" style="color:#3fb950">-15,748.05</td><td class="num" style="color:#3fb950">-57.2%</td></tr><tr><td><span class="tag deep">深度亏损</span>天孚通信<div style="font-size:10px;color:#8b949e">券商 · 300394</div></td><td class="num">58,560.00</td><td class="num" style="color:#3fb950">-75,837.98</td><td class="num" style="color:#3fb950">-56.4%</td></tr><tr><td><span class="tag deep">深度亏损</span>摩根新兴动力A<div style="font-size:10px;color:#8b949e">基金账户 · 377240</div></td><td class="num">10,581.09</td><td class="num" style="color:#3fb950">-9,418.91</td><td class="num" style="color:#3fb950">-47.1%</td></tr><tr><td><span class="tag deep">深度亏损</span>中欧上证科创板人工智能指数C<div style="font-size:10px;color:#8b949e">理财通 · 持仓收益</div></td><td class="num">6,896.00</td><td class="num" style="color:#3fb950">-3,104.00</td><td class="num" style="color:#3fb950">-31.0%</td></tr><tr><td><span class="tag ">中度亏损</span>易方达科创50联接C<div style="font-size:10px;color:#8b949e">理财通 · 持仓收益</div></td><td class="num">6,060.39</td><td class="num" style="color:#3fb950">-1,262.61</td><td class="num" style="color:#3fb950">-17.2%</td></tr><tr><td><span class="tag ">中度亏损</span>工银科技创新混合<div style="font-size:10px;color:#8b949e">基金账户 · 007353</div></td><td class="num">45,947.16</td><td class="num" style="color:#3fb950">-7,254.90</td><td class="num" style="color:#3fb950">-13.6%</td></tr><tr><td><span class="tag ">中度亏损</span>易方达新经济混合<div style="font-size:10px;color:#8b949e">基金账户 · 001018</div></td><td class="num">35,951.06</td><td class="num" style="color:#3fb950">-5,048.94</td><td class="num" style="color:#3fb950">-12.3%</td></tr><tr><td><span class="tag ">中度亏损</span>莱克电气<div style="font-size:10px;color:#8b949e">券商 · 603355</div></td><td class="num">19,914.00</td><td class="num" style="color:#3fb950">-711.05</td><td class="num" style="color:#3fb950">-3.4%</td></tr><tr><td><span class="tag win">盈利</span>嘉实主题新动力混合<div style="font-size:10px;color:#8b949e">基金账户 · 070021</div></td><td class="num">35,570.51</td><td class="num" style="color:#f85149">+5,570.51</td><td class="num" style="color:#f85149">+18.6%</td></tr><tr><td><span class="tag win">盈利</span>广发聚荣一年持有期混合A<div style="font-size:10px;color:#8b949e">理财通 · 持仓收益</div></td><td class="num">11,487.71</td><td class="num" style="color:#f85149">+1,487.71</td><td class="num" style="color:#f85149">+14.9%</td></tr><tr><td><span class="tag win">盈利</span>招商中证A500ETF发起式联接A<div style="font-size:10px;color:#8b949e">基金账户 · 0224…（截图截断）</div></td><td class="num">21,342.04</td><td class="num" style="color:#f85149">+1,342.04</td><td class="num" style="color:#f85149">+6.7%</td></tr><tr><td><span class="tag win">盈利</span>埃斯顿<div style="font-size:10px;color:#8b949e">券商 · 002747</div></td><td class="num">14,230.00</td><td class="num" style="color:#f85149">+802.88</td><td class="num" style="color:#f85149">+6.0%</td></tr><tr><td><span class="tag">单独口径</span>活期+<div style="font-size:10px;color:#8b949e">理财通 · 累计收益，不并入浮亏</div></td><td class="num">869.35</td><td class="num" style="color:#f85149">+436.59</td><td class="num">—</td></tr></table>
+      <div class="stock-tip" style="margin-top:8px;line-height:1.6">深度亏损 ≤ -30%：4 只；中度亏损 -30%～0：4 只；盈利 &gt; 0：4 只；单独口径：活期+ 1 项。券商资金余额 20,146.41 为账户现金，不是标的，未列入分档。</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">五</span>总仓位判断 · <span class="sect-tag">六</span>待确认优先级</h2>
+      <div class="p-sub">仅陈述数据事实与待办，不给出加减仓建议</div>
+      <div class="fact">
+        <p><b>总仓位</b>：权益类 278,343.50（93.0%），类现金 21,015.76（7.0%）。并入第三个基金账户后，类现金占比从两账户口径 14.0% 降至 7.0%。截图未提供风险偏好、资金期限与后续现金流，故不对「该不该减总仓」下结论。</p>
+        <p style="margin-top:8px"><b>待确认（按优先级）</b>：</p>
+        <p>① 旧持仓名单差异：亨通光电、立讯精密、世嘉科技、迈为股份、汇川技术是否已清仓或不在该人民币账户；<br>
+        ② 成本基数：反推成本 387,526.80 是否与真实买入成本一致（App 可「修改成本价」）；<br>
+        ③ 账户完整性：新基金账户归属渠道，以及美元／港币、贵金属等是否还有未截图账户；<br>
+        ④ 台账同步：飞书「投资表」是否按本批三账户数据整体替换；<br>
+        ⑤ 流水线冲突：自动流水线每日 07:06 重写 index.html，可能覆盖本标准视图，需确认是否改其输出模板。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">明细</span>三账户逐项数据</h2>
+      <div class="p-sub">查阅型表格　·　所有数字按截图抄录，未补现价、未补被截断代码</div>
+      <div style="font-size:12px;color:#58a6ff;margin:10px 0 4px"><b>① 券商人民币账户</b>　总资产 112,850.41｜持仓市值 92,704.00｜资金余额 20,146.41｜浮动盈亏 <span style="color:#3fb950">-75,746.15</span></div>
+      <table><tr><th>个股</th><th class=num>市值</th><th class=num>累计盈亏</th><th class=num>盈亏率</th><th class=num>占股票端</th></tr><tr><td>莱克电气<div style="font-size:10px;color:#8b949e">603355</div></td><td class="num">19,914.00</td><td class="num" style="color:#3fb950">-711.05</td><td class="num" style="color:#3fb950">-3.45%</td><td class="num">21.5%</td></tr><tr><td>埃斯顿<div style="font-size:10px;color:#8b949e">002747</div></td><td class="num">14,230.00</td><td class="num" style="color:#f85149">+802.88</td><td class="num" style="color:#f85149">+5.99%</td><td class="num">15.3%</td></tr><tr><td>天孚通信<div style="font-size:10px;color:#8b949e">300394</div></td><td class="num">58,560.00</td><td class="num" style="color:#3fb950">-75,837.98</td><td class="num" style="color:#3fb950">-56.44%</td><td class="num">63.2%</td></tr></table>
+      <div style="font-size:12px;color:#58a6ff;margin:14px 0 4px"><b>② 腾讯理财通</b>　合计 37,116.99｜前 4 只持仓收益 <span style="color:#3fb950">-18,626.95</span>｜昨日收益合计 <span style="color:#3fb950">-1,299.82</span></div>
+      <table><tr><th>基金</th><th class=num>持有金额</th><th class=num>持仓收益</th><th class=num>昨日收益(11-06)</th><th class=num>占该账户</th></tr><tr><td>融通产业趋势股票<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">11,803.54</td><td class="num" style="color:#3fb950">-15,748.05</td><td class="num" style="color:#3fb950">-864.62</td><td class="num">31.8%</td></tr><tr><td>广发聚荣一年持有期混合A<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">11,487.71</td><td class="num" style="color:#f85149">+1,487.71</td><td class="num" style="color:#3fb950">-18.00</td><td class="num">31.0%</td></tr><tr><td>中欧上证科创板人工智能指数C<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">6,896.00</td><td class="num" style="color:#3fb950">-3,104.00</td><td class="num" style="color:#3fb950">-266.00</td><td class="num">18.6%</td></tr><tr><td>易方达科创50联接C<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">6,060.39</td><td class="num" style="color:#3fb950">-1,262.61</td><td class="num" style="color:#3fb950">-151.22</td><td class="num">16.3%</td></tr><tr><td>活期+<div style="font-size:10px;color:#8b949e">累计收益</div></td><td class="num">869.35</td><td class="num" style="color:#f85149">+436.59</td><td class="num" style="color:#f85149">+0.02</td><td class="num">2.3%</td></tr></table>
+      <div style="font-size:12px;color:#58a6ff;margin:14px 0 4px"><b>③ 基金账户「我的基金」</b>　合计 149,391.86｜持有收益 <span style="color:#3fb950">-14,810.20</span>｜最新收益(11-06) <span style="color:#3fb950">-3,702.81</span>｜反推成本 164,202.06</div>
+      <table><tr><th>基金</th><th class=num>持有金额</th><th class=num>持有收益</th><th class=num>最新收益(11-06)</th><th class=num>占该账户</th></tr><tr><td>易方达新经济混合<div style="font-size:10px;color:#8b949e">001018</div></td><td class="num">35,951.06</td><td class="num" style="color:#3fb950">-5,048.94</td><td class="num" style="color:#3fb950">-450.38</td><td class="num">24.1%</td></tr><tr><td>工银科技创新混合<div style="font-size:10px;color:#8b949e">007353</div></td><td class="num">45,947.16</td><td class="num" style="color:#3fb950">-7,254.90</td><td class="num" style="color:#3fb950">-1,547.53</td><td class="num">30.8%</td></tr><tr><td>招商中证A500ETF发起式联接A<div style="font-size:10px;color:#8b949e">0224…（截图截断）</div></td><td class="num">21,342.04</td><td class="num" style="color:#f85149">+1,342.04</td><td class="num" style="color:#3fb950">-357.98</td><td class="num">14.3%</td></tr><tr><td>嘉实主题新动力混合<div style="font-size:10px;color:#8b949e">070021</div></td><td class="num">35,570.51</td><td class="num" style="color:#f85149">+5,570.51</td><td class="num" style="color:#3fb950">-872.98</td><td class="num">23.8%</td></tr><tr><td>摩根新兴动力A<div style="font-size:10px;color:#8b949e">377240</div></td><td class="num">10,581.09</td><td class="num" style="color:#3fb950">-9,418.91</td><td class="num" style="color:#3fb950">-473.94</td><td class="num">7.1%</td></tr></table>
+      <div class="stock-tip" style="margin-top:8px;line-height:1.6">活期+ 的 +436.59 为<b>累计收益</b>，与「持仓收益」口径不同，未并入浮亏。招商中证A500ETF发起式联接A 代码截图显示为「0224…」被截断，未补未猜；工银科技创新混合截图带「产品风险变动提醒」，如实保留。</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">口径</span>数据来源与计算说明</h2>
+      <div class="note">
+        <b style="color:var(--accent)">来源</b>：丰哥三张截图——券商 App「查询持仓」08:14、腾讯理财通「资产明细」08:16、「我的基金」持仓页 08:19（页面标注「以上是全部我的持仓」）；2026-11-07 为周六休市，行情口径对应 11-06 周五收盘。全部数字按截图抄录，未查外部行情、未编造现价／当日个股涨跌／基金代码。<br>
+        <b style="color:var(--accent)">计算</b>：总资产 = 三账户之和；累计浮亏 = 券商浮动盈亏 + 理财通前 4 只持仓收益 + 基金账户 5 只持有收益；反推成本 = Σ(持有金额 − 持仓收益)；反推盈亏率 = 持仓收益 ÷ 反推成本。类现金 = 券商资金余额 + 活期+。所有反推值均标注为反推口径。<br>
+        <b style="color:var(--accent)">视图</b>：按「持仓体检」标准骨架重排（结论先行 → 组合画像 → 风险暴露 → 结构问题 → 持仓分层 → 总仓位 → 待确认 → 明细 → 口径 → 留痕）；保留站点深色主题与访问密码，07:06 盘前指引内容移入下方折叠留痕区。图表支持图／表切换。
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>自动流水线 07:06 盘前指引 · 历史留痕（已失效，点击展开）</summary>
+    <div class="inner">
+      <div style="background:#2d1a12;border:1px solid #6e3a1f;border-radius:6px;padding:9px 11px;margin-bottom:10px;font-size:11px;line-height:1.7;color:#e3b341">⚠️ <b>以下为 2026-11-07 07:06 自动流水线生成的盘前指引，基于当时行情与旧持仓名单</b>（含亨通光电、立讯精密等，三张截图已不含）。其中当日涨跌、个股操作建议与 08:14–08:19 截图口径不一致，<b>仅作历史留痕，不作为当前持仓判断依据</b>。当前持仓以本页上方三账户明细为准。</div>
+      <div class="row row-two">
     <div class="panel">
       <h2><span class="sect-tag">模块四</span>今日关注经济数据/事件</h2>
       <div class="p-sub">宏观日历</div>
@@ -211,9 +291,7 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
     <div class="panel">
       <h2><span class="sect-tag">模块六</span>10维框架盘前指引 <span style="font-size:11px;color:#8b949e;font-weight:400;">（Kimi 生成）</span></h2>
       <div class="p-sub">宏观 / 政策 / 资金 / 技术 / 情绪 / 估值 / 产业 / 汇率 / 商品 / 风险 · 综合评级</div>
-      <div id="tenBlock" style="max-height:560px;overflow:auto;"><div style="background:#2d1a12;border:1px solid #6e3a1f;border-radius:6px;padding:9px 11px;margin-bottom:10px;font-size:11px;line-height:1.7;color:#e3b341">
-        ⚠️ <b>本模块为 2026-11-07 07:06 自动流水线生成，基于当时行情与旧持仓名单</b>（含亨通光电、立讯精密等，三张截图已不含）。其中提到的当日涨跌、个股操作建议与上方 08:14/08:16/08:19 截图口径不一致，<b>仅作历史留痕，不作为当前持仓判断依据</b>。当前持仓以本页「券商账户 · 个股持仓」「腾讯理财通 · 基金持仓」「基金账户 · 我的基金持仓」三表为准。
-      </div><div class="ten-h2">十维框架研判</div>
+      <div id="tenBlock" style="max-height:560px;overflow:auto;"><div class="ten-h2">十维框架研判</div>
 <div class="ten-line">**【宏观】** 中性偏多：外需科技景气和人民币走强托底风险偏好。纳指+1.09%、纳指100+1.35%，A股昨日上证+0.89%、创业板+4.16%显示成长弹性仍在，但全球高利率与高位商品仍压制估值扩张。</div>
 <div class="ten-line">**【政策】** 谨慎偏多：年末政策窗口临近但需验证增量落地。稳增长、地产化险、中长期资金入市与“十五五”产业定调为潜在催化，若无超预期表述，高位板块易兑现。</div>
 <div class="ten-line">**【资金】** 中性偏多：情绪资金回流成长，但需成交放大确认。创业板+4.16%、科创50+3.04%、中证1000+2.38%强于上证50+1.65%，说明风偏偏向中小创，若今日缩量高开则易分歧。</div>
@@ -231,46 +309,48 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
 <div class="ten-line">一句话：以上为基于给定数据的模型观点，行情与政策以交易所/央行/公司公告及终端实时数据为准，不构成投资建议；高波动与深套持仓下严格控制仓位、止损与流动性风险。</div></div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="panel" style="border-color:#30363d;">
-      <div style="font-size:11px;line-height:1.8;color:var(--muted)"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div>
     </div>
-  </div>
+  </details>
+
+  <div class="row"><div class="panel" style="border-color:#30363d"><div class="disc"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div></div></div>
 </main>
 
 <script>
-var D = {"pl_names": ["莱克电气", "埃斯顿", "天孚通信", "融通产业趋势股票", "广发聚荣一年持有期混合…", "中欧上证科创板人工智能…", "易方达科创50联接C", "易方达新经济混合", "工银科技创新混合", "招商中证A500ETF…", "嘉实主题新动力混合", "摩根新兴动力A"], "pl_values": [-711.05, 802.88, -75837.98, -15748.05, 1487.71, -3104.0, -1262.61, -5048.94, -7254.9, 1342.04, 5570.51, -9418.91], "donut": [{"name": "莱克电气", "value": 19914, "itemStyle": {"color": "#58a6ff"}}, {"name": "埃斯顿", "value": 14230, "itemStyle": {"color": "#f0b429"}}, {"name": "天孚通信", "value": 58560, "itemStyle": {"color": "#3fb950"}}, {"name": "融通产业趋势股票", "value": 11803, "itemStyle": {"color": "#bc8cff"}}, {"name": "广发聚荣一年持有期…", "value": 11487, "itemStyle": {"color": "#e3b341"}}, {"name": "中欧上证科创板人工…", "value": 6896, "itemStyle": {"color": "#39c5cf"}}, {"name": "易方达科创50联接…", "value": 6060, "itemStyle": {"color": "#ff7b72"}}, {"name": "活期+", "value": 869, "itemStyle": {"color": "#a371f7"}}, {"name": "易方达新经济混合", "value": 35951, "itemStyle": {"color": "#8b949e"}}, {"name": "工银科技创新混合", "value": 45947, "itemStyle": {"color": "#d29922"}}, {"name": "招商中证A500E…", "value": 21342, "itemStyle": {"color": "#db61a2"}}, {"name": "嘉实主题新动力混合", "value": 35570, "itemStyle": {"color": "#56d364"}}, {"name": "摩根新兴动力A", "value": 10581, "itemStyle": {"color": "#79c0ff"}}], "mkt_list": ["上证指数", "深证成指", "创业板指", "科创50", "中证1000", "上证50"], "mkt_pct": [0.89, 2.79, 4.16, 3.04, 2.38, 1.65], "trend_labels": ["早盘", "午盘", "收盘"], "trend_vals": [3612.1667, 3636.7241, 3690.4753], "plColor": "neg", "shColor": "pos"};
-var tooltipDark={backgroundColor:'rgba(22,27,34,0.95)',borderColor:'#30363d',textStyle:{color:'#e6edf3',fontSize:12},extraCssText:'border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.5);'};
+var D = {"pl_names": ["莱克电气", "埃斯顿", "天孚通信", "融通产业趋势股票", "广发聚荣一年持有期混合…", "中欧上证科创板人工智能…", "易方达科创50联接C", "易方达新经济混合", "工银科技创新混合", "招商中证A500ETF…", "嘉实主题新动力混合", "摩根新兴动力A"], "pl_values": [-711.05, 802.88, -75837.98, -15748.05, 1487.71, -3104.0, -1262.61, -5048.94, -7254.9, 1342.04, 5570.51, -9418.91], "donut": [{"name": "莱克电气", "value": 19914, "itemStyle": {"color": "#58a6ff"}}, {"name": "埃斯顿", "value": 14230, "itemStyle": {"color": "#f0b429"}}, {"name": "天孚通信", "value": 58560, "itemStyle": {"color": "#3fb950"}}, {"name": "融通产业趋势股票", "value": 11803, "itemStyle": {"color": "#bc8cff"}}, {"name": "广发聚荣一年持有期…", "value": 11487, "itemStyle": {"color": "#e3b341"}}, {"name": "中欧上证科创板人工…", "value": 6896, "itemStyle": {"color": "#39c5cf"}}, {"name": "易方达科创50联接…", "value": 6060, "itemStyle": {"color": "#ff7b72"}}, {"name": "易方达新经济混合", "value": 35951, "itemStyle": {"color": "#a371f7"}}, {"name": "工银科技创新混合", "value": 45947, "itemStyle": {"color": "#8b949e"}}, {"name": "招商中证A500E…", "value": 21342, "itemStyle": {"color": "#d29922"}}, {"name": "嘉实主题新动力混合", "value": 35570, "itemStyle": {"color": "#db61a2"}}, {"name": "摩根新兴动力A", "value": 10581, "itemStyle": {"color": "#56d364"}}, {"name": "活期+", "value": 869, "itemStyle": {"color": "#79c0ff"}}]};
+var dark={backgroundColor:'rgba(22,27,34,0.95)',borderColor:'#30363d',textStyle:{color:'#e6edf3',fontSize:12}};
 var muted={color:'#8b949e',fontSize:11};
 var split={lineStyle:{color:'#21262d'}};
-function axisDark(light){return {color:light?'#e6edf3':'#8b949e',fontSize:11};}
-
-/* 持仓累计盈亏 */
-var plChart=echarts.init(document.getElementById('plChart'));
-plChart.setOption({
-  backgroundColor:'transparent',
-  tooltip:Object.assign({},tooltipDark,{trigger:'axis',axisPointer:{type:'shadow'},formatter:function(ps){var p=ps[0];var c=p.value<0?'#3fb950':'#f85149';return p.name+'<br/>累计盈亏：<span style="color:'+c+'">¥'+p.value.toLocaleString('zh-CN')+'</span>';}}),
-  grid:{left:90,right:90,top:30,bottom:28},
-  xAxis:{type:'value',axisLabel:{color:'#8b949e',fontSize:11,formatter:function(v){return v/1000+'k';}},splitLine:split,axisLine:{show:false}},
-  yAxis:{type:'category',data:D.pl_names,axisLabel:{color:'#e6edf3',fontSize:12},axisTick:{show:false}},
-  series:[{name:'盈亏',type:'bar',barWidth:18,data:D.pl_values,
-    itemStyle:{color:function(p){return p.value<0?'#3fb950':'#f85149';},borderRadius:[0,6,6,0]},
-    label:{show:true,position:'right',color:'#e6edf3',fontSize:11,formatter:function(p){return '¥'+p.value.toLocaleString('zh-CN');}} }]
-});
-
-/* 市值占比 */
 var donutChart=echarts.init(document.getElementById('donutChart'));
 donutChart.setOption({
   backgroundColor:'transparent',
-  tooltip:Object.assign({},tooltipDark,{trigger:'item',formatter:'{b}<br/>占比 {d}%<br/>¥{c}'}),
-  legend:{bottom:2,textStyle:{color:'#8b949e',fontSize:11},itemWidth:12,itemHeight:12,icon:'circle'},
-  series:[{type:'pie',radius:['50%','76%'],center:['50%','44%'],data:D.donut,avoidLabelOverlap:true,
-    itemStyle:{borderRadius:6,borderColor:'#0d1117',borderWidth:2},
-    label:{show:true,color:'#e6edf3',fontSize:11,formatter:'{b}\n{d}%'}}]
+  tooltip:Object.assign({},dark,{trigger:'item',formatter:'{b}<br/>占比 {d}%<br/>¥{c}'}),
+  legend:{bottom:2,textStyle:muted,itemWidth:12,itemHeight:12,icon:'circle',type:'scroll'},
+  series:[{type:'pie',radius:['42%','72%'],center:['50%','43%'],data:D.donut,avoidLabelOverlap:true,
+    itemStyle:{borderRadius:5,borderColor:'#0d1117',borderWidth:2},
+    label:{show:true,color:'#e6edf3',fontSize:10,formatter:'{b}\n{d}%'}}]
 });
-
-window.addEventListener('resize',function(){[plChart,donutChart].forEach(function(c){c.resize();});});
+var plChart=echarts.init(document.getElementById('plChart'));
+plChart.setOption({
+  backgroundColor:'transparent',
+  tooltip:Object.assign({},dark,{trigger:'axis',axisPointer:{type:'shadow'},
+    formatter:function(ps){var p=ps[0];return p.name+'<br/>累计盈亏：¥'+p.value.toLocaleString('zh-CN');}}),
+  grid:{left:120,right:88,top:16,bottom:24},
+  xAxis:{type:'value',axisLabel:Object.assign({},muted,{formatter:function(v){return v/1000+'k';}}),splitLine:split,axisLine:{show:false}},
+  yAxis:{type:'category',data:D.pl_names,axisLabel:Object.assign({},muted,{color:'#e6edf3',fontSize:11}),axisTick:{show:false}},
+  series:[{name:'盈亏',type:'bar',barWidth:15,data:D.pl_values,
+    itemStyle:{color:function(p){return p.value<0?'#3fb950':'#f85149';},borderRadius:[0,5,5,0]},
+    label:{show:true,position:'right',color:'#e6edf3',fontSize:10,
+      formatter:function(p){return '¥'+p.value.toLocaleString('zh-CN');}}}]
+});
+function sw(n,mode){
+  var ch=document.getElementById('wrapChart'+n), tb=document.getElementById('wrapTable'+n);
+  ch.style.display = mode==='chart'?'block':'none';
+  tb.style.display = mode==='table'?'block':'none';
+  var bs=document.querySelectorAll('#sw'+n+' button');
+  for(var i=0;i<bs.length;i++){bs[i].className = bs[i].getAttribute('data-m')===mode?'on':'';}
+  if(mode==='chart'){window.dispatchEvent(new Event('resize'));}
+}
+window.addEventListener('resize',function(){donutChart.resize();plChart.resize();});
 </script>
 </body>
 </html>
