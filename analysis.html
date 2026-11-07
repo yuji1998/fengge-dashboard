@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丰哥·投资分析档案（持续化）</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--green:#3fb950;--red:#f85149;--accent:#58a6ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;padding:20px 22px 40px;min-height:100vh;}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
+h1{font-size:22px;font-weight:600;letter-spacing:1px;}
+h1 .dot{color:var(--accent);}
+.version{font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 8px;border-radius:12px;margin-left:8px;vertical-align:middle;}
+.meta{color:var(--muted);font-size:13px;}
+.meta b{color:var(--accent);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:16px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.card .label{color:var(--muted);font-size:12px;margin-bottom:6px;}
+.card .value{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;}
+.card .sub{color:var(--muted);font-size:11px;margin-top:5px;}
+.pos{color:var(--red);}.neg{color:var(--green);}
+main{display:flex;flex-direction:column;gap:14px;}
+.row{display:grid;gap:14px;}
+.row-line{grid-template-columns:2fr 1fr;}
+.row-two{grid-template-columns:1fr 1fr;}
+.row-three{grid-template-columns:repeat(3,1fr);}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;}
+.panel h2{font-size:15px;font-weight:600;margin-bottom:2px;}
+.panel .p-sub{color:var(--muted);font-size:11px;margin-bottom:8px;}
+.chart{width:100%;height:300px;}
+.chart-lg{height:320px;}
+.us-line{display:flex;align-items:center;justify-content:space-between;padding:6px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
+.us-line:last-child{border-bottom:none;}
+.us-name{color:var(--text);font-weight:500;}
+.us-price{color:var(--muted);font-variant-numeric:tabular-nums;}
+.us-pct{font-weight:600;font-variant-numeric:tabular-nums;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{color:var(--muted);font-weight:500;text-align:left;font-size:11px;padding:5px 6px;border-bottom:1px solid var(--border);}
+td{padding:7px 6px;border-bottom:1px solid var(--border);}
+td.num{text-align:right;font-variant-numeric:tabular-nums;}
+td.unit{color:var(--muted);font-size:11px;text-align:right;}
+.stock-tip{font-size:10px;color:var(--muted);}
+.risk-item{display:flex;align-items:center;gap:8px;padding:7px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
+.risk-item:last-child{border-bottom:none;}
+.risk-name{flex:1;color:var(--text);}
+.risk-lvl{font-size:11px;width:38px;flex-shrink:0;}
+.risk-note{color:var(--muted);font-size:11px;max-width:180px;text-align:right;}
+.econ-item{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
+.econ-item:last-child{border-bottom:none;}
+.econ-date{color:var(--accent);font-size:11px;width:92px;flex-shrink:0;font-variant-numeric:tabular-nums;}
+.econ-name{flex:1;color:var(--text);}
+.news-item{padding:9px 2px;border-bottom:1px dashed var(--border);}
+.news-title{color:var(--accent);font-size:12px;font-weight:600;margin-bottom:4px;}
+.news-body{color:var(--muted);font-size:12px;line-height:1.5;max-height:150px;overflow:auto;white-space:pre-wrap;}
+.ten-h2{font-size:16px;font-weight:700;color:var(--accent);margin:10px 0 6px;}
+.ten-dim{font-size:14px;font-weight:600;color:var(--text);margin:6px 0 2px;}
+.ten-line{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px;white-space:pre-wrap;}
+.ten-empty{color:var(--muted);font-size:13px;}
+.sect-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px;margin-right:6px;}
+@media (max-width:1080px){.row-line,.row-two,.row-three{grid-template-columns:1fr;}}
+
+.tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+.tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
+.tldr .main{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:9px;}
+.tldr ul{margin:0 0 0 16px;font-size:12px;line-height:1.8;color:var(--muted);}
+.tldr b{color:var(--text);}
+.hbar{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:9px 0 7px;border:1px solid var(--border);}
+.hbar div{display:flex;align-items:center;justify-content:center;font-size:10px;color:#0d1117;font-weight:700;white-space:nowrap;}
+.legend{font-size:11px;color:var(--muted);line-height:1.7;}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:10px;}
+.kv div{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:9px 11px;}
+.kv span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px;}
+.kv b{font-size:15px;font-variant-numeric:tabular-nums;}
+.fact{font-size:12px;line-height:1.85;color:var(--text);}
+.fact p{margin-bottom:7px;}
+.fact b{color:var(--accent);}
+.tag{display:inline-block;font-size:10px;border-radius:4px;padding:1px 6px;margin-right:5px;border:1px solid var(--border);color:var(--muted);}
+.tag.deep{color:var(--green);border-color:#2d5a34;}
+.tag.win{color:var(--red);border-color:#6e2b28;}
+.switch{float:right;font-size:10px;}
+.switch button{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:5px;padding:2px 9px;cursor:pointer;font-size:10px;}
+.switch button.on{color:var(--accent);border-color:var(--accent);}
+#plChart{height:420px;}
+.meta a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);margin-left:6px;}
+details{background:var(--panel);border:1px solid #6e3a1f;border-radius:10px;padding:0;}
+details summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:600;color:#e3b341;list-style:none;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▸ ';color:#e3b341;}
+details[open] summary::before{content:'▾ ';}
+details .inner{padding:0 14px 14px;}
+.note{font-size:11px;line-height:1.8;color:var(--muted);}
+.disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+@media (max-width:1080px){.row-two{grid-template-columns:1fr;}}
+
+.meta a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);margin-left:6px;}
+.lead{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;line-height:1.85;}
+.lead b{color:var(--accent);}
+.round{border-left:2px solid var(--border);padding-left:14px;margin:14px 0;}
+.round h3{margin:0 0 5px;font-size:14px;}
+.round .tagm{font-size:11px;color:var(--muted);}
+.fact{font-size:12px;line-height:1.85;}
+.fact b{color:var(--accent);}
+.bar{display:flex;height:18px;border-radius:5px;overflow:hidden;margin:8px 0;border:1px solid var(--border);font-size:10px;font-weight:700;color:#0d1117;}
+.bar div{display:flex;align-items:center;justify-content:center;}
+.disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
+  <div class="meta">更新于 <b>2026-11-07 09:10:44</b>　·　<a href="index.html">当前看板</a>　<a href="archive.html">投资档案（数字）</a></div>
+</header>
+
+<div class="lead"><b>规则</b>：以新为准 + 每轮明确范围的增量综合分析；旧结论进台账不删除<br>
+<b>两层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料与当轮新信息。</div>
+
+<section class="cards">
+  <div class="card"><div class="label">累计轮次</div><div class="value">1</div><div class="sub">逐轮追加，旧结论不删</div></div>
+  <div class="card"><div class="label">已完成</div><div class="value">1</div><div class="sub">结论已回写</div></div>
+  <div class="card"><div class="label">待综合分析</div><div class="value">0</div><div class="sub">新信息登记后状态</div></div>
+  <div class="card"><div class="label">当前基准快照</div><div class="value" style="font-size:15px">20261107c</div><div class="sub">三账户 299,359.26 / -109,183.30</div></div>
+</section>
+
+<main>
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">一</span>分析轮次（新→旧）</h2>
+    <div class="p-sub">每轮先报范围，再综合，最后落盘</div>
+    <div class="round">
+  <h3>第 0 轮 · 2026-11-07 · 遗产盘点 <span class="tagm">已完成</span></h3>
+  <div class="tagm">范围：核查 EasyClaw / F 盘投资遗产是否全部继承；建立持续化综合分析机制</div>
+  <div class="fact" style="margin-top:6px">没有全部继承：上轮只建了持仓盈亏数字档案，分析/纪律/框架/流程/多年收益/逐日扫描仍在 EasyClaw 原路径。本次以全量索引 + 关键结论方式补齐，并补 7 个数字节点（8-28 股票端／理财通分列两条）。首轮跨层综合结论：账户从 2 个变 3 个、标的从 4 只变 13 个，但集中度与单一成长风格暴露没变，类现金占比反降至 7.0%；8-9 月硬止损位因持仓变更已失效需重设。机制已落地为分析档案六件套 + invest_intake.py + analysis.html。</div>
+  <ul class="fact" style="margin:6px 0 0 16px"><li>上轮数字档案只覆盖「当时赚/亏多少」，不等于全部投资档案</li><li>本次不搬运 200+ 份原文，建全量索引 + 关键结论继承，避免第二份副本</li><li>数字链补 7 节点后，5 月盈利期 → 8/9 月逐日 → 11 月三账户基本连贯</li><li>账户变多但集中度未改善：天孚仍占股票端 63.2%，科技成长按名称粗归类占总资产 70.6%</li><li>类现金 7.0%（两账户口径 14.0%），缓冲变薄</li><li>历史硬止损（天孚254.50/立讯50/莱克25）对当前组合失效，需重设</li></ul>
+  <div class="tagm" style="margin-top:6px">调取来源：投资档案_时间线.json（数字档案）；W/memory/_Topics/投资分析.md；W/memory/cards/（投资分析透传、每周投资报告生成、持仓周报汇总、持仓更新）；W/memory-topic/（投资与金融数据、持仓监测流水线、节假日不推送投资）；W/memory/feishu_docs/投资表.md（2026-08-28 飞书镜像）；W/memory/investment_strategy_log.jsonl（16 条）；W/output/（37 份盘前指引、12 份异动扫描、绿的谐波研报）；W/memory/hermes_curated/insights/（31 份）；F/ ｜ 关联快照：20261107c_202611070819</div>
+</div>
+  </div></div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">二</span>遗产继承状态 · 2026-11-07 盘点</h2>
+    <div class="p-sub">结论：<b style="color:var(--accent)">没有全部继承</b>——上轮只建了数字档案，本次以全量索引 + 关键结论补齐分析层</div>
+    <div class="bar">
+      <div style="width:20%;background:#3fb950">数字档案 ✅</div>
+      <div style="width:35%;background:#58a6ff">分析层 🆕 本次纳入</div>
+      <div style="width:35%;background:#8b949e">原文 📇 仅建索引</div>
+      <div style="width:10%;background:#d29922">运行时 ⚠️</div>
+    </div>
+    <div class="fact">
+      <b>已纳入</b>：9 年（2017–2025）年度收益报告、飞书投资表 8-28 镜像、8-19 风险纪律卡、投资能力检测双报告、7-26 复盘、7-27 投顾报告、9 月异动扫描 12 份、策略日志 16 条、八维框架、周报/报告模板、多模型交叉验证铁律。<br>
+      <b>仅建索引（全文留原路径，随时可调）</b>：raw 71 份 / analysis 66 份 / 行情 daily 69 份 / 盘前指引 37 份 / Hermes 洞察 31 份 / 绿的谐波研报等，不复制第二份副本。<br>
+      <b>依赖运行时未迁移</b>：cron、iFinD MCP（额度耗尽）、东财 push2（已失效）、飞书投资表原文。<br>
+      完整清单见 <code>分析档案\01_EasyClaw遗产盘点_20261107.md</code>。
+    </div>
+  </div></div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">三</span>分析底座（历史常量，须先校准再用）</h2>
+    <div class="fact">
+      <b>旧硬止损</b>：天孚 255 → 9-17 除权后 254.50；立讯 50；莱克 25；亨通无纪律位。🔴 11-07 截图已不含立讯、亨通，<b>对当前组合失效，需重设</b>。<br>
+      <b>历史风险</b>：8-19 组合有效 Beta≈2.3、天孚占 60.3% / Beta 2.85 / 波动率 94%；9-11 升至有效 Beta≈4.0、天孚 Beta 5.41。<br>
+      <b>当前对照</b>：13 标的、三账户，天孚仍占股票端 63.2%，科技／成长按名称粗归类占总资产 70.6%，类现金仅 7.0%——账户变多但集中度与单一风格暴露未改善。<br>
+      <b>数据源</b>：腾讯行情可用；东财 push2 失效、iFinD 额度耗尽、北向逐笔已停披露（不猜数）。<br>
+      详见 <code>分析档案\04_纪律与框架常量.md</code>。
+    </div>
+  </div></div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">四</span>档案说明</h2>
+    <div class="fact">
+      <b>权威主副本</b>：<code>F:\金融知识库\金融数据\投资档案\分析档案\</code>（总索引 / 遗产盘点 / 轮次台账 + JSON / 历史材料索引 / 纪律常量 / 素材目录）。<br>
+      <b>本页为派生展示</b>：<code>derived_from: F:\金融知识库\金融数据\投资档案\分析档案\分析轮次.json</code>，由 <code>invest_intake.py</code> 重建，请勿手改。<br>
+      <b>登记入口</b>：<code>python invest_intake.py --title "..." --type 研报 --source "..." --file &lt;路径&gt;</code>；分析完成后 <code>--complete &lt;id&gt; --conclusion "..."</code> 回写结论。<br>
+      <b>红线</b>：数字只来自已有文件/截图/可复核算术；历史纪律位是当时口径；默认只做综合研判与事实呈现，不含买卖建议。
+    </div>
+  </div></div>
+
+  <div class="row"><div class="panel" style="border-color:#30363d"><div class="disc"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div></div></div>
+</main>
+</body>
+</html>
