@@ -291,6 +291,7 @@ details .inner{padding:0 15px 14px;}
 <li><b>数据源可靠性显式标注</b>：腾讯行情可用；东财 push2 失效；iFinD 额度耗尽；北向逐笔净流入自 2024-08-19 不再披露，不猜数。</li>
 <li><b>历史纪律位失效</b>：8–9 月硬止损（天孚 254.50 / 立讯 50 / 莱克 25）对应旧持仓结构，不得照搬为当前组合操作建议。</li>
 <li><b>🔴 EasyClaw 单边维护</b>：取用历史投资材料只走 <code>..\历史遗产_EasyClaw全量_20261107\</code>，不引用 <code>C:\Users\*\.easyclaw\</code> 原路径；EasyClaw 原件保留但已冻结。历史脚本含 32 处明文凭证，仅限本地读取，绝不推 GitHub 或外发。</li>
+<li><b>🔴 后续都以最新更新的为准（2026-11-07 丰哥定，长期通用）</b>：当前基准快照 / 版本号 / 三账户数字一律读单一指针 <code>..\当前基准.json</code>（<code>baseline.py</code> 读写，<code>update_invest_dash.py</code> 每次重跑自动刷新）。<code>daily_invest_brief.py</code> 的研判上下文、<code>build_invest_views.py</code> 的全站菜单版本、<code>invest_intake.py</code> 的分析页卡片都改为读指针，旧版 4 处硬编码已清除。收到新持仓截图只改生成器顶部常量一处；不带截图的信息只登记轮次，不动账户数字。</li>
 </ol></div></details>
   <div class="panel" style="border-color:#30363d">
     <div class="disc"><b>免责声明</b>：以上内容基于公开数据、已归档材料与截图实数字整理，仅供参考，<b>不构成投资建议</b>，不含买卖判断、操作价位或仓位调整建议。凡标注【待核实】【待补充】【待调权威源】处均为数据缺口，未以估算值替代。股市有风险，投资需谨慎。</div>
