@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丰哥·投资策略与微调（20261107c）</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--green:#3fb950;--red:#f85149;--accent:#58a6ff;--warn:#e3b341;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;padding:20px 22px 40px;min-height:100vh;}
+.wrap{max-width:1240px;margin:0 auto;}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;}
+h1{font-size:22px;font-weight:600;letter-spacing:1px;}
+h1 .dot{color:var(--accent);}
+.version{font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 8px;border-radius:12px;margin-left:8px;vertical-align:middle;}
+.meta{color:var(--muted);font-size:12px;} .meta b{color:var(--accent);}
+/* nav 规则见下方 NAV_CSS（全站共用） */
+main{display:flex;flex-direction:column;gap:14px;}
+.tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;}
+.tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
+.tldr .main{font-size:14px;line-height:1.8;} .tldr b{color:var(--text);}
+.tldr ul{margin:8px 0 0 16px;font-size:12px;line-height:1.8;color:var(--muted);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 15px;}
+.card .label{color:var(--muted);font-size:11px;margin-bottom:6px;}
+.card .value{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;}
+.card .sub{color:var(--muted);font-size:10px;margin-top:5px;line-height:1.5;}
+.pos{color:var(--red);} .neg{color:var(--green);} .warn{color:var(--warn);}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.panel h2{font-size:15px;font-weight:600;margin-bottom:3px;}
+.panel h3{font-size:13px;font-weight:600;margin:12px 0 5px;color:var(--text);}
+.panel .p-sub{color:var(--muted);font-size:11px;margin-bottom:10px;line-height:1.6;}
+.panel p{font-size:12px;line-height:1.85;color:var(--text);margin-bottom:6px;}
+.panel ul,.panel ol{margin:4px 0 8px 18px;font-size:12px;line-height:1.8;color:var(--muted);}
+.panel li{margin-bottom:3px;}
+.panel b{color:var(--text);}
+.panel code{background:#0d1117;border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:11px;color:var(--accent);}
+.panel blockquote{border-left:2px solid var(--accent);padding-left:10px;margin:6px 0 10px;color:var(--muted);font-size:12px;line-height:1.8;}
+.row-two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.row-three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{color:var(--muted);font-weight:500;text-align:left;font-size:10px;padding:6px;border-bottom:1px solid var(--border);}
+td{padding:7px 6px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.tag{display:inline-block;font-size:10px;border-radius:4px;padding:1px 6px;margin-right:5px;border:1px solid var(--border);color:var(--muted);}
+.tag.hot{color:var(--red);border-color:#6e2b28;} .tag.wait{color:var(--warn);border-color:#6e5a1f;}
+.tag.ok{color:var(--green);border-color:#2d5a34;} .tag.info{color:var(--accent);border-color:#2d4a72;}
+.item{border:1px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:10px;background:#0d1117;}
+.item .ttl{font-size:13px;font-weight:600;margin-bottom:5px;line-height:1.5;}
+.item .kv{font-size:11px;color:var(--muted);line-height:1.8;}
+.item .kv b{color:var(--text);}
+.item .lbl{color:var(--accent);font-size:10px;font-weight:600;letter-spacing:1px;margin:8px 0 3px;}
+.bar{display:flex;height:20px;border-radius:5px;overflow:hidden;margin:8px 0;border:1px solid var(--border);font-size:10px;font-weight:700;color:#0d1117;}
+.bar div{display:flex;align-items:center;justify-content:center;white-space:nowrap;}
+.legend{font-size:11px;color:var(--muted);line-height:1.8;}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;}
+details{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:0;}
+details summary{cursor:pointer;padding:12px 15px;font-size:13px;font-weight:600;color:var(--accent);list-style:none;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▸ ';color:var(--accent);}
+details[open] summary::before{content:'▾ ';}
+details .inner{padding:0 15px 14px;}
+.disc{font-size:11px;line-height:1.85;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+.note{font-size:11px;line-height:1.8;color:var(--muted);}
+@media (max-width:1080px){.row-two,.row-three{grid-template-columns:1fr;}}
+
+
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
+.nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:.15s;}
+.nav a span{font-size:13px;}
+.nav a:hover{color:var(--text);border-color:#3d4a5c;}
+.nav a.on{color:var(--accent);border-color:var(--accent);background:#12233b;}
+@media (max-width:1080px){.nav a{padding:5px 9px;font-size:11px;}}
+
+
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
+.nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:.15s;}
+.nav a span{font-size:13px;}
+.nav a:hover{color:var(--text);border-color:#3d4a5c;}
+.nav a.on{color:var(--accent);border-color:var(--accent);background:#12233b;}
+@media (max-width:1080px){.nav a{padding:5px 9px;font-size:11px;}}
+</style>
+</head>
+<body>
+<!-- ===== 访问密码锁（与首页共用 fg_dash_v2，一次解锁全站通用） ===== -->
+<div id="lock">
+  <div class="lock-box">
+    <div style="font-size:40px;margin-bottom:10px;">🔒</div>
+    <div style="font-size:20px;font-weight:600;margin-bottom:6px;">丰哥·投资看板</div>
+    <div style="color:#8b949e;font-size:13px;margin-bottom:18px;">策略与预警 · 请输入访问密码</div>
+    <input type="password" id="lockInput" placeholder="访问密码" autocomplete="off" style="width:200px;padding:10px 14px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:15px;text-align:center;outline:none;" />
+    <div id="lockMsg" style="color:#f85149;font-size:12px;height:18px;margin-top:8px;"></div>
+    <button id="lockBtn" style="margin-top:6px;padding:9px 34px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">进入</button>
+  </div>
+  <style>
+    #lock{position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;align-items:center;justify-content:center;}
+    .lock-box{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:36px 40px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  </style>
+</div>
+<script>
+(function(){
+  var LOCK='fg_dash_v2', btn=document.getElementById('lockBtn'), inp=document.getElementById('lockInput'),
+      msg=document.getElementById('lockMsg'), lk=document.getElementById('lock'), PASS='fg2026';
+  function go(){ if(inp.value===PASS){ try{localStorage.setItem(LOCK,'1');}catch(e){} lk.style.display='none'; }
+                else { msg.textContent='密码错误，请重试'; inp.select(); } }
+  try{ if(localStorage.getItem(LOCK)==='1') lk.style.display='none'; }catch(e){}
+  btn.addEventListener('click',go); inp.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+})();
+</script>
+<div class="wrap">
+<header class="header">
+  <h1>丰哥<span class="dot">·</span>投资策略与微调<span class="version">20261107c · 核心层</span></h1>
+  <div class="meta">账户基准：<b>2026-11-07 08:19</b>　·　市场数据：<b>2026-11-07</b>　·　生成 2026-11-07 11:31:03</div>
+</header>
+<nav class="nav">
+<a href="index.html?v=20261107c"><span>📈</span>总览</a>
+<a class="on" href="strategy.html?v=20261107c"><span>🎯</span>投资策略</a>
+<a href="holdings.html?v=20261107c"><span>📊</span>持股分析</a>
+<a href="funds.html?v=20261107c"><span>🧾</span>基金分析</a>
+<a href="alerts.html?v=20261107c"><span>🚨</span>实时预警</a>
+<a href="archive.html?v=20261107c"><span>📚</span>投资档案</a>
+<a href="analysis.html?v=20261107c"><span>🧭</span>投资分析</a>
+</nav>
+<main>
+<div class="tldr"><div class="lead">TL;DR · 结论先行</div><div class="main">当前组合不是 13 个标的的分散组合，而是<b>一笔「光模块 / 算力链 + 成长风格」的集中暴露</b>：天孚通信单只占总资产 <b>19.56%</b>、占股票端 <b>63.17%</b>、占总浮亏 <b>69.5%</b>；前三大浮亏标的合计占 <b>92.5%</b>；类现金仅 <b>7.02%</b>。<br>市场档位：<b>震荡 / 切换档（偏防守）</b>（置信度 中）——<b>不适合方向性加仓，适合做集中度与现金缓冲的结构性微调</b>。本页不给买卖价位、不代下单；所有微调都是「条件 → 动作 → 幅度上限 → 风险 → 失效条件」，前提未确认前只执行零成本纪律动作。</div><ul><li>账户基准 2026-11-07 08:19 · 20261107c（读 <code>当前基准.json</code> 指针，不写死）</li><li>方法：组合体检 / 组合优化 / 仓位管理 / 交易计划 / 市场状态 / 宏观传导 / 压力测试</li><li>每轮留痕、L5 复盘回填命中率；旧结论不删不覆盖</li></ul></div>
+<div class="cards"><div class="card"><div class="label">总资产</div><div class="value ">299,359.26</div><div class="sub">3 账户 / 13 标的</div></div><div class="card"><div class="label">累计浮亏</div><div class="value neg">-109,183.30</div><div class="sub">占反推成本 -28.17%</div></div><div class="card"><div class="label">类现金</div><div class="value warn">21,015.76</div><div class="sub">7.02% · 缓冲偏薄</div></div><div class="card"><div class="label">第一大持仓权重</div><div class="value warn">19.56%</div><div class="sub">天孚通信 · 超积极型上限</div></div><div class="card"><div class="label">美债 10Y</div><div class="value ">4.86%</div><div class="sub">美国财政部一手 · 2026-11-07</div></div></div>
+<section class="panel"><h2>🧭 投资偏好画像与待确认前提</h2><div class="p-sub">可查证行为特征 / 推断偏好 / 必须确认的前提分开列，推断项不写成事实。完整版见 <code>投资偏好画像.md</code>。</div>
+<div class="item"><div class="ttl">🔴 前提未确认前，方向性动作一律不执行</div><div class="kv">在前提确认前，默认按「保守微调」执行：只做 S3 / S5（零成本纪律动作）与 S4（观察），S1 / S2 只列预案不执行；单次调整上限 1% 总资产，不加杠杆、不新增标的。</div></div>
+<table><thead><tr><th>#</th><th>必须确认</th><th>为什么需要</th><th>状态</th></tr></thead><tbody>
+<tr><td>1</td><td><b>可承受最大回撤</b></td><td>决定总仓位天花板与 S1 减仓幅度</td><td><span class="tag wait">待丰哥确认</span></td></tr>
+<tr><td>2</td><td><b>资金期限 / 1–3 年内用途</b></td><td>决定能否承受磨底时间成本</td><td><span class="tag wait">待丰哥确认</span></td></tr>
+<tr><td>3</td><td><b>是否有新增资金及规模</b></td><td>决定再平衡靠内部资金还是外部资金</td><td><span class="tag wait">待丰哥确认</span></td></tr>
+<tr><td>4</td><td><b>是否接受把部分浮亏兑现</b></td><td>决定 S1 是否可执行；这是降集中度的唯一现实路径</td><td><span class="tag wait">待丰哥确认</span></td></tr>
+<tr><td>5</td><td><b>天孚权重目标区间</b></td><td>决定再平衡目标与阈值</td><td><span class="tag wait">待丰哥确认</span></td></tr>
+<tr><td>6</td><td><b>风险偏好是否接受低相关 / 红利底仓</b></td><td>决定杠铃另一端是否建仓（本轮不指定标的）</td><td><span class="tag wait">待丰哥确认</span></td></tr>
+</tbody></table></section>
+<section class="panel"><h2>🔍 组合诊断（硬数据 × 组合优化约束）</h2><div class="p-sub">账户数字来自丰哥截图（一手）；约束来自组合优化常规口径。不做均值方差优化，因为预期收益估计精度低、易产生极端权重。</div>
+<table><thead><tr><th>维度</th><th>实际</th><th>参考约束</th><th>判断</th><th>级别</th></tr></thead><tbody>
+<tr><td><b>单一标的权重上限</b></td><td>天孚通信 19.56% 总资产</td><td>保守 3% / 稳健 5% / 积极 8%（组合优化常规约束）</td><td>超出积极型上限 2.4 倍</td><td><span class="tag hot">高</span></td></tr>
+<tr><td><b>股票端集中度</b></td><td>天孚占股票端 63.17%</td><td>单一份额不宜超过 1/3（相关性检查口径）</td><td>超出 1.9 倍；3 只股票实为一笔主仓 + 两笔卫星</td><td><span class="tag hot">高</span></td></tr>
+<tr><td><b>行业 / 风格集中度</b></td><td>科技·成长主线按名称粗归类约 70.6% 总资产（历史口径）</td><td>行业集中度不超过权益仓位 25%</td><td>远超上限；基金穿透后又与股票端落在同一申万三级，13 标的属「假分散」</td><td><span class="tag hot">高</span></td></tr>
+<tr><td><b>类现金缓冲</b></td><td>21,015.76 元 / 7.02%</td><td>震荡 / 切换档宜留 10–15% 缓冲</td><td>缓冲偏薄，缺少再平衡与应对波动的弹药</td><td><span class="tag wait">中</span></td></tr>
+<tr><td><b>浮亏集中度</b></td><td>天孚单只占总浮亏 69.5%；前三大浮亏标的占 92.5%</td><td>风险贡献应分散，避免单只决定组合损益</td><td>组合损益几乎由一只标的决定</td><td><span class="tag hot">高</span></td></tr>
+<tr><td><b>整体浮亏</b></td><td>-109,183.30 元 / 反推成本 -28.17%</td><td>—</td><td>属于深度回撤区间，任何减仓都会把浮亏转为实际亏损，需前提确认</td><td><span class="tag wait">中</span></td></tr>
+<tr><td><b>组合波动（历史口径）</b></td><td>有效 Beta 2.3→4.0（2026-08-19 / 09-11）</td><td>稳健线 1.5</td><td>历史口径已失效，但方向性仍是高 Beta；当前 Beta 需重校准【待补充】</td><td><span class="tag wait">中</span></td></tr>
+</tbody></table></section>
+<section class="panel"><h2>📡 市场档位与前瞻判断</h2><div class="p-sub">档位：<b>震荡 / 切换档（偏防守）</b>｜置信度 中｜判断不只看指数涨跌，还看广度、量能、贴现率与政策传导。</div>
+<ul><li>指数层面：2026-11-07 上证 3649.18（-1.1%）、创业板指 2465.23（-3.96%）、科创50 1253.2（-2.6%），11-04 放量长阳后 11-06 回落，属「探底反弹被中断」形态（腾讯行情，非一手）。</li><li>广度层面：11-06 上涨占比约 13%，一日普涨、一日普跌，广度恶化是先于指数的脆弱信号（Choice 经媒体转述，需核实原文）。</li><li>贴现率层面：美债 10Y 4.86%（美国财政部，一手，2026-11-07）仍在高位，对高估值成长是持续压制；2Y 4.51%，期限结构正斜率。</li><li>政策层面：回购增持再贷款利率下调、互换便利常态化、类平准基金表述构成「政策底」，但政策底 ≠ 市场底，传导到风偏需量能与右侧信号确认（媒体转述官方公告，需核实原文）。</li><li>业绩层面：三季报已披露完毕进入真空期，定价主线转向宏观预期、海外流动性与资金行为（多家券商 11 月策略共识，非一手）。</li></ul>
+<div class="item"><div class="ttl">仓位与风格含义</div><div class="kv">按 market-state 方法论：切换档应「减少新进场、等结构清晰」，震荡档应「控制总仓位、做结构不做方向」。对本组合的直接含义是——不适合做方向性加仓，适合做集中度与现金缓冲的结构性微调。</div><div class="kv"><b>维持条件</b>：量能温和、政策预期不落空、光模块对利空不再创新低</div><div class="kv"><b>切换前置信号</b>：两市成交持续站上 2 万亿、上涨家数占比连续 3 日 &gt;50%、融资余额企稳、ETF 承接延续、美债 10Y 不再创新高</div><div class="kv"><b>判断失效标志</b>：放量破位 + 广度连续恶化 + 美债 10Y 突破前高 + 光模块订单/盈利预期下修</div></div>
+</section>
+<section class="panel"><h2>🔗 宏观传导链（必须走中间变量）</h2><div class="p-sub">不允许「所有行业都受益」式泛化；每条都写清一阶 / 二阶与验证指标。</div>
+<div class="item"><div class="ttl">美债 10Y 4.86% 高位 → 全球成长股贴现率抬升 → 高 PE 标的估值压缩 → 天孚通信（PE-TTM 约 61 倍，10 月末，非一手）与科创/AI 基金首当其冲</div><div class="kv"><b>阶次</b>：一阶　<b>验证</b>：美国财政部日度收益率曲线（一手，每日跟）；估值分位【待补充】</div></div>
+<div class="item"><div class="ttl">AI 资本开支增速斜率放缓预期（100%→60%→14%，卖方测算）→ 2027/2028 盈利预期重估 → 估值倍数收缩 → 出现「三季报业绩 +139%、股价 10/8–11/4 平均 -40.55%」的背离</div><div class="kv"><b>阶次</b>：二阶（滞后但弹性更大）　<b>验证</b>：云厂商资本开支指引、卖方盈利预测修正方向、CPO/NPO 验证进度</div></div>
+<div class="item"><div class="ttl">国内稳市政策（再贷款利率 1%、互换便利、类平准基金）→ 增量资金与风偏托底 → 先利好宽基与红利底仓，再外溢至成长；传导有时滞，不假设政策意图必然兑现</div><div class="kv"><b>阶次</b>：一阶 → 二阶　<b>验证</b>：两市量能、宽基 ETF 净申购、融资余额、12 月会议通稿</div></div>
+<div class="item"><div class="ttl">CPO / NPO 技术路线推进 → 可插拔光模块份额与定价受扰 → 上游器件（天孚）弹性最大但也最脆弱</div><div class="kv"><b>阶次</b>：产业内二阶　<b>验证</b>：英伟达 / 博通 CPO 交换机交付节奏、NPO 客户验证进度、2027H2 上量指引</div></div>
+</section>
+<section class="panel"><h2>🎲 L3 情景推演与预案</h2><div class="p-sub">概率一律【待评估】，不拍脑袋给数；预案是观察动作与条件式微调，不是买卖指令。</div>
+<div class="item"><div class="ttl"><span class="tag info">A</span> 政策超预期 + 海外利率回落 → 中期修复　<span class="tag wait">【待评估】</span></div><div class="kv"><b>触发</b>：12 月政治局会议 / 中央经济工作会议增量表述 + 美债 10Y 不再创新高 + 融资余额企稳 + ETF 承接延续</div><div class="kv"><b>传导</b>：风偏抬升 → 成长弹性释放 → 组合净值修复最快（因 Beta 高）</div><div class="kv"><b>受影响</b>：天孚通信 300394 / 科创/AI 类基金 / 埃斯顿 002747</div><div class="kv"><b>预案</b>：这是唯一适合「执行降集中度」的窗口：在反弹中分批减，而不是在下跌中割；同时暂停补现金动作。若集中度未降到目标区间，不因反弹而追加同主线。</div></div>
+<div class="item"><div class="ttl"><span class="tag info">B</span> 震荡磨底（基准情景）　<span class="tag wait">【待评估】</span></div><div class="kv"><b>触发</b>：量能 1.5–2 万亿区间反复、广度时好时坏、业绩真空期无新催化</div><div class="kv"><b>传导</b>：政策链与红利底仓占优、成长高波动 → 组合净值横盘偏弱，个股分化</div><div class="kv"><b>受影响</b>：全部权益类</div><div class="kv"><b>预案</b>：最适合作结构性微调：冻结新增同主线、把类现金从 7% 抬向 10–12%、执行再平衡规则；不做方向性加减仓。</div></div>
+<div class="item"><div class="ttl"><span class="tag info">C</span> 二次探底 / 逻辑证伪　<span class="tag wait">【待评估】</span></div><div class="kv"><b>触发</b>：CPO 替代快于预期、2027 订单下修、美债 10Y 破前高、板块放量破位、地缘与出口管制升级</div><div class="kv"><b>传导</b>：高 Beta 组合回撤被放大 → 浮亏从 -28% 继续走扩</div><div class="kv"><b>受影响</b>：天孚通信 300394 / 全部科技/成长类基金</div><div class="kv"><b>预案</b>：优先保住现金缓冲、暂停一切加仓；不因「跌得多」而补仓摊薄成本。若逻辑证伪被权威源确认，降集中度从「预案」升级为「优先动作」，仍需丰哥确认后执行。</div></div>
+</section>
+<section class="panel"><h2>🧪 压力测试（线性敏感度，不是 VaR）</h2><div class="p-sub">粗粒度线性敏感度估算（不是 VaR、不是预测、不含相关性与肥尾）。缺口：未取到日收益率序列、当前有效 Beta、相关系数矩阵、估值分位，故不做参数法 / 历史模拟法 VaR。</div>
+<table><thead><tr><th>情景</th><th>估算</th><th>说明</th></tr></thead><tbody>
+<tr><td>情景冲击：科技/成长主线再跌 20%（参考 10/8–11/4 光模块平均 -40.55% 的一半）</td><td><b>约 39,302.10 元 / 占总资产 13.13%</b></td><td>按权益占比 × 成长暴露 × 跌幅线性相乘；实际因相关性与个股差异可能显著偏离</td></tr>
+<tr><td>单日冲击：若整体权益跟随 11-06 创业板指 -3.96%</td><td><b>约 11,022.40 元</b></td><td>按权益类市值线性估算，仅作量级感，不是当日实际盈亏</td></tr>
+<tr><td>集中度冲击：仅天孚通信单只再跌 20%</td><td><b>约 11,712.00 元 / 占总资产 3.91%</b></td><td>单只贡献被放大，验证「组合损益由一只标的决定」</td></tr>
+</tbody></table><p>🔴 控制手段不是预测跌幅，而是降低单一标的权重、补足现金缓冲、冻结新增同主线。</p></section>
+<section class="panel"><h2>⚖️ 再平衡规则</h2>
+<div class="item"><div class="ttl">trigger</div><div class="kv">目标权重偏离 ±5 个百分点，或季度检视；两者取先到</div></div>
+<div class="item"><div class="ttl">frequency</div><div class="kv">季度定期 + 阈值触发的混合方案，不做月度以内的高频再平衡（交易成本会吃掉收益）</div></div>
+<div class="item"><div class="ttl">cost</div><div class="kv">A 股印花税 0.05% + 佣金；单次调整成本需 &lt;0.3% 才有意义，因此单次金额不宜过小、频次不宜过高</div></div>
+<div class="item"><div class="ttl">single_cap</div><div class="kv">单次调整 ≤ 总资产 1%（约 2,993.59 元），分 2–3 批执行</div></div>
+<div class="item"><div class="ttl">funding</div><div class="kv">优先用类现金、分红与 S1 减仓所得做内部再平衡，不依赖新增资金，不加杠杆</div></div>
+<div class="item"><div class="ttl">avoid</div><div class="kv">不在 12 月会议 / FOMC / 关键数据发布前 3 个交易日调仓；不追涨、不抄底、不因单日涨跌临时改计划</div></div>
+</section>
+<section class="panel"><h2>🎯 条件式仓位微调清单（核心）</h2><div class="p-sub">每条都是「条件 → 动作 → 幅度上限 → 风险 → 失效条件」。<b>零成本纪律动作可立即执行；改变仓位的动作在前提确认前只作预案。</b>最终决策与下单由丰哥确认，本页不代操作。</div>
+<div class="item"><div class="ttl"><span class="tag info">S0</span> 前提补齐（最高优先级，先做这个）　<span class="tag wait">待丰哥确认</span></div>
+<div class="kv"><b>类型</b>：前提　<b>置信度</b>：高</div>
+<div class="lbl">触发条件</div><div class="kv">立即，无需市场信号</div>
+<div class="lbl">动作</div><div class="kv">请丰哥确认 5 项前提：① 可承受最大回撤百分比；② 这笔钱的期限与 1–3 年内是否有用途；③ 是否有新增资金及规模；④ 是否接受把部分浮亏兑现以降低集中度；⑤ 天孚权重目标区间。在确认前，只执行不改变仓位的 S3 / S4，S1 / S2 / S5 一律只作预案、不执行。</div>
+<div class="lbl">幅度上限</div><div class="kv">—</div>
+<div class="lbl">风险提示</div><div class="kv">前提不明时给出方向性仓位建议属于无依据操作，可能与实际资金安排冲突</div>
+<div class="lbl">失效条件</div><div class="kv">—</div>
+<div class="lbl">依据（来源 + 时点 + 分级）</div><ul><li>金融 skill 数据底线：操作类问题先列前提，前提缺失主动追问　<span class="tag info">2026-11-07</span> workbuddy-finance-skill / position-sizing　一手（官方机构 / 丰哥截图）</li></ul>
+</div>
+<div class="item"><div class="ttl"><span class="tag wait">S1</span> 在反弹中分批降单一标的集中度（预案，非立即执行）　<span class="tag wait">预案 · 待前提确认</span></div>
+<div class="kv"><b>类型</b>：条件式微调　<b>置信度</b>：中</div>
+<div class="lbl">触发条件</div><div class="kv">情景 A 出现，且「量能确认 + 融资余额企稳 + 板块对利空不再创新低」三项中至少两项成立；并且 S0 前提已确认可接受兑现浮亏</div>
+<div class="lbl">动作</div><div class="kv">分 2–3 批把天孚通信权重从 19.56% 向 15% 以下降；每批 ≤ 总资产 0.5%（约 1,496.80 元）。只在反弹窗口减，不在下跌中割；减仓所得优先转为类现金，不换入同主线其他标的。</div>
+<div class="lbl">幅度上限</div><div class="kv">累计首阶段 ≤ 总资产 3%（约 8,980.78 元）；单批 ≤0.5%</div>
+<div class="lbl">风险提示</div><div class="kv">若政策超预期带来快速修复，减仓会踏空一部分弹性；若判断错了「右侧确认」，可能在半山腰减仓</div>
+<div class="lbl">失效条件</div><div class="kv">2027 订单/盈利预测被权威源确认上修、且估值分位回落到历史中位数以下 → 暂停降仓并重评</div>
+<div class="lbl">依据（来源 + 时点 + 分级）</div><ul><li>天孚占总资产 19.56%、占股票端 63.17%、占总浮亏 69.5%　<span class="tag info">2026-11-07 08:19</span> 丰哥 2026-11-07 08:19 截图 → 快照 20261107c_202611070819　一手（官方机构 / 丰哥截图）</li><li>单资产上限积极型 8%、行业集中度 ≤ 权益 25%　<span class="tag info">2026-11-07</span> workbuddy-finance-skill / portfolio-optimization　一手（官方机构 / 丰哥截图）</li><li>8–9 月「反弹 285–295 减半仓」为当时口径；11-06 收盘 122.00 与旧纪律位不在同一价格量级，旧价位已失效，不得照搬；具体除权因子与股数口径【待核实】　<span class="tag info">2026-11-06</span> 分析档案/04_纪律与框架常量.md + 腾讯行情 11-06　非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</li></ul>
+</div>
+<div class="item"><div class="ttl"><span class="tag wait">S2</span> 把类现金缓冲从 7% 抬向 10–12%（预案）　<span class="tag wait">预案 · 待前提确认</span></div>
+<div class="kv"><b>类型</b>：条件式微调　<b>置信度</b>：中</div>
+<div class="lbl">触发条件</div><div class="kv">情景 B 持续（量能 1.5–2 万亿反复、广度 &lt;30% 连续 3 日），或情景 C 任一触发信号出现</div>
+<div class="lbl">动作</div><div class="kv">把类现金从 7.02%（21,015.76 元）分次抬到 10–12%；资金来源优先 S1 减仓所得、基金分红与低相关品种赎回，不依赖新增资金。</div>
+<div class="lbl">幅度上限</div><div class="kv">累计 +3~5 个百分点（约 8,980.78~14,967.96 元），单次 ≤ 总资产 1%</div>
+<div class="lbl">风险提示</div><div class="kv">磨底末期抬高现金会降低反弹弹性；若恰好在底部区域减仓，机会成本明显</div>
+<div class="lbl">失效条件</div><div class="kv">情景 A 三项信号确认后停止抬升，转为维持</div>
+<div class="lbl">依据（来源 + 时点 + 分级）</div><ul><li>类现金 21,015.76 元 / 7.02%，权益类 92.98%　<span class="tag info">2026-11-07 08:19</span> 丰哥 2026-11-07 08:19 截图　一手（官方机构 / 丰哥截图）</li><li>震荡 / 切换档宜留 10–15% 缓冲；仓位由可承受风险反推，不由信心正推　<span class="tag info">2026-11-07</span> market-state / position-sizing　一手（官方机构 / 丰哥截图）</li></ul>
+</div>
+<div class="item"><div class="ttl"><span class="tag ok">S3</span> 冻结新增同主线暴露（零成本纪律动作，建议立即执行）　<span class="tag wait">建议立即执行 · 待丰哥确认</span></div>
+<div class="kv"><b>类型</b>：纪律动作　<b>置信度</b>：高</div>
+<div class="lbl">触发条件</div><div class="kv">立即生效，无需任何市场信号</div>
+<div class="lbl">动作</div><div class="kv">不再新增光模块 / 算力 / 科创 AI 主题的任何个股或基金（含定投加码、含「跌多了补一点」）；新增资金若有，先补现金缓冲，不进入该主线。这条不改变现有仓位、不产生交易成本。</div>
+<div class="lbl">幅度上限</div><div class="kv">0（不改变仓位）</div>
+<div class="lbl">风险提示</div><div class="kv">若主线反转，会少赚一段弹性；但相对「假分散」继续加深，这个代价可接受</div>
+<div class="lbl">失效条件</div><div class="kv">集中度已降到目标区间、且情景 A 被确认、且经丰哥重新拍板后方可解除</div>
+<div class="lbl">依据（来源 + 时点 + 分级）</div><ul><li>科技/成长主线按名称粗归类约 70.6%；基金穿透后与股票端落在同一申万三级 01851024.PT　<span class="tag info">2026-09-30</span> 投资档案/策略与预警/基金穿透台账.json（2026Q3）　非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</li><li>组合相关性是隐藏风险，已高配某板块时新仓应按「补充暴露」而非独立头寸处理　<span class="tag info">2026-11-07</span> position-sizing　一手（官方机构 / 丰哥截图）</li></ul>
+</div>
+<div class="item"><div class="ttl"><span class="tag info">S4</span> 基金端：暂不调仓，等下一期季报重新穿透　<span class="tag wait">观察中</span></div>
+<div class="kv"><b>类型</b>：观察动作　<b>置信度</b>：中</div>
+<div class="lbl">触发条件</div><div class="kv">立即生效；复核时点为 2026Q4 季报披露后</div>
+<div class="lbl">动作</div><div class="kv">已持有的 9 只基金本轮不做申赎（避免双重交易成本与税费）；若未来有新增资金，优先非科技 / 非算力主线，但不指定具体标的——产品数据未取到权威源，不编造代码；覆盖率 &lt;10% 的 3 只指数联接 / 偏债不作行业敞口依据。</div>
+<div class="lbl">幅度上限</div><div class="kv">0（不改变仓位）</div>
+<div class="lbl">风险提示</div><div class="kv">主动权益基金实际调仓未知，季报披露有滞后，穿透结果只是可见下限</div>
+<div class="lbl">失效条件</div><div class="kv">若 2026Q4 季报显示共同重仓显著扩散或收缩，本条重评</div>
+<div class="lbl">依据（来源 + 时点 + 分级）</div><ul><li>可信 6 只纳入汇总、022455 旁证待确认不纳入、009878 / 022111 代码与名称不符不采信；覆盖率 4.92% / 0.26% / 1.38% 三只严重低估权益暴露　<span class="tag info">2026-11-07</span> 基金穿透台账.json + 基金代码映射.md　非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</li></ul>
+</div>
+<div class="item"><div class="ttl"><span class="tag info">S5</span> 重设纪律框架：用「逻辑证伪条件」替代旧价格止损　<span class="tag wait">建议立即执行 · 待丰哥确认</span></div>
+<div class="kv"><b>类型</b>：机制动作　<b>置信度</b>：高</div>
+<div class="lbl">触发条件</div><div class="kv">立即生效；价格类纪律位待波动率数据补齐后再定</div>
+<div class="lbl">动作</div><div class="kv">8–9 月硬止损（天孚 254.50 / 立讯 50 / 莱克 25）与当前持仓结构、当前价格口径均已脱节，全部作废。改为三条逻辑证伪触发器：① 2027 订单或盈利预测被权威源确认下修；② CPO 替代节奏显著快于预期；③ 美债 10Y 突破前高且板块放量破位。任一成立即触发组合重评（不是自动卖出）。价格止损位待当前有效 Beta / 波动率补齐后再设【待补充】。</div>
+<div class="lbl">幅度上限</div><div class="kv">0（机制，不改仓位）</div>
+<div class="lbl">风险提示</div><div class="kv">没有价格止损意味着短期回撤不会被机械截断，需要靠 S1/S2 的结构性动作控制风险</div>
+<div class="lbl">失效条件</div><div class="kv">若丰哥明确要求保留价格止损，则按当前价格与波动率重设，并单独留痕</div>
+<div class="lbl">依据（来源 + 时点 + 分级）</div><ul><li>11-07 截图不含立讯、亨通，新增埃斯顿与 5 只公募基金，历史纪律位对当前组合失效　<span class="tag info">2026-11-07</span> 分析档案/04_纪律与框架常量.md 第七节　一手（官方机构 / 丰哥截图）</li><li>止损距离是仓位的分母；没有止损位就没有仓位计算，但旧位不能照搬　<span class="tag info">2026-11-07</span> position-sizing / trade-plan　一手（官方机构 / 丰哥截图）</li></ul>
+</div>
+</section>
+<div class="row-two">
+<section class="panel"><h2>🕳️ 数据缺口【待补充】</h2><ul><li>当前有效 Beta / 年化波动率 / 相关系数矩阵（历史 2.3→4.0 口径已失效）→ 无法做参数法 VaR 与精确仓位反推</li><li>个股估值分位、股价位置、盈利预测权威原文（现只有卖方研报二次引用）→ 不下拥挤度等级结论、不作估值依据</li><li>基金全部持仓（非前十大）、指数联接穿透至目标指数成分 → 行业敞口只能作可见下限</li><li>天孚通信现价与 8–9 月纪律位之间的除权因子 / 股数口径 → 旧价位作废，不猜</li><li>009878 / 022111 正确代码、022455 是否同一只、招商 A500 完整代码、广发聚荣持有期到期日</li><li>12 月政治局会议 / 中央经济工作会议 / FOMC 的官方日期 →【待官方日历】，不填未确认日期</li><li>申万行业分类生效日期权威原文（申万宏源行业分类文件最新版本）</li><li>金融数据源连接器（fund-query / stock-fundamental-analysis 依赖）尚未授权 → 缺口不宣称补齐</li></ul></section>
+<section class="panel"><h2>🛡️ 红线</h2><ul><li>账户数字只来自丰哥截图并经 `当前基准.json` 指针读取，市场数字不反推、不改写持仓</li><li>媒体 / 研报 / 第三方行情一律标「非一手，需核实原文」，不与官方一手数据同等处理</li><li>不确认未经核实的选举结果或政策原文；事件雷达里「待核实 · 推演模板」不作为既成事实</li><li>不编造行情、新闻、基金代码、个股行业分类、目标价与盈利预测；缺数据写【待补充】</li><li>不给出具体买卖价位、不代为下单；所有微调都写成条件式预案，最终决策与执行由丰哥确认</li><li>情景冲击是线性敏感度估算，不是 VaR、不是预测；不给假精确数字</li><li>卖方目标价区间分歧 935–2405 元，不作为操作依据</li><li>旧结论与旧快照不删不覆盖；每轮复盘回写 review，用命中率校准下一轮判断</li></ul></section>
+</div>
+<section class="panel"><h2>📚 来源台账（来源 + 时点 + 分级）</h2><div class="p-sub">一手＝官方机构 / 丰哥截图；非一手＝第三方行情 / 财经媒体 / 卖方研报二次引用，一律标「需核实原文」，不与一手同等处理。</div>
+<table><thead><tr><th>数据</th><th>来源</th><th>时点</th><th>分级</th></tr></thead><tbody>
+<tr><td>三账户总资产 / 持仓市值 / 累计浮亏 / 类现金 / 13 标的明细</td><td>丰哥 2026-11-07 08:19 三张持仓截图 → 快照 20261107c_202611070819</td><td>2026-11-07 08:19</td><td><span class="tag ok">一手（官方机构 / 丰哥截图）</span></td></tr>
+<tr><td>A 股 / 指数 11-06 收盘价与涨跌幅（7 条）</td><td>腾讯行情 qt.gtimg.cn（官方数据抓取脚本 official_data_fetch.py 落盘）</td><td>2026-11-06</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>美债 10Y 4.86% / 2Y 4.51%</td><td>美国财政部 Daily Treasury Par Yield Curve Rates</td><td>2026-11-06</td><td><span class="tag ok">一手（官方机构 / 丰哥截图）</span></td></tr>
+<tr><td>10 月 PMI 等最新发布</td><td>国家统计局 · 最新发布</td><td>2026-11-04</td><td><span class="tag ok">一手（官方机构 / 丰哥截图）</span></td></tr>
+<tr><td>股票回购增持再贷款利率下调 0.25pct 至 1%、互换便利第三次操作、汇金类平准基金表述</td><td>人民网 / 中国证券报 / 券商中国转述央行与金融监管总局公告</td><td>2026-11-04~05</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>11-06 市场宽度：上涨 758 家 / 下跌 4741 家 / 涨停 33 / 跌停 15（上涨占比约 13%）</td><td>Choice 数据经财经媒体转述（domain_search）</td><td>2026-11-06</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>11-04 上证 +2.16% 收 3686.17、两市成交 2.05 万亿；11-06 回落 1.10% 成交 1.66 万亿</td><td>腾讯证券新闻 / 华夏时报（domain_search）</td><td>2026-11-04~06</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>光模块三季报「易中天」合计归母净利约 357 亿元、同比约 +139%</td><td>westock-data finance 财报接口 + 中国基金报（domain_search）</td><td>2026Q3（截止 2026-09-30）</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>8 只光模块代表股 10/8–11/4 平均 -40.55%、近 5 日 -23.42%；中际旭创融资余额 319.82→176.02 亿（-44.96%）</td><td>同花顺数据经新浪财经 / 中国基金报转述（domain_search）</td><td>2026-11-04</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>北美四大云厂商 2026 资本开支指引 7200–7450 亿美元；2027/2028 增速斜率放缓测算</td><td>中信建投 / 摩根士丹利测算经媒体转述（domain_search）</td><td>2026-10~11</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>天孚通信 PE-TTM 约 61 倍（10 月末）、2027E 约 27 倍；卖方目标价分歧 935–2405 元</td><td>卖方一致预期经财经媒体转述（domain_search）</td><td>2026-10 末</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>基金季报穿透：可见前十大 49 只、跨基金共同重仓 9 只、等效穿透 26,199.79 元；天孚通信 300394 与新易盛 300502 / 中际旭创 300308 申万三级同为 01851024.PT</td><td>基金穿透台账.json（天天基金 F10 二次引用季报 + NEODATA 公司档案 / westock-data）</td><td>2026Q3（截止 2026-09-30）</td><td><span class="tag wait">非一手（第三方行情 / 财经媒体 / 卖方研报二次引用，需核实原文）</span></td></tr>
+<tr><td>历史组合有效 Beta 2.3→4.0、天孚 Beta 5.41 / 波动率 105.3%、硬止损 254.50 等</td><td>分析档案/04_纪律与框架常量.md（8–9 月口径）</td><td>2026-08-19~09-17</td><td><span class="tag ok">一手（官方机构 / 丰哥截图）</span></td></tr>
+<tr><td>事件雷达 5 条（年末政策窗口 / 出口管制 / 美债利率路径 / 地缘商品 / 待核实推演模板）</td><td>事件雷达.json + 事件日历.md + 历史类比库.md</td><td>2026-11-07</td><td><span class="tag ok">一手（官方机构 / 丰哥截图）</span></td></tr>
+</tbody></table></section>
+<section class="panel"><h2>🔄 轮次留痕与 L5 复盘</h2>
+<div class="item"><div class="ttl">第 1 轮 · 2026-11-07 · 首轮策略框架建立　<span class="tag ok">已完成</span></div><div class="kv">从「信息整理」升级到「策略与微调」；建立偏好画像、组合诊断、市场档位、传导链、三情景、压力测试、再平衡规则与 6 条条件式微调；前提 6 项待丰哥确认。</div></div>
+<div class="item"><div class="ttl">第 2 轮 · 2026-11-07 · 丰哥定调：策略升为核心层　<span class="tag ok">已完成</span></div><div class="kv">首轮框架建立后按丰哥定调登记；前提 6 项待确认，S3/S5 建议立即执行，S1/S2 只作预案，账户数字未变</div></div>
+<p>🔴 每条 action 的 status / review 由 --confirm / --round 回写；事后回填「是否提前捕捉、判断应验与否」，形成 L5 命中率闭环。｜当前命中率 【待回填】</p></section>
+<section class="panel" style="border-color:#6e5a1f"><h2>⚠️ 免责声明</h2><p><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</p><p class="note">补充口径：本页给出的是条件式预案（条件 → 动作 → 幅度上限 → 风险提示 → 失效条件），仅作研究参考，不构成投资建议、不含具体买卖价位、不代为下单；最终决策与执行由丰哥确认。凡标注【待核实】【待补充】【待官方日历】处均为数据缺口，未用估算值替代。</p></section>
+  <div class="panel" style="border-color:#30363d">
+    <div class="disc"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。<br>补充口径：「投资策略」页给出的是<b>条件式微调预案</b>（条件 → 动作 → 幅度上限 → 风险提示 → 失效条件），仅作研究参考，不含具体买卖价位、不代为下单，最终决策与执行由丰哥确认；其余页面只做数据整理与结构呈现。凡标注【待核实】【待补充】【待调权威源】处均为数据缺口，未以估算值替代。</div>
+    <div class="note" style="margin-top:8px">derived_from：<code>F:\金融知识库\金融数据\投资档案\策略与预警\投资策略与微调.json</code>（权威主副本）｜
+    本页为派生视图，不反向修改事实层；账户数字一律经 <code>当前基准.json</code> 指针读取。</div>
+  </div>
+</main>
+</div>
+</body>
+</html>
