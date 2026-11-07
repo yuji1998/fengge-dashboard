@@ -116,6 +116,76 @@ details .inner{padding:0 15px 14px;}
 <main>
 <section class="tldr"><div class="lead">结论先行 · 每日持股策略</div><div class="main">每天凌晨跑一遍信息，落到 3 只 A 股的<b>信息面、结构性观察点、触发条件、数据缺口</b>四段，并在次日回填「判断应验与否」形成闭环。本页是<b>观察框架，不是买卖指令</b>；历史硬止损位对应旧持仓结构已失效，不照搬。最新一期：<b>2026-11-07</b>（框架建立（首日））。</div><ul><li>股票端仅 3 只，但天孚通信单只占总浮亏 69.5%、占股票端市值 63.2%。</li><li>个股与基金侧科创/AI 主题重复暴露同一主线，标的数量增加并未分散风险因子。</li><li>美债10Y、个股深度数据源存在缺口，相关结论一律标【待补充】。</li></ul></section>
 <div class="cards"><div class="card"><div class="label">股票标的</div><div class="value ">3 只</div><div class="sub">券商人民币账户</div></div><div class="card"><div class="label">股票端市值</div><div class="value ">92,704.00</div><div class="sub">占三账户总资产 31.0%</div></div><div class="card"><div class="label">股票端浮亏</div><div class="value neg">-75,746.15</div><div class="sub">占三账户总浮亏 69.4%</div></div><div class="card"><div class="label">第一风险源占比</div><div class="value warn">69.5%</div><div class="sub">天孚通信占总浮亏</div></div></div>
+<section class="panel"><h2>📡 最新市场数据 · 个股与指数（每日自动抓取）</h2><div class="p-sub">📡 自动抓取于 <b>2026-11-07 09:50:45</b>　·　2026-11-07 为周六休市；A股行情口径对应 11-06 周五收盘，美债为 11-06 官方收盘收益率　·　<b>下表是市场／官方数据，不是您的账户持仓数字</b>；账户总资产、份额、成本与累计盈亏仍以 11-07 三张截图基准为准。市场数据只作研判输入，<b>不反向改写持仓档案</b>。</div><table><thead><tr><th>标的</th><th>代码</th><th>收盘价</th><th>涨跌</th><th>数据时点</th><th>来源 / 分级</th></tr></thead><tbody><tr><td><b>莱克电气</b></td><td><code>603355</code></td><td class="num">33.19</td><td class="num neg">-3.60%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr><tr><td><b>埃斯顿</b></td><td><code>002747</code></td><td class="num">28.46</td><td class="num neg">-4.66%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr><tr><td><b>天孚通信</b></td><td><code>300394</code></td><td class="num">122.00</td><td class="num neg">-5.79%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr><tr><td><b>上证指数</b></td><td><code>000001</code></td><td class="num">3,649.18</td><td class="num neg">-1.10%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr><tr><td><b>深证成指</b></td><td><code>399001</code></td><td class="num">11,175.78</td><td class="num neg">-2.57%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr><tr><td><b>创业板指</b></td><td><code>399006</code></td><td class="num">2,465.23</td><td class="num neg">-3.96%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr><tr><td><b>科创50</b></td><td><code>000688</code></td><td class="num">1,253.20</td><td class="num neg">-2.60%</td><td>2026-11-06</td><td>腾讯行情 qt.gtimg.cn<br><span class="note">非一手（第三方行情/资讯平台）</span></td></tr></tbody></table><p class="note">⚠️ 上表为公开市场报价，<b>不是</b>您持仓的市值、成本或盈亏；休市日显示最近交易日收盘，不可与 11-07 截图口径相加或横向比较。「收盘价」来自腾讯行情（非一手），仅作结构性观察参考。</p><details><summary>官方数据源清单 · 可得性与分级（点击展开）</summary><div class="inner"><h2>官方数据源清单 · 可得性与分级</h2>
+<blockquote>最近核验：2026-11-07 09:50:45　｜　2026-11-07 为周六休市；A股行情口径对应 11-06 周五收盘，美债为 11-06 官方收盘收益率</blockquote>
+<blockquote>本清单由 <code>official_data_fetch.py</code> 每日重建，是「数字持续跟踪」的权威说明。</blockquote>
+<h3>一、先分清两类数字（最容易搞混）</h3>
+<table><thead><tr><th>类别</th><th>例子</th><th>从哪来</th><th>能不能自动跟</th></tr></thead><tbody>
+<tr><td><b>账户数字</b></td><td>总资产 299,359.26、持仓市值、份额、成本、累计浮亏 -109,183.30</td><td><b>只有丰哥发的截图</b></td><td>❌ 网上没有，也不能从行情反推；每次发新截图才更新，旧数字进快照归档</td></tr>
+<tr><td><b>市场 / 官方数字</b></td><td>指数收盘、个股行情、基金单位净值、美债10Y、CPI/PMI 发布</td><td>公开官方源 / 行情平台</td><td>✅ 每天自动抓，标注来源与时点，落 <code>市场数据/</code> 快照</td></tr>
+</tbody></table>
+<p><b>红线</b>：市场数据只作研判输入，<b>不反向改写持仓档案</b>；净值披露有 T+1 滞后，休市日行情是最近交易日收盘，均按实际时点标注，不把历史值说成当前值。</p>
+<h3>二、数据源可得性（本轮实测）</h3>
+<table><thead><tr><th>源</th><th>分级</th><th>状态</th><th>可解析 / 说明</th></tr></thead><tbody>
+<tr><td>腾讯行情（A股 / 指数）</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>本轮取回 7 条报价；GBK 编码，字段含现价/昨收/涨跌幅/时间戳</td></tr>
+<tr><td>天天基金 · 单位净值</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>9 只有代码基金全部取回净值序列，并做代码↔名称交叉校验：2 处名称不符已标「不予采信」；活期+ 为货币类无净值。代码来自 EasyClaw fund_daily_monitor.py 历史映射，招商A500 待丰哥确认</td></tr>
+<tr><td>美国财政部 · 日度国债收益率曲线</td><td>一手（官方机构）</td><td>✅ 可用</td><td>CSV 共 214 行，最新 2026-11-06；含 1M–30Y 全期限</td></tr>
+<tr><td>国家统计局 · 最新发布</td><td>一手（官方机构）</td><td>✅ 可用</td><td>本轮解析 8 条发布标题与日期（CPI/PPI/PMI/工业利润等）</td></tr>
+<tr><td>中国货币网 · 人民币汇率中间价</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，24469B；中间价数据为动态加载，本轮只验页面可达</td></tr>
+<tr><td>中国人民银行 · 官网</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，141343B；LPR / 公开市场操作 / 社融等一手发布入口</td></tr>
+<tr><td>巨潮资讯网 · 法定信息披露</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，108676B；个股公告一手源，公告列表需 POST 接口，本轮只验页面可达</td></tr>
+<tr><td>美联储 H.15 · 利率数据下载</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，1009493B；CSV 可下载（约 1MB），作为 10Y 交叉验证备用源，本轮未逐行解析</td></tr>
+<tr><td>新浪财经 · 指数/汇率</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>HTTP 200，173B；需带 Referer，2xx 可用</td></tr>
+<tr><td>东方财富 push2</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>HTTP 200，127B；本轮实测 200 且有数据；历史记录曾失效，需连续观察稳定性</td></tr>
+<tr><td>FRED · 圣路易斯联储</td><td>一手（官方机构）</td><td>❌ 不可用</td><td>ReadTimeout；本轮连接超时，改用美国财政部 CSV 作为 10Y 主源</td></tr>
+<tr><td>同花顺 iFinD MCP</td><td>一手（官方机构）</td><td>❌ 不可用</td><td>2026-09-28 额度耗尽；未在本轮重试</td></tr>
+<tr><td>通达信 · 问小达 MCP</td><td>非一手（第三方行情/资讯平台）</td><td>❌ 不可用</td><td>积分耗尽；未在本轮重试</td></tr>
+<tr><td>北向资金逐笔净流入</td><td>一手（官方机构）</td><td>— 不再披露</td><td>自 2024-08-19 起不再披露逐笔净流入，不猜数</td></tr>
+</tbody></table>
+<h3>三、本轮拿到的关键数字（均带来源与时点）</h3>
+<table><thead><tr><th>指标</th><th>值</th><th>时点</th><th>来源</th><th>分级</th></tr></thead><tbody>
+<tr><td>美债 10Y</td><td>4.86%</td><td>2026-11-06</td><td>美国财政部日度收益率曲线</td><td>一手（官方机构）</td></tr>
+<tr><td>美债 2Y</td><td>4.51%</td><td>2026-11-06</td><td>美国财政部日度收益率曲线</td><td>一手（官方机构）</td></tr>
+<tr><td>莱克电气（603355）</td><td>33.19（-3.60%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>埃斯顿（002747）</td><td>28.46（-4.66%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>天孚通信（300394）</td><td>122.0（-5.79%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>上证指数（000001）</td><td>3649.18（-1.10%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>深证成指（399001）</td><td>11175.78（-2.57%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>创业板指（399006）</td><td>2465.23（-3.96%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>科创50（000688）</td><td>1253.2（-2.60%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>广发聚荣一年持有期混合A 单位净值</td><td>1.2119</td><td>2026-11-05</td><td>天天基金</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>易方达科创50联接C 单位净值</td><td>0.9818</td><td>2026-11-05</td><td>天天基金</td><td>非一手（第三方行情/资讯平台）</td></tr>
+</tbody></table>
+<blockquote>上表为<b>市场数据</b>，不是丰哥的账户资产；账户数字仍以 11-07 三张截图基准快照为准。</blockquote>
+<h3>四、基金代码 ↔ 名称交叉校验（本轮新发现）</h3>
+<p>对 9 只有代码的持仓基金，把天天基金返回的 <code>fS_name</code> 与台账名称做归一化比对（去掉「上证 / 联接 / 指数 / 混合 / A / C」等份额类别与修饰词）。不一致者<b>不采信其净值</b>，也不擅自改代码，逐条列出待丰哥确认：</p>
+<table><thead><tr><th>代码</th><th>台账名称</th><th>平台返回名称</th><th>处理</th></tr></thead><tbody>
+<tr><td><code>009878</code></td><td>融通产业趋势股票</td><td>平安低碳经济混合A</td><td>⚠️ 净值不予采信，待确认正确代码</td></tr>
+<tr><td><code>022111</code></td><td>中欧上证科创板人工智能指数C</td><td>华泰保兴恒利中短债D</td><td>⚠️ 净值不予采信，待确认正确代码</td></tr>
+</tbody></table>
+<blockquote><code>022455</code> 平台返回「招商中证A500ETF发起式联接A」与截图名称一致，可作为该代码的旁证；但仍等丰哥确认后才纳入自动净值跟踪，不自动升级为已确认。</blockquote>
+<h3>五、补上的历史缺口</h3>
+<ul>
+<li><b>美债10Y</b>：此前 11-07 盘前指引多处标注「数据待补充」、事件雷达里挂为「数据源缺口」。本轮接入美国财政部官方 CSV（最新 4.86%，2026-11-06），缺口已补；美联储 H.15 CSV 作为交叉验证备用源。</li>
+<li><b>东财 push2</b>：历史记录为「已失效」，本轮实测 200 且有返回，暂标「可用·需连续观察」，不据此推翻历史结论，连续多日稳定后再更新状态。</li>
+<li><b>FRED</b>：本轮连接超时，不影响 10Y 取数（已由财政部源覆盖）。</li>
+</ul>
+<h3>六、仍然拿不到 / 不猜的</h3>
+<ul>
+<li>丰哥账户的份额、成本、总资产、累计盈亏（只能靠截图）；</li>
+<li>iFinD（额度耗尽）、通达信（积分耗尽）；</li>
+<li>北向逐笔净流入（2024-08-19 起不再披露）；</li>
+<li>基金季报持仓穿透（需等披露，已列基金分析待确认）；</li>
+<li>选举结果、政策原文等未经核实的事件（一律标【待核实】，不把举例当事实）。</li>
+</ul>
+<h3>七、更新方式</h3>
+<ol>
+<li>每天 07:00 流水线先跑 <code>python official_data_fetch.py</code>，落 <code>市场数据/YYYY-MM-DD.json</code> + <code>latest.json</code>；</li>
+<li><code>daily_invest_brief.py --prepare</code> 会把这份快照列入当日上下文；</li>
+<li><code>build_invest_views.py</code> 读 <code>latest.json</code>，在持股 / 基金 / 预警三页展示数据面板；</li>
+<li>所有数字在页面上就地标注来源与时点；不改动、不反推持仓数字。</li>
+</ol>
+<blockquote><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</blockquote></div></details></section>
 <section class="panel"><h2>📌 今日策略提示 · 2026-11-07</h2><div class="p-sub">本日为三页机制建立首日，未做实时行情抓取。当日信息面以 EasyClaw 07:06 生成的 output/盘前指引_20261107.md 与站内 news.html 为准；持仓数字以 11-07 三张截图基准快照为准。周六休市，不产生当日交易信号。</div>
 <h3>本轮判断</h3><p>首日只建立观察框架与数据缺口清单，未形成方向性策略结论。三只股票共性是「信息面靠盘前指引、个股深度数据缺源」；结构性焦点仍是天孚通信的集中度与算力链政策敏感度。</p>
 <h3>调取来源</h3><ul><li>投资档案/快照/20261107c_202611070819.json（当前基准）</li><li>EasyClaw output/盘前指引_20261107.md（07:06 自动流水线）</li><li>站内 news.html（每日要闻，含 11-07 两条美国中期选举相关标题）</li><li>分析档案/04_纪律与框架常量.md（历史纪律位，已标注失效）</li></ul>

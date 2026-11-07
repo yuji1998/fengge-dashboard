@@ -116,6 +116,76 @@ details .inner{padding:0 15px 14px;}
 <main>
 <section class="tldr"><div class="lead">结论先行 · 为什么以前没有前瞻性</div><div class="main">站内 news.html 11-07 已出现「选举结果不改 OpenAI 扩张计划」「中期选举失利后 特朗普任命米勒接替威尔斯出任白宫幕僚长」两条标题，盘前指引也有「今日关注」与「历史风险清单对照」；但两者都停在标题/当日复盘层面，没有传导链、没有情景概率、没有映射到 13 个标的、没有领先指标跟踪。信息进来了，研判没形成——这是机制缺口，不是信息缺口。</div><ul><li>结论：<b>信息其实进来了，缺的是把信息变成研判的五层结构</b>——这是机制缺口，不是采集缺口。</li><li>本次建立 L1 事件日历 → L2 领先指标 → L3 情景推演 → L4 历史类比 → L5 触发与复盘。</li><li>丰哥所举「美国两院归属」样例，本轮<b>不确认任何选举结果</b>，只建成待核实的推演模板；结构先备好，结果一确认即可升级为正式预警。</li></ul></section>
 <div class="cards"><div class="card"><div class="label">挂起事件</div><div class="value ">5 条</div><div class="sub">中国 1 / 全球 4</div></div><div class="card"><div class="label">机制层数</div><div class="value ">5 层</div><div class="sub">L1 日历 → L5 复盘</div></div><div class="card"><div class="label">待核实样例</div><div class="value warn">1 条</div><div class="sub">不把举例当既成事实</div></div><div class="card"><div class="label">数据源缺口</div><div class="value warn">美债10Y</div><div class="sub">不猜数，标【待补充】</div></div></div>
+<section class="panel"><h2>📡 官方数据跟踪状态（每日 07:00 核验）</h2><div class="p-sub">📡 自动抓取于 <b>2026-11-07 09:50:45</b>　·　2026-11-07 为周六休市；A股行情口径对应 11-06 周五收盘，美债为 11-06 官方收盘收益率　·　<b>下表是市场／官方数据，不是您的账户持仓数字</b>；账户总资产、份额、成本与累计盈亏仍以 11-07 三张截图基准为准。市场数据只作研判输入，<b>不反向改写持仓档案</b>。</div><div class="row-two"><div class="item"><div class="lbl">美债 10Y · 此前「待补充」缺口已补</div><div class="kv"><b style="font-size:19px;color:var(--accent)">4.86%</b>　数据时点 <b>2026-11-06</b><br>来源：美国财政部 Daily Treasury Par Yield Curve Rates（一手（官方机构））<br>2Y：4.51%<br><span class="note">10 年期国债恒定到期收益率；此前盘前指引一直标注「待补充」，本源已补上该缺口</span></div></div><div class="item"><div class="lbl">国家统计局 · 最新一手发布</div><ul><li><code>2026-11-04</code> 2026年10月中国采购经理指数运行情况</li><li><code>2026-10-31</code> 社会事业全面发展　民生福祉取得新进步——2025年社会民生统计报告</li><li><code>2026-10-30</code> 2026年前三季度全国规模以上文化及相关产业企业营业收入增长4.3%</li><li><code>2026-10-30</code> 2026年1—9月份全国规模以上工业企业利润增长15.5%</li><li><code>2026-10-27</code> 2026年10月中旬流通领域重要生产资料市场价格变动情况</li></ul><div class="kv note">具体数值需点进原文核实，本页只登记发布日期与标题。</div></div></div><table><thead><tr><th>数据源</th><th>分级</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td><b>腾讯行情（A股 / 指数）</b></td><td>非一手（第三方行情/资讯平台）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">本轮取回 7 条报价；GBK 编码，字段含现价/昨收/涨跌幅/时间戳</td></tr><tr><td><b>天天基金 · 单位净值</b></td><td>非一手（第三方行情/资讯平台）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">9 只有代码基金全部取回净值序列，并做代码↔名称交叉校验：2 处名称不符已标「不予采信」；活期+ 为货币类无净值。代码来自 EasyClaw fund_daily_monitor.py 历史映射，招商A500 待丰哥确认</td></tr><tr><td><b>美国财政部 · 日度国债收益率曲线</b></td><td>一手（官方机构）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">CSV 共 214 行，最新 2026-11-06；含 1M–30Y 全期限</td></tr><tr><td><b>国家统计局 · 最新发布</b></td><td>一手（官方机构）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">本轮解析 8 条发布标题与日期（CPI/PPI/PMI/工业利润等）</td></tr><tr><td><b>中国货币网 · 人民币汇率中间价</b></td><td>一手（官方机构）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">HTTP 200，24469B；中间价数据为动态加载，本轮只验页面可达</td></tr><tr><td><b>中国人民银行 · 官网</b></td><td>一手（官方机构）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">HTTP 200，141343B；LPR / 公开市场操作 / 社融等一手发布入口</td></tr><tr><td><b>巨潮资讯网 · 法定信息披露</b></td><td>一手（官方机构）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">HTTP 200，108676B；个股公告一手源，公告列表需 POST 接口，本轮只验页面可达</td></tr><tr><td><b>美联储 H.15 · 利率数据下载</b></td><td>一手（官方机构）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">HTTP 200，1009493B；CSV 可下载（约 1MB），作为 10Y 交叉验证备用源，本轮未逐行解析</td></tr><tr><td><b>新浪财经 · 指数/汇率</b></td><td>非一手（第三方行情/资讯平台）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">HTTP 200，173B；需带 Referer，2xx 可用</td></tr><tr><td><b>东方财富 push2</b></td><td>非一手（第三方行情/资讯平台）</td><td><span class="tag ok">✅ 可用</span></td><td class="note">HTTP 200，127B；本轮实测 200 且有数据；历史记录曾失效，需连续观察稳定性</td></tr><tr><td><b>FRED · 圣路易斯联储</b></td><td>一手（官方机构）</td><td><span class="tag hot">❌ 不可用</span></td><td class="note">ReadTimeout；本轮连接超时，改用美国财政部 CSV 作为 10Y 主源</td></tr><tr><td><b>同花顺 iFinD MCP</b></td><td>一手（官方机构）</td><td><span class="tag hot">❌ 不可用</span></td><td class="note">2026-09-28 额度耗尽；未在本轮重试</td></tr><tr><td><b>通达信 · 问小达 MCP</b></td><td>非一手（第三方行情/资讯平台）</td><td><span class="tag hot">❌ 不可用</span></td><td class="note">积分耗尽；未在本轮重试</td></tr><tr><td><b>北向资金逐笔净流入</b></td><td>一手（官方机构）</td><td><span class="tag ">— 不再披露</span></td><td class="note">自 2024-08-19 起不再披露逐笔净流入，不猜数</td></tr></tbody></table><p class="note">10 / 14 个源本轮可用；不可用者一律标 unavailable，<b>不猜数、不用历史值冒充当前值</b>。</p><details><summary>官方数据源清单全文（两类数字 / 分级 / 待确认）</summary><div class="inner"><h2>官方数据源清单 · 可得性与分级</h2>
+<blockquote>最近核验：2026-11-07 09:50:45　｜　2026-11-07 为周六休市；A股行情口径对应 11-06 周五收盘，美债为 11-06 官方收盘收益率</blockquote>
+<blockquote>本清单由 <code>official_data_fetch.py</code> 每日重建，是「数字持续跟踪」的权威说明。</blockquote>
+<h3>一、先分清两类数字（最容易搞混）</h3>
+<table><thead><tr><th>类别</th><th>例子</th><th>从哪来</th><th>能不能自动跟</th></tr></thead><tbody>
+<tr><td><b>账户数字</b></td><td>总资产 299,359.26、持仓市值、份额、成本、累计浮亏 -109,183.30</td><td><b>只有丰哥发的截图</b></td><td>❌ 网上没有，也不能从行情反推；每次发新截图才更新，旧数字进快照归档</td></tr>
+<tr><td><b>市场 / 官方数字</b></td><td>指数收盘、个股行情、基金单位净值、美债10Y、CPI/PMI 发布</td><td>公开官方源 / 行情平台</td><td>✅ 每天自动抓，标注来源与时点，落 <code>市场数据/</code> 快照</td></tr>
+</tbody></table>
+<p><b>红线</b>：市场数据只作研判输入，<b>不反向改写持仓档案</b>；净值披露有 T+1 滞后，休市日行情是最近交易日收盘，均按实际时点标注，不把历史值说成当前值。</p>
+<h3>二、数据源可得性（本轮实测）</h3>
+<table><thead><tr><th>源</th><th>分级</th><th>状态</th><th>可解析 / 说明</th></tr></thead><tbody>
+<tr><td>腾讯行情（A股 / 指数）</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>本轮取回 7 条报价；GBK 编码，字段含现价/昨收/涨跌幅/时间戳</td></tr>
+<tr><td>天天基金 · 单位净值</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>9 只有代码基金全部取回净值序列，并做代码↔名称交叉校验：2 处名称不符已标「不予采信」；活期+ 为货币类无净值。代码来自 EasyClaw fund_daily_monitor.py 历史映射，招商A500 待丰哥确认</td></tr>
+<tr><td>美国财政部 · 日度国债收益率曲线</td><td>一手（官方机构）</td><td>✅ 可用</td><td>CSV 共 214 行，最新 2026-11-06；含 1M–30Y 全期限</td></tr>
+<tr><td>国家统计局 · 最新发布</td><td>一手（官方机构）</td><td>✅ 可用</td><td>本轮解析 8 条发布标题与日期（CPI/PPI/PMI/工业利润等）</td></tr>
+<tr><td>中国货币网 · 人民币汇率中间价</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，24469B；中间价数据为动态加载，本轮只验页面可达</td></tr>
+<tr><td>中国人民银行 · 官网</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，141343B；LPR / 公开市场操作 / 社融等一手发布入口</td></tr>
+<tr><td>巨潮资讯网 · 法定信息披露</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，108676B；个股公告一手源，公告列表需 POST 接口，本轮只验页面可达</td></tr>
+<tr><td>美联储 H.15 · 利率数据下载</td><td>一手（官方机构）</td><td>✅ 可用</td><td>HTTP 200，1009493B；CSV 可下载（约 1MB），作为 10Y 交叉验证备用源，本轮未逐行解析</td></tr>
+<tr><td>新浪财经 · 指数/汇率</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>HTTP 200，173B；需带 Referer，2xx 可用</td></tr>
+<tr><td>东方财富 push2</td><td>非一手（第三方行情/资讯平台）</td><td>✅ 可用</td><td>HTTP 200，127B；本轮实测 200 且有数据；历史记录曾失效，需连续观察稳定性</td></tr>
+<tr><td>FRED · 圣路易斯联储</td><td>一手（官方机构）</td><td>❌ 不可用</td><td>ReadTimeout；本轮连接超时，改用美国财政部 CSV 作为 10Y 主源</td></tr>
+<tr><td>同花顺 iFinD MCP</td><td>一手（官方机构）</td><td>❌ 不可用</td><td>2026-09-28 额度耗尽；未在本轮重试</td></tr>
+<tr><td>通达信 · 问小达 MCP</td><td>非一手（第三方行情/资讯平台）</td><td>❌ 不可用</td><td>积分耗尽；未在本轮重试</td></tr>
+<tr><td>北向资金逐笔净流入</td><td>一手（官方机构）</td><td>— 不再披露</td><td>自 2024-08-19 起不再披露逐笔净流入，不猜数</td></tr>
+</tbody></table>
+<h3>三、本轮拿到的关键数字（均带来源与时点）</h3>
+<table><thead><tr><th>指标</th><th>值</th><th>时点</th><th>来源</th><th>分级</th></tr></thead><tbody>
+<tr><td>美债 10Y</td><td>4.86%</td><td>2026-11-06</td><td>美国财政部日度收益率曲线</td><td>一手（官方机构）</td></tr>
+<tr><td>美债 2Y</td><td>4.51%</td><td>2026-11-06</td><td>美国财政部日度收益率曲线</td><td>一手（官方机构）</td></tr>
+<tr><td>莱克电气（603355）</td><td>33.19（-3.60%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>埃斯顿（002747）</td><td>28.46（-4.66%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>天孚通信（300394）</td><td>122.0（-5.79%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>上证指数（000001）</td><td>3649.18（-1.10%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>深证成指（399001）</td><td>11175.78（-2.57%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>创业板指（399006）</td><td>2465.23（-3.96%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>科创50（000688）</td><td>1253.2（-2.60%）</td><td>2026-11-06</td><td>腾讯行情</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>广发聚荣一年持有期混合A 单位净值</td><td>1.2119</td><td>2026-11-05</td><td>天天基金</td><td>非一手（第三方行情/资讯平台）</td></tr>
+<tr><td>易方达科创50联接C 单位净值</td><td>0.9818</td><td>2026-11-05</td><td>天天基金</td><td>非一手（第三方行情/资讯平台）</td></tr>
+</tbody></table>
+<blockquote>上表为<b>市场数据</b>，不是丰哥的账户资产；账户数字仍以 11-07 三张截图基准快照为准。</blockquote>
+<h3>四、基金代码 ↔ 名称交叉校验（本轮新发现）</h3>
+<p>对 9 只有代码的持仓基金，把天天基金返回的 <code>fS_name</code> 与台账名称做归一化比对（去掉「上证 / 联接 / 指数 / 混合 / A / C」等份额类别与修饰词）。不一致者<b>不采信其净值</b>，也不擅自改代码，逐条列出待丰哥确认：</p>
+<table><thead><tr><th>代码</th><th>台账名称</th><th>平台返回名称</th><th>处理</th></tr></thead><tbody>
+<tr><td><code>009878</code></td><td>融通产业趋势股票</td><td>平安低碳经济混合A</td><td>⚠️ 净值不予采信，待确认正确代码</td></tr>
+<tr><td><code>022111</code></td><td>中欧上证科创板人工智能指数C</td><td>华泰保兴恒利中短债D</td><td>⚠️ 净值不予采信，待确认正确代码</td></tr>
+</tbody></table>
+<blockquote><code>022455</code> 平台返回「招商中证A500ETF发起式联接A」与截图名称一致，可作为该代码的旁证；但仍等丰哥确认后才纳入自动净值跟踪，不自动升级为已确认。</blockquote>
+<h3>五、补上的历史缺口</h3>
+<ul>
+<li><b>美债10Y</b>：此前 11-07 盘前指引多处标注「数据待补充」、事件雷达里挂为「数据源缺口」。本轮接入美国财政部官方 CSV（最新 4.86%，2026-11-06），缺口已补；美联储 H.15 CSV 作为交叉验证备用源。</li>
+<li><b>东财 push2</b>：历史记录为「已失效」，本轮实测 200 且有返回，暂标「可用·需连续观察」，不据此推翻历史结论，连续多日稳定后再更新状态。</li>
+<li><b>FRED</b>：本轮连接超时，不影响 10Y 取数（已由财政部源覆盖）。</li>
+</ul>
+<h3>六、仍然拿不到 / 不猜的</h3>
+<ul>
+<li>丰哥账户的份额、成本、总资产、累计盈亏（只能靠截图）；</li>
+<li>iFinD（额度耗尽）、通达信（积分耗尽）；</li>
+<li>北向逐笔净流入（2024-08-19 起不再披露）；</li>
+<li>基金季报持仓穿透（需等披露，已列基金分析待确认）；</li>
+<li>选举结果、政策原文等未经核实的事件（一律标【待核实】，不把举例当事实）。</li>
+</ul>
+<h3>七、更新方式</h3>
+<ol>
+<li>每天 07:00 流水线先跑 <code>python official_data_fetch.py</code>，落 <code>市场数据/YYYY-MM-DD.json</code> + <code>latest.json</code>；</li>
+<li><code>daily_invest_brief.py --prepare</code> 会把这份快照列入当日上下文；</li>
+<li><code>build_invest_views.py</code> 读 <code>latest.json</code>，在持股 / 基金 / 预警三页展示数据面板；</li>
+<li>所有数字在页面上就地标注来源与时点；不改动、不反推持仓数字。</li>
+</ol>
+<blockquote><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</blockquote></div></details></section>
 <section class="panel"><h2>🔎 五个具体缺口 → 五层机制</h2><div class="row-two">
 <div class="item"><div class="lbl">以前缺什么</div><ul><li>流水线是「事件发生后 → 抓新闻 → 当日复盘」，天然滞后于价格</li><li>没有 L1 事件日历，选举/议息这类确定时点不会提前挂起</li><li>没有 L2 领先指标，民调/赔率/提前投票/利率期货没有跟踪位</li><li>没有 L4 历史类比库，苗头出现时无法调出「上次同类怎么走」</li><li>没有「传导链 → 我的持仓」映射与 L5 复盘，研判落不到组合上</li></ul></div>
 <div class="item"><div class="lbl">现在怎么补（L1 事件日历 起）</div><ul><li>L1 事件日历：未来 7/30 天已知时点（政策会议、数据发布、财报、选举、关税节点）</li><li>L2 领先指标：民调/赔率、利率期货隐含、PMI 先行项、资金流、期权隐波、提前投票</li><li>L3 情景推演：每个重大事件 2–3 个情景 + 传导链 + 对 13 个标的的映射 + 预案</li><li>L4 历史类比：同类事件历史上怎么走，只列观察维度，具体区间数据须调权威源后填写</li><li>L5 触发与复盘：触发条件命中则升级为正式预警；事后回填「是否提前捕捉、判断应验与否」</li></ul></div>
@@ -123,7 +193,7 @@ details .inner{padding:0 15px 14px;}
 <section class="panel"><h2>🚨 事件雷达 · 全球（4）</h2><div class="p-sub">重大政策、选举、货币、产业与地缘事件；既看已发生的，也提前挂起确定会来的时点。</div>
 <div class="item"><div class="ttl">美国国会两院归属与政策指向（丰哥 11-07 提问所举重大事件样例）　<span class="tag wait">待核实 · 非事实确认</span></div><div class="kv"><span class="tag info">选举 / 政治格局</span><span class="tag">重大（样例模板）</span><span class="tag">待核实 · 推演模板</span><span class="tag">E20261107_US_CONGRESS</span></div><div class="kv" style="margin-top:6px">丰哥以「美国民主党全面胜选 / 参众两院」为例，指出此类重大事件应提前有研判。本轮未核实任何选举结果、未查外部行情与新闻源，不把该表述作为既成事实；本条只展示系统对这类事件的完整推演结构，所有结论字段待权威信息核实后填写。</div><div class="lbl">为什么这类事件以前没有前瞻性</div><ul><li>既有流水线是「事件发生后 → 抓新闻 → 当日复盘」，天然滞后于价格</li><li>没有 L1 事件日历，选举日这类确定时点不会提前挂起</li><li>没有 L2 领先指标，民调/赔率/提前投票等结果前信号没有跟踪位</li><li>没有 L4 历史类比库，无法在苗头出现时立刻调出「上次同类怎么走」</li><li>没有「传导链 → 我的 13 个标的」映射，研判落不到自己的组合上</li></ul><div class="lbl">L2 领先指标</div><ul><li>关键州民调与预测市场赔率（结果前）</li><li>提前投票 / 邮寄选票结构与开票节奏</li><li>两党政策纲领文本与人事提名信号</li><li>美元指数、美债期货与利率期权隐含波动（结果前定价）</li><li>政策落地日程（国会会期、预算/拨款、监管人事）</li></ul><div class="lbl">影响传导链</div><ul><li>财政与赤字预期 → 美债供给 / 期限溢价 → 美债10Y → 全球成长股估值 → A股科技成长映射</li><li>产业与监管取向（AI、半导体、出口管制） → 算力链 → 天孚通信、科创/AI 类基金</li><li>贸易与关税取向 → 出口链 → 莱克电气</li><li>美元 / 人民币 → 风险偏好与资金流 → 全部权益类 93.0% 仓位</li><li>避险情绪 → 黄金、油价 → 盘前指引「历史风险清单」中的地缘/商品链条</li></ul><div class="lbl">L3 情景推演</div><table><thead><tr><th>情景</th><th>概率</th><th>传导</th><th>受影响</th><th>预案（观察动作）</th></tr></thead><tbody><tr><td><b>情景 A · 统一政府（总统与两院同党）</b></td><td>待评估</td><td>政策推进阻力下降 → 财政/产业政策可预期性上升 → 视具体纲领决定对成长股是压制还是提振</td><td>天孚通信、科创/AI 类基金、埃斯顿</td><td>先核实纲领文本再判方向；本轮不填结论</td></tr><tr><td><b>情景 B · 分裂政府</b></td><td>待评估</td><td>立法推进受阻 → 政策不确定性延长，行政/监管手段权重上升 → 出口管制与关税仍可能单点扰动</td><td>天孚通信、莱克电气</td><td>重点跟踪行政口径而非立法进度</td></tr><tr><td><b>情景 C · 结果延后 / 争议</b></td><td>待评估</td><td>风险偏好短期受压、波动率抬升 → 高 Beta 成长与拥挤主线回撤弹性最大</td><td>全部权益类</td><td>以波动率与量能确认作为观察信号，不给操作指令</td></tr></tbody></table><div class="lbl">L4 历史类比维度</div><ul><li>历史上统一政府 vs 分裂政府时期：美股（尤其成长/科技）相对表现</li><li>同期美元指数、美债10Y、黄金的方向与持续时间</li><li>A股出口链与科技成长在对应窗口的相对表现</li><li>说明：以上只列观察维度，具体区间与数值须调权威数据源后填写，本轮不编数</li></ul><div class="lbl">映射到我的持仓</div><div class="kv">天孚通信、埃斯顿、莱克电气、中欧上证科创板人工智能指数C、易方达科创50联接C、工银科技创新混合</div><div class="lbl">L5 触发条件</div><ul><li>官方结果确认 → 状态从「待核实」升级为正式预警并填写结论</li><li>纲领/人事信号出现 → 更新传导链方向</li><li>美债10Y 或美元出现显著方向变化 → 记录估值传导</li><li>算力链出口管制增量表述 → 同步挂到持股分析页</li></ul><div class="lbl">当前结论</div><div class="kv warn">待核实后填写</div><div class="kv note" style="margin-top:6px">来源：丰哥 11-07 提问（举例，非事实确认）；站内 news.html 11-07 两条相关标题（仅标题，未做内容核实）</div></div>
 <div class="item"><div class="ttl">半导体 / 算力链出口管制升级风险　<span class="tag ok">已挂起</span></div><div class="kv"><span class="tag info">产业 / 出口管制</span><span class="tag">高</span><span class="tag">持续监测</span><span class="tag">E20261107_EXPORT_CONTROL</span></div><div class="kv" style="margin-top:6px">来源：盘前指引_20261107.md 第五节「历史风险清单对照」明确列为结构性风险，且科技主线拥挤度高。该风险与组合第一大持仓天孚通信直接相关。</div><div class="lbl">L2 领先指标</div><ul><li>主要经济体管制清单与实体名单更新</li><li>北美云厂商资本开支指引</li><li>光模块订单与产业链排产</li><li>板块拥挤度与资金流</li></ul><div class="lbl">影响传导链</div><ul><li>管制升级 → 算力链预期下修 → 天孚通信 + 科创/AI 基金同步承压</li><li>国产替代政策对冲 → 部分环节可能受益</li></ul><div class="lbl">L3 情景推演</div><table><thead><tr><th>情景</th><th>概率</th><th>传导</th><th>受影响</th><th>预案（观察动作）</th></tr></thead><tbody><tr><td><b>情景 A · 管制范围扩大</b></td><td>待评估</td><td>算力链估值与订单预期同时受压，个股+基金双层叠加</td><td>天孚通信、中欧上证科创板人工智能指数C、易方达科创50联接C、工银科技创新混合</td><td>升级为正式预警并同步持股/基金两页</td></tr><tr><td><b>情景 B · 维持现状</b></td><td>待评估</td><td>风险不解除但无新增冲击</td><td>天孚通信</td><td>保留在监测清单</td></tr></tbody></table><div class="lbl">L4 历史类比维度</div><ul><li>历史管制升级窗口光模块板块与相关基金的回撤幅度与修复周期（维度待填数）</li></ul><div class="lbl">映射到我的持仓</div><div class="kv">天孚通信、科创/AI 类基金、工银科技创新混合</div><div class="lbl">L5 触发条件</div><ul><li>管制清单/实体名单更新</li><li>云厂商资本开支指引下修</li><li>天孚通信或科创指数出现放量异动</li></ul><div class="lbl">当前结论</div><div class="kv">结构性风险持续存在，与组合集中度叠加，优先跟踪</div><div class="kv note" style="margin-top:6px">来源：EasyClaw output/盘前指引_20261107.md 第五节；分析档案/04_纪律与框架常量.md</div></div>
-<div class="item"><div class="ttl">美债10Y 与美联储利率路径：全球成长股估值定价锚缺数　<span class="tag ok">已挂起</span></div><div class="kv"><span class="tag info">货币 / 数据源缺口</span><span class="tag">中高</span><span class="tag">数据源缺口</span><span class="tag">E20261107_RATES_DATA_GAP</span></div><div class="kv" style="margin-top:6px">盘前指引_20261107.md 多处标注「美债10Y 数据待补充」。这是决策级数据缺口，直接影响成长股估值判断；iFinD 额度耗尽、东财 push2 失效，需另找可靠源，本轮不猜数。</div><div class="lbl">L2 领先指标</div><ul><li>利率期货隐含路径</li><li>FOMC 点阵图与官方声明（日期以官方日历为准）</li><li>CPI/PPI/就业数据</li><li>美元指数与 CNH</li></ul><div class="lbl">影响传导链</div><ul><li>美债10Y 上行 → 成长股估值压制 → 天孚通信、埃斯顿、科创/AI 基金</li><li>美元反弹 → CNH 与风偏 → 全部权益类</li></ul><div class="lbl">L3 情景推演</div><table><thead><tr><th>情景</th><th>概率</th><th>传导</th><th>受影响</th><th>预案（观察动作）</th></tr></thead><tbody><tr><td><b>情景 A · 利率上行</b></td><td>待评估</td><td>高 Beta 成长回撤弹性最大</td><td>天孚通信、埃斯顿、科创/AI 类基金</td><td>补数据源后再做量化</td></tr><tr><td><b>情景 B · 利率回落</b></td><td>待评估</td><td>成长风格估值修复</td><td>科创/AI 类基金</td><td>观察量能确认</td></tr></tbody></table><div class="lbl">L4 历史类比维度</div><ul><li>历次美债10Y 快速上行窗口 A股成长风格相对表现（维度待填数）</li></ul><div class="lbl">映射到我的持仓</div><div class="kv">天孚通信、埃斯顿、科创/AI 类基金</div><div class="lbl">L5 触发条件</div><ul><li>找到可靠美债10Y 数据源并接入</li><li>FOMC/CPI 官方发布</li></ul><div class="lbl">当前结论</div><div class="kv">数据缺口未解决，相关结论一律标【待补充】，不得以估算值替代</div><div class="kv note" style="margin-top:6px">来源：EasyClaw output/盘前指引_20261107.md；分析档案/04_纪律与框架常量.md</div></div>
+<div class="item"><div class="ttl">美债10Y 与美联储利率路径：全球成长股估值定价锚缺数　<span class="tag ok">已挂起</span></div><div class="kv"><span class="tag info">货币 / 数据源缺口</span><span class="tag">中高</span><span class="tag">已补数据源 · 持续监测</span><span class="tag">E20261107_RATES_DATA_GAP</span></div><div class="kv" style="margin-top:6px">【历史诊断·保留】盘前指引_20261107.md 多处标注「美债10Y 数据待补充」。这是决策级数据缺口，直接影响成长股估值判断；iFinD 额度耗尽、东财 push2 曾失效，需另找可靠源，当时不猜数。</div><div class="lbl">缺口修复 / 最新进展</div><div class="kv" style="color:var(--green)">2026-11-07 已接入美国财政部 Daily Treasury Par Yield Curve Rates 官方 CSV（一手）：10Y 4.86%、2Y 4.51%，数据时点 2026-11-06；美联储 H.15 CSV 作为交叉验证备用源。FRED 本轮超时，不影响取数。详见 官方数据源清单.md 与 市场数据/latest.json。</div><div class="lbl">L2 领先指标</div><ul><li>利率期货隐含路径</li><li>FOMC 点阵图与官方声明（日期以官方日历为准）</li><li>CPI/PPI/就业数据</li><li>美元指数与 CNH</li></ul><div class="lbl">影响传导链</div><ul><li>美债10Y 上行 → 成长股估值压制 → 天孚通信、埃斯顿、科创/AI 基金</li><li>美元反弹 → CNH 与风偏 → 全部权益类</li></ul><div class="lbl">L3 情景推演</div><table><thead><tr><th>情景</th><th>概率</th><th>传导</th><th>受影响</th><th>预案（观察动作）</th></tr></thead><tbody><tr><td><b>情景 A · 利率上行</b></td><td>待评估</td><td>高 Beta 成长回撤弹性最大</td><td>天孚通信、埃斯顿、科创/AI 类基金</td><td>补数据源后再做量化</td></tr><tr><td><b>情景 B · 利率回落</b></td><td>待评估</td><td>成长风格估值修复</td><td>科创/AI 类基金</td><td>观察量能确认</td></tr></tbody></table><div class="lbl">L4 历史类比维度</div><ul><li>历次美债10Y 快速上行窗口 A股成长风格相对表现（维度待填数）</li></ul><div class="lbl">映射到我的持仓</div><div class="kv">天孚通信、埃斯顿、科创/AI 类基金</div><div class="lbl">L5 触发条件</div><ul><li>找到可靠美债10Y 数据源并接入</li><li>FOMC/CPI 官方发布</li></ul><div class="lbl">当前结论</div><div class="kv">原缺口已补：美债10Y 4.86%（2026-11-06，美国财政部·一手）。仍未核实的其他数据一律标【待补充】，不得以估算值替代；东财 push2 本轮实测恢复可用，标「需连续观察」，不据此推翻历史结论</div><div class="kv note" style="margin-top:6px">来源：EasyClaw output/盘前指引_20261107.md；分析档案/04_纪律与框架常量.md；美国财政部日度国债收益率曲线 CSV（2026-11-06）；策略与预警/官方数据源清单.md</div></div>
 <div class="item"><div class="ttl">中东、俄乌、关税与红海航运保险成本　<span class="tag ok">已挂起</span></div><div class="kv"><span class="tag info">地缘 / 商品</span><span class="tag">中</span><span class="tag">持续监测</span><span class="tag">E20261107_GEO_COMMODITY</span></div><div class="kv" style="margin-top:6px">盘前指引_20261107.md 第五节列为「风险未解除」：油价高位、黄金高位提示避险未消，航运保险成本抬升影响出口链成本。</div><div class="lbl">L2 领先指标</div><ul><li>油价与航运保险费率</li><li>黄金与避险资产</li><li>关税政策增量</li><li>人民币中间价</li></ul><div class="lbl">影响传导链</div><ul><li>油价/运费上行 → 出口链成本 → 莱克电气</li><li>避险抬升 → 风偏下降 → 全部权益类</li></ul><div class="lbl">L3 情景推演</div><table><thead><tr><th>情景</th><th>概率</th><th>传导</th><th>受影响</th><th>预案（观察动作）</th></tr></thead><tbody><tr><td><b>情景 A · 地缘升级</b></td><td>待评估</td><td>成本与风偏双压</td><td>莱克电气、全部权益类</td><td>记录成本传导方向</td></tr><tr><td><b>情景 B · 缓和</b></td><td>待评估</td><td>成本压力缓解</td><td>莱克电气</td><td>保留监测</td></tr></tbody></table><div class="lbl">L4 历史类比维度</div><ul><li>历史地缘冲击窗口出口链与避险资产表现（维度待填数）</li></ul><div class="lbl">映射到我的持仓</div><div class="kv">莱克电气</div><div class="lbl">L5 触发条件</div><ul><li>布油逼近/突破关键关口</li><li>航运保险费率显著变化</li><li>关税政策增量表述</li></ul><div class="lbl">当前结论</div><div class="kv">风险未解除，持续监测，不单独触发组合级结论</div><div class="kv note" style="margin-top:6px">来源：EasyClaw output/盘前指引_20261107.md 第五节</div></div>
 </section>
 <section class="panel"><h2>🇨🇳 事件雷达 · 中国（1）</h2><div class="p-sub">政策窗口、数据发布、产业定调与资本市场制度。</div>
@@ -188,7 +258,22 @@ details .inner{padding:0 15px 14px;}
 <li><code>daily_invest_brief.py --rebuild</code> 重建三页；</li>
 <li><code>api_push_invest.py</code> 一次性推送 7 个文件。</li>
 </ol>
-<p>铁律不变：只提示不代操作、不编造数据、缺数据标【待补充】、所有在线页附免责声明。</p></div></details>
+<p>铁律不变：只提示不代操作、不编造数据、缺数据标【待补充】、所有在线页附免责声明。</p>
+<h3>七、2026-11-07 补记：数字持续跟踪与两类数字的区分</h3>
+<p>丰哥追加要求「每次有信息给我就更新投资档案；具体数字持续跟踪；网上应该能拿到官方数据」。实测结论：<b>大部分官方数据可以拿到，但必须先把两类数字分开</b>。</p>
+<table><thead><tr><th>类别</th><th>从哪来</th><th>能不能自动跟</th></tr></thead><tbody>
+<tr><td><b>账户数字</b>（总资产 / 市值 / 份额 / 成本 / 累计盈亏）</td><td>只有丰哥发的截图</td><td>❌ 网上没有，也不能从行情反推；每次新截图才更新，旧数字进快照归档</td></tr>
+<tr><td><b>市场 / 官方数字</b>（指数收盘 / 个股行情 / 基金净值 / 美债10Y / CPI·PMI 发布）</td><td>公开官方源与行情平台</td><td>✅ 每天自动抓，标注来源、时点与一手/非一手分级</td></tr>
+</tbody></table>
+<p>新增 <code>official_data_fetch.py</code>，每天 07:00 先跑一次，落 <code>市场数据/YYYY-MM-DD.json</code> + <code>latest.json</code>。本轮实测 14 个源中 10 个可用：</p>
+<ul>
+<li><b>一手官方</b>：美国财政部日度收益率曲线 CSV、美联储 H.15 CSV、国家统计局最新发布、央行、中国货币网、巨潮资讯；</li>
+<li><b>非一手</b>：腾讯行情、天天基金净值、新浪财经、东财 push2；</li>
+<li><b>不可用 / 不猜</b>：FRED（本轮超时）、iFinD（额度耗尽）、通达信（积分耗尽）、北向逐笔（2024-08-19 起不再披露）。</li>
+</ul>
+<p><b>顺带补掉一个老缺口</b>：盘前指引一直写「美债10Y 待补充」，现在由美国财政部官方 CSV 取到 10Y 4.86%、2Y 4.51%（2026-11-06，一手），事件雷达里那条「数据源缺口」已升级为「已补数据源 · 持续监测」，原诊断文字保留为历史留痕。</p>
+<p><b>还查出一处数据质量问题</b>：拿天天基金返回的基金名称与 EasyClaw 历史代码映射做交叉校验，发现 <code>009878</code>（融通产业趋势股票）实际返回「平安低碳经济混合A」、<code>022111</code>（中欧科创AI C）实际返回「华泰保兴恒利中短债D」——两只代码明显不匹配，其净值<b>不予采信</b>、也不擅自改代码，已列入待确认；<code>022455</code> 名称与截图一致，可作招商 A500 的旁证但仍等丰哥确认。详见 <code>基金代码映射.md</code> 第四节与 <code>官方数据源清单.md</code> 第四节。</p>
+<p>这正好补上 L2 领先指标与 L3 情景推演的「数据底座」：以前研判缺数只能标待补充，现在有了一手来源可追溯的数字，每个都带来源与时点。但<b>市场数据只作研判输入，绝不反向改写持仓档案</b>——这条是红线。</p></div></details>
 <details><summary>L1 事件日历 · 未来时点清单（点击展开）</summary><div class="inner"><h2>事件日历 · L1（未来时点清单）</h2>
 <blockquote>目的：把「事后看新闻」改成「事前挂起」。确定会来的时点提前列出，事件没发生就先有观察位。</blockquote>
 <blockquote><b>红线</b>：本文件只列<b>周期性/类型化时点</b>，不填未经官方确认的具体日期；具体发布日以官方日历、交易所公告与行情终端为准。凡未核实日期一律标【待官方日历】。</blockquote>

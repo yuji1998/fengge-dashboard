@@ -151,7 +151,7 @@ details .inner{padding:0 14px 14px;}
 </script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
-  <div class="meta">更新于 <b>2026-11-07 09:36:29</b>　·　持续化 · 逐轮沉淀</div>
+  <div class="meta">更新于 <b>2026-11-07 09:51:08</b>　·　持续化 · 逐轮沉淀</div>
 </header>
 <nav class="nav">
 <a href="index.html?v=20261107c"><span>📈</span>总览</a>
@@ -166,8 +166,8 @@ details .inner{padding:0 14px 14px;}
 <b>三层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）；<b>策略与预警</b>＝前瞻层（每日持股策略／基金策略／事件预警，见顶部菜单）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料、已挂起事件与当轮新信息。</div>
 
 <section class="cards">
-  <div class="card"><div class="label">累计轮次</div><div class="value">3</div><div class="sub">逐轮追加，旧结论不删</div></div>
-  <div class="card"><div class="label">已完成</div><div class="value">3</div><div class="sub">结论已回写</div></div>
+  <div class="card"><div class="label">累计轮次</div><div class="value">4</div><div class="sub">逐轮追加，旧结论不删</div></div>
+  <div class="card"><div class="label">已完成</div><div class="value">4</div><div class="sub">结论已回写</div></div>
   <div class="card"><div class="label">待综合分析</div><div class="value">0</div><div class="sub">新信息登记后状态</div></div>
   <div class="card"><div class="label">当前基准快照</div><div class="value" style="font-size:15px">20261107c</div><div class="sub">三账户 299,359.26 / -109,183.30</div></div>
 </section>
@@ -177,6 +177,12 @@ details .inner{padding:0 14px 14px;}
     <h2><span class="sect-tag">一</span>分析轮次（新→旧）</h2>
     <div class="p-sub">每轮先报范围，再综合，最后落盘</div>
     <div class="round">
+  <h3>第 3 轮 · 2026-11-07 · 机制建设 <span class="tagm">已完成</span></h3>
+  <div class="tagm">范围：建立官方市场数据每日跟踪、两类数字隔离、每次信息一键更新档案；不改动 11-07 三账户持仓数字</div>
+  <div class="fact" style="margin-top:6px">新增 official_data_fetch.py（14 源实测 10 可用）、市场数据快照与官方数据源清单；补掉美债10Y 缺口；三页加官方数据面板；新增 invest_update.py 一键入口与档案更新日志；07:00 自动化加入数据抓取步骤。</div>
+  <ul class="fact" style="margin:6px 0 0 16px"><li>每次收到丰哥信息→更新投资档案已固化为一键入口 invest_update.py（刷市场数据→登记轮次→追加 档案更新日志.jsonl→重建三页与分析页→推 7 文件），日志 append-only 逐次留痕</li><li>两类数字严格隔离：账户数字（总资产/市值/份额/成本/累计盈亏）只有截图有、网上没有也不能反推；市场/官方数字公开可得、每天自动抓，标注来源+时点+一手/非一手，只作研判输入不反向改写持仓</li><li>官方源本轮实测 14 源中 10 可用：一手＝美国财政部 10Y/2Y、美联储 H.15、国家统计局、央行、中国货币网、巨潮；非一手＝腾讯行情、天天基金净值、新浪、东财 push2；不可用＝FRED 超时、iFinD 额度耗尽、通达信积分耗尽、北向逐笔不再披露</li><li>补掉老缺口：盘前指引一直标『美债10Y 待补充』，现由美国财政部官方 CSV 取到 10Y 4.86%、2Y 4.51%（2026-11-06，一手），事件雷达该条升级为『已补数据源·持续监测』并保留原诊断留痕</li><li>交叉校验查出 EasyClaw 历史映射 2 处错误：009878 平台返回平安低碳经济混合A（台账融通产业趋势股票）、022111 平台返回华泰保兴恒利中短债D（台账中欧科创AI C），净值不予采信、不擅改代码、列待确认；022455 名称与招商A500 一致可作旁证但仍待确认；011609 仅为简称差异</li><li>三页各加『📡 官方数据』面板，市场数据就地标来源与时点；07:00 自动化加入第 2 步官方数据抓取，prepare 上下文 15→17 项并加官方数据检查单</li><li>待确认：两只错误代码的正确代码、招商A500 完整代码、第三账户归属、亨通/立讯是否清仓、美国两院归属权威结果</li></ul>
+  <div class="tagm" style="margin-top:6px">调取来源：待综合时填写：数字档案最新快照 / 04_纪律与框架常量 / 03_历史分析材料索引 ｜ 关联快照：—</div>
+</div><div class="round">
   <h3>第 2 轮 · 2026-11-07 · 机制建设 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：仅建设持股分析/基金分析/实时预警三页、策略与预警第三层档案、全站统一菜单与每日研判流水线；不核实选举结果、不查外部行情、不改动 11-07 三账户持仓数字</div>
   <div class="fact" style="margin-top:6px">看板顶部新增统一 6 项菜单并上线 holdings/funds/alerts 三页；建立 F 盘策略与预警权威目录（持股策略台账/基金策略台账/事件雷达/事件日历/历史类比库/前瞻性机制/基金代码映射/素材）；回答丰哥『为什么没有前瞻性』；改造 07:00 自动化为每日投资总流水线；推送 7 文件上线核验通过。</div>
