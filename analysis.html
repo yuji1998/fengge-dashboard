@@ -151,7 +151,7 @@ details .inner{padding:0 14px 14px;}
 </script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
-  <div class="meta">更新于 <b>2026-11-07 10:45:56</b>　·　持续化 · 逐轮沉淀</div>
+  <div class="meta">更新于 <b>2026-11-07 10:53:06</b>　·　持续化 · 逐轮沉淀</div>
 </header>
 <nav class="nav">
 <a href="index.html?v=20261107c"><span>📈</span>总览</a>
@@ -166,8 +166,8 @@ details .inner{padding:0 14px 14px;}
 <b>三层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）；<b>策略与预警</b>＝前瞻层（每日持股策略／基金策略／事件预警，见顶部菜单）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料、已挂起事件与当轮新信息。</div>
 
 <section class="cards">
-  <div class="card"><div class="label">累计轮次</div><div class="value">6</div><div class="sub">逐轮追加，旧结论不删</div></div>
-  <div class="card"><div class="label">已完成</div><div class="value">6</div><div class="sub">结论已回写</div></div>
+  <div class="card"><div class="label">累计轮次</div><div class="value">7</div><div class="sub">逐轮追加，旧结论不删</div></div>
+  <div class="card"><div class="label">已完成</div><div class="value">7</div><div class="sub">结论已回写</div></div>
   <div class="card"><div class="label">待综合分析</div><div class="value">0</div><div class="sub">新信息登记后状态</div></div>
   <div class="card"><div class="label">当前基准快照 · 以最新更新为准</div><div class="value" style="font-size:15px">20261107c</div><div class="sub">2026-11-07 08:19 ｜ 3 账户 ｜ 总资产 299,359.26 / 浮亏 -109,183.30</div></div>
 </section>
@@ -177,6 +177,13 @@ details .inner{padding:0 14px 14px;}
     <h2><span class="sect-tag">一</span>分析轮次（新→旧）</h2>
     <div class="p-sub">每轮先报范围，再综合，最后落盘</div>
     <div class="round">
+  <h3>第 6 轮 · 2026-11-07 · 能力建设 <span class="tagm">已完成</span></h3>
+  <div class="tagm">范围：本轮范围：补齐 9 只共同重仓股与股票账户 3 只的申万行业分类，形成跨账户主题层面硬结论；不含新持仓截图，账户数字一律不变</div>
+  <div class="fact" style="margin-top:6px">用 domain_search 调 NEODATA 公司档案 + westock-data profile 两源交叉一致，把申万一级/二级/三级写进穿透台账与 funds.html 行业面板；发现天孚通信与新易盛、中际旭创申万三级完全相同（01851024.PT）。</div>
+  
+  <ul class="fact" style="margin:6px 0 0 16px"><li>行业分类缺口部分补齐：用 domain_search 调 NEODATA 公司档案 + westock-data profile，两源交叉一致，取得 9 只跨基金共同重仓股与股票账户 3 只 A 股的申万一级/二级/三级行业（含 PT 代码）。来源属非一手（公司档案行业归属，接口无时间维度字段），严格核对生效日期须以申万宏源行业分类文件最新版本为准；其余可见重仓股行业仍标【待补充】，不猜行业。</li><li>共同重仓 9 只申万一级分布：电子 6 只（深南电路、东山精密、中微公司、协创数据、寒武纪、长鑫科技）／通信 2 只（新易盛、中际旭创）／电力设备 1 只（宁德时代）。股票账户：莱克电气 603355 家用电器-小家电-清洁小家电；埃斯顿 002747 机械设备-自动化设备-机器人；天孚通信 300394 通信-通信设备-通信网络设备及器件。</li><li>🔑 跨账户主题层面硬结论：天孚通信（300394，股票账户）与基金共同重仓的新易盛（300502）、中际旭创（300308）申万三级完全相同（通信 → 通信设备 → 通信网络设备及器件，01851024.PT）。此前只能说「前十大没直接撞票」，现在可以说「基金端与股票端落在同一个申万三级行业」——这是分类代码层面的重合，不是按名称或产业链的定性联想。</li><li>但产业链位置不同：天孚通信处光模块上游器件（无源/有源光器件、光引擎），新易盛与中际旭创是光模块整机厂；申万三级相同不等于订单传导与估值驱动相同，不得过度归纳。估值分位、股价位置、盈利预测仍未取到，仍不下拥挤度等级结论。</li><li>落地位置：fund_penetration.py 的 INDUSTRY 常量与 THEME_CROSS、基金穿透台账.json 的 industry_map/stock_account_industry/theme_cross、基金穿透分析.md「四之二」、funds.html「🏷️ 行业穿透与跨账户主题重合」面板、daily_invest_brief.py 的 CHECKLIST、07:10 自动化第 4 步、策略与预警总索引与基金代码映射补充段、永久记忆第 19 条后续补齐。账户数字一个未动，仍为 11-07 08:19 三账户基准 299,359.26 / 累计浮亏 -109,183.30。</li></ul>
+  <div class="tagm" style="margin-top:6px">调取来源：待综合时填写：数字档案最新快照 / 04_纪律与框架常量 / 03_历史分析材料索引 ｜ 关联快照：—</div>
+</div><div class="round">
   <h3>第 5 轮 · 2026-11-07 · 能力建设 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：本轮范围：把基金持仓穿透做成分析动作（数据层/事实层/研判层/展示层/一键更新），并从技能市场自行筛选所需技能；不含新持仓截图，账户数字一律不变</div>
   <div class="fact" style="margin-top:6px">按丰哥「在分析的时候，对基金的持仓情况也能做穿透分析」定调，新建 fund_penetration.py 抓 2026Q3 季报前十大，落基金穿透台账.json/分析.md，funds.html 加穿透面板，daily_invest_brief.py 每轮必带检查项，invest_update.py 顺带刷新；按丰哥授权自行筛装 fund-query 与 stock-fundamental-analysis 两个技能。</div>
