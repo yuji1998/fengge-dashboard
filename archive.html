@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丰哥·投资档案（历史存量）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--green:#3fb950;--red:#f85149;--accent:#58a6ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;padding:20px 22px 40px;min-height:100vh;}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
+h1{font-size:22px;font-weight:600;letter-spacing:1px;}
+h1 .dot{color:var(--accent);}
+.version{font-size:11px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 8px;border-radius:12px;margin-left:8px;vertical-align:middle;}
+.meta{color:var(--muted);font-size:13px;}
+.meta b{color:var(--accent);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:16px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.card .label{color:var(--muted);font-size:12px;margin-bottom:6px;}
+.card .value{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;}
+.card .sub{color:var(--muted);font-size:11px;margin-top:5px;}
+.pos{color:var(--red);}.neg{color:var(--green);}
+main{display:flex;flex-direction:column;gap:14px;}
+.row{display:grid;gap:14px;}
+.row-line{grid-template-columns:2fr 1fr;}
+.row-two{grid-template-columns:1fr 1fr;}
+.row-three{grid-template-columns:repeat(3,1fr);}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;}
+.panel h2{font-size:15px;font-weight:600;margin-bottom:2px;}
+.panel .p-sub{color:var(--muted);font-size:11px;margin-bottom:8px;}
+.chart{width:100%;height:300px;}
+.chart-lg{height:320px;}
+.us-line{display:flex;align-items:center;justify-content:space-between;padding:6px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
+.us-line:last-child{border-bottom:none;}
+.us-name{color:var(--text);font-weight:500;}
+.us-price{color:var(--muted);font-variant-numeric:tabular-nums;}
+.us-pct{font-weight:600;font-variant-numeric:tabular-nums;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{color:var(--muted);font-weight:500;text-align:left;font-size:11px;padding:5px 6px;border-bottom:1px solid var(--border);}
+td{padding:7px 6px;border-bottom:1px solid var(--border);}
+td.num{text-align:right;font-variant-numeric:tabular-nums;}
+td.unit{color:var(--muted);font-size:11px;text-align:right;}
+.stock-tip{font-size:10px;color:var(--muted);}
+.risk-item{display:flex;align-items:center;gap:8px;padding:7px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
+.risk-item:last-child{border-bottom:none;}
+.risk-name{flex:1;color:var(--text);}
+.risk-lvl{font-size:11px;width:38px;flex-shrink:0;}
+.risk-note{color:var(--muted);font-size:11px;max-width:180px;text-align:right;}
+.econ-item{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px dashed var(--border);font-size:12px;}
+.econ-item:last-child{border-bottom:none;}
+.econ-date{color:var(--accent);font-size:11px;width:92px;flex-shrink:0;font-variant-numeric:tabular-nums;}
+.econ-name{flex:1;color:var(--text);}
+.news-item{padding:9px 2px;border-bottom:1px dashed var(--border);}
+.news-title{color:var(--accent);font-size:12px;font-weight:600;margin-bottom:4px;}
+.news-body{color:var(--muted);font-size:12px;line-height:1.5;max-height:150px;overflow:auto;white-space:pre-wrap;}
+.ten-h2{font-size:16px;font-weight:700;color:var(--accent);margin:10px 0 6px;}
+.ten-dim{font-size:14px;font-weight:600;color:var(--text);margin:6px 0 2px;}
+.ten-line{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px;white-space:pre-wrap;}
+.ten-empty{color:var(--muted);font-size:13px;}
+.sect-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px;margin-right:6px;}
+@media (max-width:1080px){.row-line,.row-two,.row-three{grid-template-columns:1fr;}}
+
+.tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+.tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
+.tldr .main{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:9px;}
+.tldr ul{margin:0 0 0 16px;font-size:12px;line-height:1.8;color:var(--muted);}
+.tldr b{color:var(--text);}
+.hbar{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:9px 0 7px;border:1px solid var(--border);}
+.hbar div{display:flex;align-items:center;justify-content:center;font-size:10px;color:#0d1117;font-weight:700;white-space:nowrap;}
+.legend{font-size:11px;color:var(--muted);line-height:1.7;}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:10px;}
+.kv div{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:9px 11px;}
+.kv span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px;}
+.kv b{font-size:15px;font-variant-numeric:tabular-nums;}
+.fact{font-size:12px;line-height:1.85;color:var(--text);}
+.fact p{margin-bottom:7px;}
+.fact b{color:var(--accent);}
+.tag{display:inline-block;font-size:10px;border-radius:4px;padding:1px 6px;margin-right:5px;border:1px solid var(--border);color:var(--muted);}
+.tag.deep{color:var(--green);border-color:#2d5a34;}
+.tag.win{color:var(--red);border-color:#6e2b28;}
+.switch{float:right;font-size:10px;}
+.switch button{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:5px;padding:2px 9px;cursor:pointer;font-size:10px;}
+.switch button.on{color:var(--accent);border-color:var(--accent);}
+#plChart{height:420px;}
+.meta a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);margin-left:6px;}
+details{background:var(--panel);border:1px solid #6e3a1f;border-radius:10px;padding:0;}
+details summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:600;color:#e3b341;list-style:none;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▸ ';color:#e3b341;}
+details[open] summary::before{content:'▾ ';}
+details .inner{padding:0 14px 14px;}
+.note{font-size:11px;line-height:1.8;color:var(--muted);}
+.disc{font-size:11px;line-height:1.8;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;}
+@media (max-width:1080px){.row-two{grid-template-columns:1fr;}}
+
+.arch-note{font-size:12px;line-height:1.85;color:var(--text);}
+.arch-note b{color:var(--accent);}
+.warn{background:#2d1a12;border:1px solid #6e3a1f;border-radius:8px;padding:11px 14px;font-size:12px;line-height:1.8;color:#e3b341;margin-bottom:14px;}
+.meta a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);}
+.scroll{max-height:420px;overflow:auto;}
+#nodeChart{height:300px;}#dailyChart{height:300px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <h1>丰哥<span class="dot">·</span>投资档案<span class="version">历史存量 · 只增不删</span></h1>
+  <div class="meta">生成于 <b>2026-11-07 08:52:18</b>　·　<a href="index.html">← 返回当前看板</a></div>
+</header>
+
+<div class="warn"><b>⚠️ 口径警示</b>：各节点口径不同，禁止直接横向比较或相加：① 2026-05 为「股票端 / 理财通」分账户台账；② 2026-07~10 逐日为监测名单内 3–4 只股票的成本口径累计盈亏（不含基金、不含第三基金账户）；③ 2026-11 看板版本为「账户总资产 / 累计浮亏」，11-07 v=a 为两账户、v=b/c 起为三账户；④ 7-26 复盘报告的 -7.4 万是 199 笔已实现 + 持仓浮亏的历史累计净亏，与浮亏口径不同。</div>
+
+<section class="cards">
+  <div class="card"><div class="label">档案规则</div><div class="value" style="font-size:15px">以新为准</div><div class="sub">看板显示最新；旧快照逐次留存</div></div>
+  <div class="card"><div class="label">关键节点</div><div class="value">8</div><div class="sub">含早期盈利期与 4 个看板历史版本</div></div>
+  <div class="card"><div class="label">逐日记录</div><div class="value">64</div><div class="sub">2026-07-26 ~ 2026-10-23 股票端</div></div>
+  <div class="card"><div class="label">已存快照</div><div class="value">1</div><div class="sub">快照目录追加写入，不覆盖</div></div>
+</section>
+
+<main>
+  <div class="row row-two">
+    <div class="panel"><h2>逐日累计盈亏 · 股票端</h2><div class="p-sub">监测名单 3–4 只，成本口径，不含基金　·　来源：analysis/2026*.json</div><div id="dailyChart" class="chart"></div></div>
+    <div class="panel"><h2>关键节点盈亏对比</h2><div class="p-sub">各节点口径不同，仅看量级与方向，不作横向加减　·　来源见下表</div><div id="nodeChart" class="chart"></div></div>
+  </div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">一</span>关键节点 · 当时赚了多少 / 亏了多少</h2>
+    <div class="p-sub">按时间排序；正数红、负数绿（A 股习惯）</div>
+    <div class="scroll"><table>
+      <tr><th>时点</th><th>范围</th><th class="num">资产/市值</th><th class="num">盈亏</th><th>口径</th><th>来源</th></tr>
+      <tr><td>2026-05-20 23:27</td><td>腾讯理财通（5 项）</td><td class="num">42,011.79</td><td class="num" style="color:#f85149"><b>3,704.44</b></td><td style="font-size:11px;color:#8b949e">台账 total_return 为持仓收益；活期+ 的累计收益混在该合计内，与后期口径不完全一致</td><td style="font-size:10px;color:#8b949e">03_持仓监控/fund_holdings.json</td></tr><tr><td>2026-05-25 22:22</td><td>股票端（7 只）</td><td class="num">227,865.00</td><td class="num" style="color:#f85149"><b>29,400.92</b></td><td style="font-size:11px;color:#8b949e">台账 total_float = 逐只浮动盈亏之和；不含基金</td><td style="font-size:10px;color:#8b949e">99_索引/stock_holdings.json</td></tr><tr><td>2026-07-26</td><td>199 笔交易复盘（2024.01–2026.07）</td><td class="num">—</td><td class="num" style="color:#3fb950"><b>-74,000.00</b></td><td style="font-size:11px;color:#8b949e">已实现盈亏 + 当时持仓浮亏的历史累计净亏；不是单日、也不是当前浮亏</td><td style="font-size:10px;color:#8b949e">03_持仓监控/analysis/丰哥投资复盘报告_20260726.md</td></tr><tr><td>2026-11-01</td><td>看板本地旧版</td><td class="num">184,986.00</td><td class="num" style="color:#3fb950"><b>-86,214.00</b></td><td style="font-size:11px;color:#8b949e">「持仓总市值 / 持仓累计浮亏」卡片口径，账户范围未标注</td><td style="font-size:10px;color:#8b949e">index.html.bak_20261107</td></tr><tr><td>2026-11-07 07:06</td><td>自动流水线盘前指引版</td><td class="num">179,334.00</td><td class="num" style="color:#3fb950"><b>-91,866.00</b></td><td style="font-size:11px;color:#8b949e">同上卡片口径；基于旧持仓名单与模型推算，非截图实数字</td><td style="font-size:10px;color:#8b949e">index_remote_20261107.html</td></tr><tr><td>2026-11-07 08:16</td><td>两账户（券商 + 理财通）</td><td class="num">149,967.40</td><td class="num" style="color:#3fb950"><b>-94,373.10</b></td><td style="font-size:11px;color:#8b949e">截图实数字：总资产 / 持仓市值 / 累计浮亏；成本按反推</td><td style="font-size:10px;color:#8b949e">index.html.bak_20261107a（v=20261107a）</td></tr><tr><td>2026-11-07 08:19</td><td>三账户（+ 基金账户）</td><td class="num">299,359.26</td><td class="num" style="color:#3fb950"><b>-109,183.30</b></td><td style="font-size:11px;color:#8b949e">截图实数字：总资产 / 持仓市值 / 累计浮亏；成本按反推</td><td style="font-size:10px;color:#8b949e">index.html.bak_20261107b（v=20261107b）</td></tr><tr><td>2026-11-07 08:19</td><td>当前基准（三账户标准视图）</td><td class="num">299,359.26</td><td class="num" style="color:#3fb950"><b>-109,183.30</b></td><td style="font-size:11px;color:#8b949e">截图实数字；成本按「持有金额 − 持仓收益」反推；活期+ 累计收益单独口径</td><td style="font-size:10px;color:#8b949e">快照/20261107c_202611070819.json</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">二</span>逐日明细（64 天）</h2>
+    <div class="p-sub">可滚动；完整 CSV 见 F 盘权威档案</div>
+    <div class="scroll"><table>
+      <tr><th>日期</th><th class="num">股票端市值</th><th class="num">反推成本</th><th class="num">累计盈亏</th><th class="num">持仓数</th></tr>
+      <tr><td>20260726</td><td class="num">289,148.00</td><td class="num">318,465.00</td><td class="num" style="color:#3fb950">-51,726.80</td><td class="num">4</td></tr><tr><td>20260727</td><td class="num">292,947.00</td><td class="num">318,465.00</td><td class="num" style="color:#3fb950">-25,518.00</td><td class="num">4</td></tr><tr><td>20260728</td><td class="num">286,768.00</td><td class="num">318,465.00</td><td class="num" style="color:#3fb950">-31,697.00</td><td class="num">4</td></tr><tr><td>20260729</td><td class="num">289,627.00</td><td class="num">318,465.00</td><td class="num" style="color:#3fb950">-28,838.00</td><td class="num">4</td></tr><tr><td>20260730</td><td class="num">282,730.00</td><td class="num">318,465.00</td><td class="num" style="color:#3fb950">-35,735.00</td><td class="num">4</td></tr><tr><td>20260731</td><td class="num">282,157.00</td><td class="num">318,465.00</td><td class="num" style="color:#3fb950">-36,308.00</td><td class="num">4</td></tr><tr><td>20260803</td><td class="num">139,310.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-58,545.00</td><td class="num">3</td></tr><tr><td>20260804</td><td class="num">153,182.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-44,673.00</td><td class="num">3</td></tr><tr><td>20260805</td><td class="num">155,691.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-42,164.00</td><td class="num">3</td></tr><tr><td>20260806</td><td class="num">158,546.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-39,308.60</td><td class="num">3</td></tr><tr><td>20260807</td><td class="num">161,514.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-36,340.60</td><td class="num">3</td></tr><tr><td>20260810</td><td class="num">157,353.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-40,501.60</td><td class="num">3</td></tr><tr><td>20260811</td><td class="num">156,424.20</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-41,430.80</td><td class="num">3</td></tr><tr><td>20260812</td><td class="num">164,811.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-33,044.00</td><td class="num">3</td></tr><tr><td>20260813</td><td class="num">170,064.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-27,790.20</td><td class="num">3</td></tr><tr><td>20260814</td><td class="num">174,641.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-23,213.20</td><td class="num">3</td></tr><tr><td>20260817</td><td class="num">184,184.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-13,670.20</td><td class="num">3</td></tr><tr><td>20260818</td><td class="num">184,777.20</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-13,077.80</td><td class="num">3</td></tr><tr><td>20260819</td><td class="num">174,764.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-23,091.00</td><td class="num">3</td></tr><tr><td>20260820</td><td class="num">174,851.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-23,004.00</td><td class="num">3</td></tr><tr><td>20260821</td><td class="num">175,526.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-22,328.60</td><td class="num">3</td></tr><tr><td>20260824</td><td class="num">165,300.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-32,555.00</td><td class="num">3</td></tr><tr><td>20260825</td><td class="num">169,868.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-27,987.00</td><td class="num">3</td></tr><tr><td>20260826</td><td class="num">171,236.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-26,618.60</td><td class="num">3</td></tr><tr><td>20260827</td><td class="num">176,106.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-21,748.20</td><td class="num">3</td></tr><tr><td>20260828</td><td class="num">173,554.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-24,300.60</td><td class="num">3</td></tr><tr><td>20260831</td><td class="num">174,120.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-23,735.00</td><td class="num">3</td></tr><tr><td>20260901</td><td class="num">169,422.60</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-28,432.40</td><td class="num">3</td></tr><tr><td>20260902</td><td class="num">168,514.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-29,341.00</td><td class="num">3</td></tr><tr><td>20260903</td><td class="num">167,223.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-30,631.20</td><td class="num">3</td></tr><tr><td>20260905</td><td class="num">165,210.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-32,645.00</td><td class="num">3</td></tr><tr><td>20260907</td><td class="num">175,432.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-22,423.00</td><td class="num">3</td></tr><tr><td>20260908</td><td class="num">171,110.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-26,745.00</td><td class="num">3</td></tr><tr><td>20260909</td><td class="num">171,965.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-25,889.60</td><td class="num">3</td></tr><tr><td>20260910</td><td class="num">174,412.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-23,443.00</td><td class="num">3</td></tr><tr><td>20260911</td><td class="num">173,042.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-24,812.20</td><td class="num">3</td></tr><tr><td>20260914</td><td class="num">168,388.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-29,466.20</td><td class="num">3</td></tr><tr><td>20260915</td><td class="num">167,350.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-30,504.60</td><td class="num">3</td></tr><tr><td>20260916</td><td class="num">173,676.20</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-24,178.80</td><td class="num">3</td></tr><tr><td>20260917</td><td class="num">175,637.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-22,218.00</td><td class="num">3</td></tr><tr><td>20260918</td><td class="num">179,952.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-17,902.20</td><td class="num">3</td></tr><tr><td>20260921</td><td class="num">179,032.80</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-18,822.20</td><td class="num">3</td></tr><tr><td>20260922</td><td class="num">179,123.20</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-18,731.80</td><td class="num">3</td></tr><tr><td>20260923</td><td class="num">178,450.00</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-19,405.00</td><td class="num">3</td></tr><tr><td>20260924</td><td class="num">172,473.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-25,381.60</td><td class="num">3</td></tr><tr><td>20260925</td><td class="num">172,473.40</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-25,381.60</td><td class="num">3</td></tr><tr><td>20260929</td><td class="num">165,928.20</td><td class="num">197,855.00</td><td class="num" style="color:#3fb950">-31,926.80</td><td class="num">3</td></tr><tr><td>20260930</td><td class="num">183,166.60</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-32,726.50</td><td class="num">4</td></tr><tr><td>20261002</td><td class="num">183,166.60</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-32,726.50</td><td class="num">4</td></tr><tr><td>20261005</td><td class="num">183,166.60</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-32,726.50</td><td class="num">4</td></tr><tr><td>20261006</td><td class="num">183,166.60</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-32,726.50</td><td class="num">4</td></tr><tr><td>20261007</td><td class="num">183,166.60</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-32,726.50</td><td class="num">4</td></tr><tr><td>20261008</td><td class="num">173,030.60</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-42,862.50</td><td class="num">4</td></tr><tr><td>20261009</td><td class="num">172,152.20</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-43,740.90</td><td class="num">4</td></tr><tr><td>20261012</td><td class="num">167,100.20</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-48,792.90</td><td class="num">4</td></tr><tr><td>20261013</td><td class="num">174,027.00</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-41,866.10</td><td class="num">4</td></tr><tr><td>20261014</td><td class="num">165,545.00</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-50,348.10</td><td class="num">4</td></tr><tr><td>20261015</td><td class="num">162,485.40</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-53,407.70</td><td class="num">4</td></tr><tr><td>20261017</td><td class="num">158,348.00</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-57,545.10</td><td class="num">4</td></tr><tr><td>20261019</td><td class="num">158,065.00</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-57,828.10</td><td class="num">4</td></tr><tr><td>20261020</td><td class="num">160,674.20</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-55,218.90</td><td class="num">4</td></tr><tr><td>20261021</td><td class="num">165,629.40</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-50,263.70</td><td class="num">4</td></tr><tr><td>20261022</td><td class="num">157,186.00</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-58,707.10</td><td class="num">4</td></tr><tr><td>20261023</td><td class="num">162,049.80</td><td class="num">215,893.10</td><td class="num" style="color:#3fb950">-53,843.30</td><td class="num">4</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">三</span>当前基准快照 · 2026-11-07 08:19</h2>
+    <div class="p-sub">总资产 299,359.26｜持仓市值 279,212.85｜累计浮亏 -109,183.30｜类现金 21,015.76</div>
+    <div class="scroll"><table>
+      <tr><th>账户</th><th>标的</th><th class="num">持有金额</th><th class="num">累计盈亏</th><th class="num">反推盈亏率</th></tr>
+      <tr><td>券商</td><td>莱克电气<div style="font-size:10px;color:#8b949e">603355</div></td><td class="num">19,914.00</td><td class="num" style="color:#3fb950">-711.05</td><td class="num">-3.45%</td></tr><tr><td>券商</td><td>埃斯顿<div style="font-size:10px;color:#8b949e">002747</div></td><td class="num">14,230.00</td><td class="num" style="color:#f85149">802.88</td><td class="num">+5.98%</td></tr><tr><td>券商</td><td>天孚通信<div style="font-size:10px;color:#8b949e">300394</div></td><td class="num">58,560.00</td><td class="num" style="color:#3fb950">-75,837.98</td><td class="num">-56.43%</td></tr><tr><td>理财通</td><td>融通产业趋势股票<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">11,803.54</td><td class="num" style="color:#3fb950">-15,748.05</td><td class="num">-57.16%</td></tr><tr><td>理财通</td><td>广发聚荣一年持有期混合A<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">11,487.71</td><td class="num" style="color:#f85149">1,487.71</td><td class="num">+14.88%</td></tr><tr><td>理财通</td><td>中欧上证科创板人工智能指数C<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">6,896.00</td><td class="num" style="color:#3fb950">-3,104.00</td><td class="num">-31.04%</td></tr><tr><td>理财通</td><td>易方达科创50联接C<div style="font-size:10px;color:#8b949e">持仓收益</div></td><td class="num">6,060.39</td><td class="num" style="color:#3fb950">-1,262.61</td><td class="num">-17.24%</td></tr><tr><td>基金账户</td><td>易方达新经济混合<div style="font-size:10px;color:#8b949e">001018</div></td><td class="num">35,951.06</td><td class="num" style="color:#3fb950">-5,048.94</td><td class="num">-12.31%</td></tr><tr><td>基金账户</td><td>工银科技创新混合<div style="font-size:10px;color:#8b949e">007353</div></td><td class="num">45,947.16</td><td class="num" style="color:#3fb950">-7,254.90</td><td class="num">-13.64%</td></tr><tr><td>基金账户</td><td>招商中证A500ETF发起式联接A<div style="font-size:10px;color:#8b949e">0224…（截图截断）</div></td><td class="num">21,342.04</td><td class="num" style="color:#f85149">1,342.04</td><td class="num">+6.71%</td></tr><tr><td>基金账户</td><td>嘉实主题新动力混合<div style="font-size:10px;color:#8b949e">070021</div></td><td class="num">35,570.51</td><td class="num" style="color:#f85149">5,570.51</td><td class="num">+18.57%</td></tr><tr><td>基金账户</td><td>摩根新兴动力A<div style="font-size:10px;color:#8b949e">377240</div></td><td class="num">10,581.09</td><td class="num" style="color:#3fb950">-9,418.91</td><td class="num">-47.09%</td></tr><tr><td>理财通</td><td>活期+<div style="font-size:10px;color:#8b949e">累计收益口径</div></td><td class="num">869.35</td><td class="num" style="color:#f85149">436.59</td><td class="num">—</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="row"><div class="panel">
+    <h2><span class="sect-tag">四</span>档案说明与来源</h2>
+    <div class="arch-note">
+      <b>规则</b>：以新为准：之后任何图片 / 内容更新，看板一律以最新截图为准；旧数据不删除、不覆盖，逐次沉淀为历史快照。<br>
+      <b>权威主副本</b>：<code>F:\金融知识库\金融数据\投资档案\</code>（总索引 / 时间线 JSON / 时间线 MD / 逐日 CSV / 快照目录）。<br>
+      <b>本页为派生展示</b>：<code>derived_from: F:\金融知识库\金融数据\投资档案\投资档案_时间线.json</code>，由 <code>build_invest_archive.py</code> 重建，请勿手改。<br>
+      <b>原始来源</b>：F:\金融知识库\金融数据\99_索引\stock_holdings.json（2026-05-25）；F:\金融知识库\金融数据\03_持仓监控\fund_holdings.json（2026-05-20）；F:\金融知识库\金融数据\03_持仓监控\analysis\2026*.json（64 个交易日）；F:\金融知识库\金融数据\03_持仓监控\analysis\丰哥投资复盘报告_20260726.md 等。<br>
+      <b>更新</b>：新截图 → 改 <code>update_invest_dash.py</code> 数据常量 → 重跑（自动落新快照、重建看板与本页）→ 推送。旧数字不删不改。
+    </div>
+  </div></div>
+
+  <div class="row"><div class="panel" style="border-color:#30363d"><div class="disc"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div></div></div>
+</main>
+<script>
+var A = {"dates": ["07/26", "07/27", "07/28", "07/29", "07/30", "07/31", "08/03", "08/04", "08/05", "08/06", "08/07", "08/10", "08/11", "08/12", "08/13", "08/14", "08/17", "08/18", "08/19", "08/20", "08/21", "08/24", "08/25", "08/26", "08/27", "08/28", "08/31", "09/01", "09/02", "09/03", "09/05", "09/07", "09/08", "09/09", "09/10", "09/11", "09/14", "09/15", "09/16", "09/17", "09/18", "09/21", "09/22", "09/23", "09/24", "09/25", "09/29", "09/30", "10/02", "10/05", "10/06", "10/07", "10/08", "10/09", "10/12", "10/13", "10/14", "10/15", "10/17", "10/19", "10/20", "10/21", "10/22", "10/23"], "pnl": [-51726.8, -25518.0, -31697.0, -28838.0, -35735.0, -36308.0, -58545.0, -44673.0, -42164.0, -39308.6, -36340.6, -40501.6, -41430.8, -33044.0, -27790.2, -23213.2, -13670.2, -13077.8, -23091.0, -23004.0, -22328.6, -32555.0, -27987.0, -26618.6, -21748.2, -24300.6, -23735.0, -28432.4, -29341.0, -30631.2, -32645.0, -22423.0, -26745.0, -25889.6, -23443.0, -24812.2, -29466.2, -30504.6, -24178.8, -22218.0, -17902.2, -18822.2, -18731.8, -19405.0, -25381.6, -25381.6, -31926.8, -32726.5, -32726.5, -32726.5, -32726.5, -32726.5, -42862.5, -43740.9, -48792.9, -41866.1, -50348.1, -53407.7, -57545.1, -57828.1, -55218.9, -50263.7, -58707.1, -53843.3], "node_dates": ["2026-05-20 23:27", "2026-05-25 22:22", "2026-07-26", "2026-11-01", "2026-11-07 07:06", "2026-11-07 08:16", "2026-11-07 08:19", "2026-11-07 08:19"], "node_pnl": [3704.44, 29400.92, -74000.0, -86214.0, -91866.0, -94373.1, -109183.3, -109183.3]};
+var dark={backgroundColor:'rgba(22,27,34,0.95)',borderColor:'#30363d',textStyle:{color:'#e6edf3',fontSize:12}};
+var muted={color:'#8b949e',fontSize:11};
+var split={lineStyle:{color:'#21262d'}};
+var c1=echarts.init(document.getElementById('dailyChart'));
+c1.setOption({
+  backgroundColor:'transparent',
+  tooltip:Object.assign({},dark,{trigger:'axis',formatter:function(ps){var p=ps[0];return p.name+'<br/>累计盈亏：¥'+p.value.toLocaleString('zh-CN');}}),
+  grid:{left:70,right:24,top:26,bottom:34},
+  xAxis:{type:'category',data:A.dates,axisLabel:Object.assign({},muted,{interval:7}),axisTick:{show:false}},
+  yAxis:{type:'value',axisLabel:Object.assign({},muted,{formatter:function(v){return v/1000+'k';}}),splitLine:split},
+  series:[{name:'股票端累计盈亏',type:'line',data:A.pnl,smooth:true,symbol:'none',
+    lineStyle:{color:'#58a6ff',width:2},areaStyle:{color:'rgba(88,166,255,0.12)'},
+    markLine:{silent:true,symbol:'none',data:[{yAxis:0,lineStyle:{color:'#8b949e',type:'dashed'}}]}}]
+});
+var c2=echarts.init(document.getElementById('nodeChart'));
+c2.setOption({
+  backgroundColor:'transparent',
+  tooltip:Object.assign({},dark,{trigger:'axis',axisPointer:{type:'shadow'},formatter:function(ps){var p=ps[0];return p.name+'<br/>盈亏：¥'+p.value.toLocaleString('zh-CN');}}),
+  grid:{left:110,right:80,top:20,bottom:28},
+  xAxis:{type:'value',axisLabel:Object.assign({},muted,{formatter:function(v){return v/1000+'k';}}),splitLine:split,axisLine:{show:false}},
+  yAxis:{type:'category',data:A.node_dates,axisLabel:Object.assign({},muted,{color:'#e6edf3',fontSize:10}),axisTick:{show:false}},
+  series:[{type:'bar',barWidth:13,data:A.node_pnl,
+    itemStyle:{color:function(p){return p.value<0?'#3fb950':'#f85149';},borderRadius:[0,5,5,0]},
+    label:{show:true,position:'right',color:'#e6edf3',fontSize:10,
+      formatter:function(p){return '¥'+p.value.toLocaleString('zh-CN');}}}]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>
