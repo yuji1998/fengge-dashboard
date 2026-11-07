@@ -151,7 +151,7 @@ details .inner{padding:0 14px 14px;}
 </script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
-  <div class="meta">更新于 <b>2026-11-07 10:19:00</b>　·　持续化 · 逐轮沉淀</div>
+  <div class="meta">更新于 <b>2026-11-07 10:45:56</b>　·　持续化 · 逐轮沉淀</div>
 </header>
 <nav class="nav">
 <a href="index.html?v=20261107c"><span>📈</span>总览</a>
@@ -166,8 +166,8 @@ details .inner{padding:0 14px 14px;}
 <b>三层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）；<b>策略与预警</b>＝前瞻层（每日持股策略／基金策略／事件预警，见顶部菜单）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料、已挂起事件与当轮新信息。</div>
 
 <section class="cards">
-  <div class="card"><div class="label">累计轮次</div><div class="value">5</div><div class="sub">逐轮追加，旧结论不删</div></div>
-  <div class="card"><div class="label">已完成</div><div class="value">5</div><div class="sub">结论已回写</div></div>
+  <div class="card"><div class="label">累计轮次</div><div class="value">6</div><div class="sub">逐轮追加，旧结论不删</div></div>
+  <div class="card"><div class="label">已完成</div><div class="value">6</div><div class="sub">结论已回写</div></div>
   <div class="card"><div class="label">待综合分析</div><div class="value">0</div><div class="sub">新信息登记后状态</div></div>
   <div class="card"><div class="label">当前基准快照 · 以最新更新为准</div><div class="value" style="font-size:15px">20261107c</div><div class="sub">2026-11-07 08:19 ｜ 3 账户 ｜ 总资产 299,359.26 / 浮亏 -109,183.30</div></div>
 </section>
@@ -177,6 +177,13 @@ details .inner{padding:0 14px 14px;}
     <h2><span class="sect-tag">一</span>分析轮次（新→旧）</h2>
     <div class="p-sub">每轮先报范围，再综合，最后落盘</div>
     <div class="round">
+  <h3>第 5 轮 · 2026-11-07 · 能力建设 <span class="tagm">已完成</span></h3>
+  <div class="tagm">范围：本轮范围：把基金持仓穿透做成分析动作（数据层/事实层/研判层/展示层/一键更新），并从技能市场自行筛选所需技能；不含新持仓截图，账户数字一律不变</div>
+  <div class="fact" style="margin-top:6px">按丰哥「在分析的时候，对基金的持仓情况也能做穿透分析」定调，新建 fund_penetration.py 抓 2026Q3 季报前十大，落基金穿透台账.json/分析.md，funds.html 加穿透面板，daily_invest_brief.py 每轮必带检查项，invest_update.py 顺带刷新；按丰哥授权自行筛装 fund-query 与 stock-fundamental-analysis 两个技能。</div>
+  
+  <ul class="fact" style="margin:6px 0 0 16px"><li>穿透已做成分析动作而非一次性报表：fund_penetration.py 抓天天基金 F10 季报前十大（A股6位/港股5位都收），按股票代码聚合成跨基金共同重仓与等效穿透金额；基金穿透台账.json / 基金穿透分析.md 落事实层，funds.html 新增「🔬 基金持仓穿透」面板，daily_invest_brief.py 的 context() 与 CHECKLIST 每轮必带，invest_update.py 每次信息更新顺带 --refresh --no-rebuild（失败沿用旧台账不猜数）。</li><li>首轮数据（2026Q3 截止 2026-09-30）：可信 6 只纳入汇总（另 1 只 022455 名称一致但旁证待确认、不纳入；009878/022111 代码与名称完全不符不采信；活期+ 货币类不适用），可见前十大去重 49 只，跨基金共同重仓 9 只、等效穿透金额 26,199.79 元，占可信基金合计持仓市值 145,597.92 的 18.0%；宁德时代被 3 只基金共同重仓居首，其余为深南电路、东山精密、新易盛、中微公司、协创数据、寒武纪、中际旭创、长鑫科技。</li><li>与股票账户 3 只 A 股（莱克电气 603355 / 埃斯顿 002747 / 天孚通信 300394）未见前十大重仓直接重合；但这只说明「可见前十大」没撞上，不能推断底层完全不重合。个股申万行业/产业链归属未取到，本轮不能判断主题层面的间接重合，标【待补充】。</li><li>口径硬约束已写进检查单与页面：季报披露有滞后、报告期持仓≠当前持仓；前十大只是可见下限不是全仓位；等效金额是估算，禁止与账户持有金额/基金净资产占比横向相加；覆盖率<10% 的 3 只（广发聚荣 4.92%、易方达科创50联接C 0.26%、招商A500联接A 1.38%）主要资产是目标 ETF/债券，严重低估权益暴露、不作行业敞口依据；共同重仓是机构共识≠脆弱拥挤，估值分位/股价位置/预期一致性未取到不下拥挤等级结论。两源交叉校验 001018 前十大合计占净值比 F10 与 NEODATA 均 51.68%，逐只排序一致。</li><li>按丰哥「需要的技能可以自己从技能市场筛选」授权，已自行筛装 fund-query（基金查询，含重仓股/资产配置/ETF 跟踪指数）与 stock-fundamental-analysis（基本面诊股）两个技能；🔴 但两者依赖的金融数据源连接器尚未授权，不得据此宣称缺口已补齐，个股行业分类/估值分位/指数成分仍标【待补充】。规则写入永久记忆第 19 条、流程卡第十节、策略与预警总索引三之三、基金代码映射第五节、三层总索引；账户数字一个未动，仍为 11-07 08:19 三账户基准 299,359.26 / 累计浮亏 -109,183.30。</li></ul>
+  <div class="tagm" style="margin-top:6px">调取来源：待综合时填写：数字档案最新快照 / 04_纪律与框架常量 / 03_历史分析材料索引 ｜ 关联快照：—</div>
+</div><div class="round">
   <h3>第 4 轮 · 2026-11-07 · 档案迁移 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：本轮范围：EasyClaw 投资遗产全量物理整合、统一权威目录、切断对 EasyClaw 路径的依赖、07:10 流水线改造；不含新持仓截图，账户数字一律不变</div>
   <div class="fact" style="margin-top:6px">按丰哥「全部整合过来，不用两边弄」定调，把 EasyClaw 投资原文 1100 份 / 6.6 MB 全量复制进 F 盘统一权威目录，MANIFEST 校验 1100/1100 一致；daily_invest_brief.py、历史材料索引、三层总索引、analysis.html 全部改指新目录；07:00 自动化改 07:10 并停用 EasyClaw 采集脚本。原件保留但冻结，F 盘原路径不变。</div>
