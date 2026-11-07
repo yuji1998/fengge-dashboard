@@ -151,7 +151,7 @@ details .inner{padding:0 14px 14px;}
 </script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
-  <div class="meta">更新于 <b>2026-11-07 09:51:08</b>　·　持续化 · 逐轮沉淀</div>
+  <div class="meta">更新于 <b>2026-11-07 10:10:54</b>　·　持续化 · 逐轮沉淀</div>
 </header>
 <nav class="nav">
 <a href="index.html?v=20261107c"><span>📈</span>总览</a>
@@ -166,8 +166,8 @@ details .inner{padding:0 14px 14px;}
 <b>三层档案</b>：<code>投资档案_时间线.json</code>＝事实层（每次「当时赚/亏多少」）；本页＝分析层（观点、纪律、研判、材料）；<b>策略与预警</b>＝前瞻层（每日持股策略／基金策略／事件预警，见顶部菜单）。综合一轮分析要同时看当前基准快照、历史盈亏轨迹、纪律常量、历史材料、已挂起事件与当轮新信息。</div>
 
 <section class="cards">
-  <div class="card"><div class="label">累计轮次</div><div class="value">4</div><div class="sub">逐轮追加，旧结论不删</div></div>
-  <div class="card"><div class="label">已完成</div><div class="value">4</div><div class="sub">结论已回写</div></div>
+  <div class="card"><div class="label">累计轮次</div><div class="value">5</div><div class="sub">逐轮追加，旧结论不删</div></div>
+  <div class="card"><div class="label">已完成</div><div class="value">5</div><div class="sub">结论已回写</div></div>
   <div class="card"><div class="label">待综合分析</div><div class="value">0</div><div class="sub">新信息登记后状态</div></div>
   <div class="card"><div class="label">当前基准快照</div><div class="value" style="font-size:15px">20261107c</div><div class="sub">三账户 299,359.26 / -109,183.30</div></div>
 </section>
@@ -177,46 +177,63 @@ details .inner{padding:0 14px 14px;}
     <h2><span class="sect-tag">一</span>分析轮次（新→旧）</h2>
     <div class="p-sub">每轮先报范围，再综合，最后落盘</div>
     <div class="round">
+  <h3>第 4 轮 · 2026-11-07 · 档案迁移 <span class="tagm">已完成</span></h3>
+  <div class="tagm">范围：本轮范围：EasyClaw 投资遗产全量物理整合、统一权威目录、切断对 EasyClaw 路径的依赖、07:10 流水线改造；不含新持仓截图，账户数字一律不变</div>
+  <div class="fact" style="margin-top:6px">按丰哥「全部整合过来，不用两边弄」定调，把 EasyClaw 投资原文 1100 份 / 6.6 MB 全量复制进 F 盘统一权威目录，MANIFEST 校验 1100/1100 一致；daily_invest_brief.py、历史材料索引、三层总索引、analysis.html 全部改指新目录；07:00 自动化改 07:10 并停用 EasyClaw 采集脚本。原件保留但冻结，F 盘原路径不变。</div>
+  
+  <ul class="fact" style="margin:6px 0 0 16px"><li>全量物理整合完成：1100 份 / 6.6 MB 迁入 F:/金融知识库/金融数据/投资档案/历史遗产_EasyClaw全量_20261107/，来源覆盖活跃主工作区朱陈康 537 份、历史副工作区 Administrator 328 份、旧版 OpenClaw 归档 5 份、F 盘散落投资目录 230 份；MANIFEST.json 记录源路径与 SHA-256，--verify 校验 1100/1100 一致，只复制不删除 EasyClaw 原件。</li><li>统一权威目录是唯一事实源：00_全量清单.md 按 A 多年历史／B 持仓逐日／C 分析研判／D 纪律框架／E 脚本定时任务／F 数据源状态六类分组，与三层档案（事实层、分析层、策略与预警层）拼成完整闭环；历史原文不再散落两边。</li><li>切断依赖完成：daily_invest_brief.py 的 EASY 常量改为 HERITAGE，17 项上下文改指权威目录；03_历史分析材料索引.md 路径前缀 W/F 全改 H；01 遗产盘点、三层总索引、analysis.html 把「没有全部继承·仅建索引」升级为「已全部整合·单边维护」；07:00 自动化更名「每日投资总流水线 · 07:10」，不再调用 EasyClaw 的 build_invest_dashboard.py，行情采集由 official_data_fetch.py 自持并带来源+时点。</li><li>账户数字本轮一律未变：没有新截图，三账户 299,359.26 / 累计浮亏 -109,183.30 仍是 11-07 08:19 基准；两类数字（账户数字 vs 市场官方数字）继续严格隔离，市场数据绝不反向改写持仓档案。</li><li>风险与待拍板：历史脚本检出 32 处明文 GitHub PAT／API Key／访问口令，仅限本地读取、绝不推 GitHub 或外发，建议后续轮换；EasyClaw 侧 07:06 旧流水线本次未停用（只做时间避让与标准视图覆盖），是否彻底单边运行待丰哥确认；亨通光电销账、第一平台基金/贵金属归属、009878 与 022111 两只基金准确代码仍待确认。</li></ul>
+  <div class="tagm" style="margin-top:6px">调取来源：待综合时填写：数字档案最新快照 / 04_纪律与框架常量 / 03_历史分析材料索引 ｜ 关联快照：—</div>
+</div><div class="round">
   <h3>第 3 轮 · 2026-11-07 · 机制建设 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：建立官方市场数据每日跟踪、两类数字隔离、每次信息一键更新档案；不改动 11-07 三账户持仓数字</div>
   <div class="fact" style="margin-top:6px">新增 official_data_fetch.py（14 源实测 10 可用）、市场数据快照与官方数据源清单；补掉美债10Y 缺口；三页加官方数据面板；新增 invest_update.py 一键入口与档案更新日志；07:00 自动化加入数据抓取步骤。</div>
+  
   <ul class="fact" style="margin:6px 0 0 16px"><li>每次收到丰哥信息→更新投资档案已固化为一键入口 invest_update.py（刷市场数据→登记轮次→追加 档案更新日志.jsonl→重建三页与分析页→推 7 文件），日志 append-only 逐次留痕</li><li>两类数字严格隔离：账户数字（总资产/市值/份额/成本/累计盈亏）只有截图有、网上没有也不能反推；市场/官方数字公开可得、每天自动抓，标注来源+时点+一手/非一手，只作研判输入不反向改写持仓</li><li>官方源本轮实测 14 源中 10 可用：一手＝美国财政部 10Y/2Y、美联储 H.15、国家统计局、央行、中国货币网、巨潮；非一手＝腾讯行情、天天基金净值、新浪、东财 push2；不可用＝FRED 超时、iFinD 额度耗尽、通达信积分耗尽、北向逐笔不再披露</li><li>补掉老缺口：盘前指引一直标『美债10Y 待补充』，现由美国财政部官方 CSV 取到 10Y 4.86%、2Y 4.51%（2026-11-06，一手），事件雷达该条升级为『已补数据源·持续监测』并保留原诊断留痕</li><li>交叉校验查出 EasyClaw 历史映射 2 处错误：009878 平台返回平安低碳经济混合A（台账融通产业趋势股票）、022111 平台返回华泰保兴恒利中短债D（台账中欧科创AI C），净值不予采信、不擅改代码、列待确认；022455 名称与招商A500 一致可作旁证但仍待确认；011609 仅为简称差异</li><li>三页各加『📡 官方数据』面板，市场数据就地标来源与时点；07:00 自动化加入第 2 步官方数据抓取，prepare 上下文 15→17 项并加官方数据检查单</li><li>待确认：两只错误代码的正确代码、招商A500 完整代码、第三账户归属、亨通/立讯是否清仓、美国两院归属权威结果</li></ul>
   <div class="tagm" style="margin-top:6px">调取来源：待综合时填写：数字档案最新快照 / 04_纪律与框架常量 / 03_历史分析材料索引 ｜ 关联快照：—</div>
 </div><div class="round">
   <h3>第 2 轮 · 2026-11-07 · 机制建设 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：仅建设持股分析/基金分析/实时预警三页、策略与预警第三层档案、全站统一菜单与每日研判流水线；不核实选举结果、不查外部行情、不改动 11-07 三账户持仓数字</div>
   <div class="fact" style="margin-top:6px">看板顶部新增统一 6 项菜单并上线 holdings/funds/alerts 三页；建立 F 盘策略与预警权威目录（持股策略台账/基金策略台账/事件雷达/事件日历/历史类比库/前瞻性机制/基金代码映射/素材）；回答丰哥『为什么没有前瞻性』；改造 07:00 自动化为每日投资总流水线；推送 7 文件上线核验通过。</div>
+  
   <ul class="fact" style="margin:6px 0 0 16px"><li>六页统一菜单由 build_invest_views.py 的 nav() 单一生成，档案页与分析页补上原本缺失的访问密码锁，一次解锁全站通用</li><li>投资档案升为三层：事实层 archive.html / 分析层 analysis.html / 前瞻层 holdings+funds+alerts，三者互不覆盖</li><li>前瞻性诊断：news.html 11-07 已有两条美国中期选举相关标题、盘前指引有今日关注与历史风险清单，但都停在标题与当日复盘，无传导链/情景/领先指标/持仓映射 → 信息进来了、研判没形成，是机制缺口不是采集缺口，印证 7-26 Hermes『信息齐但决策弱』</li><li>建立 L1 事件日历→L2 领先指标→L3 情景推演→L4 历史类比→L5 触发复盘；历史类比库分市场类比与行为类比，行为类比优先引用已归档事实</li><li>丰哥举例『民主党全面胜选』本轮不确认任何选举结果，仅建 confirmed=false 的待核实推演模板，概率与结论留空，不把举例当既成事实</li><li>基金侧量化：10 只合计 186,508.85，主动成长/科技创新按名称粗归类占 75.0%，狭义科创/AI 指数重复暴露 12,956.39（占理财通 34.9%）；代码来自 EasyClaw fund_daily_monitor.py 历史映射，招商A500 截图截断待确认</li><li>每日入口 daily_invest_brief.py（prepare/apply/rebuild/status，prepare 采 15 项上下文+L1–L5 检查单）；07:00 自动化改造为总流水线，末尾强制 update_invest_dash.py 重建标准视图覆盖旧模板/旧持仓名单</li><li>待确认：招商A500 完整代码、第三账户是否即『第一平台基金/贵金属』、亨通/立讯是否清仓、是否彻底改 EasyClaw 旧脚本禁止其推 index.html、美国两院归属权威结果</li></ul>
   <div class="tagm" style="margin-top:6px">调取来源：待综合时填写：数字档案最新快照 / 04_纪律与框架常量 / 03_历史分析材料索引 ｜ 关联快照：—</div>
 </div><div class="round">
   <h3>第 1 轮 · 2026-11-07 · 持仓更新 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：仅把 11-07 三张截图已确认数字同步到飞书投资表与本地镜像；不整体覆盖历史、不判定第三账户归属</div>
   <div class="fact" style="margin-top:6px">把 11-07 三账户基准以追加章节方式同步到飞书投资表 doc Hq34ddbuLoN9xvxTZMsc017Bnnc，标题日期改为最新 2026-11-07；本地镜像 memory/feishu_docs/投资表.md 同步校正；云端 9-06 及 8-28 数据保留为历史留痕。</div>
+  
   <ul class="fact" style="margin:6px 0 0 16px"><li>本次只同步已确认的 11-07 三张截图数字，未整体覆盖云端 9-06 及更早历史，符合「以新为准 + 存量归档」</li><li>云端投资表原文停在 9-06（股票 183,876 / -32,147，理财通沿用 8-28），本地镜像原停在 8-28，本次一并校正</li><li>第三账户「我的基金」与旧表「第一平台基金/贵金属」板块归属未确认，未强行归类；招商中证A500 代码截图截断，不补不猜</li><li>每日 07:06 自动流水线仍会覆盖标准视图，本轮未改，待单独确认</li></ul>
   <div class="tagm" style="margin-top:6px">调取来源：投资档案/快照/20261107c_202611070819.json（当前基准快照）；投资档案/投资档案_时间线.json（关键节点 15 / 逐日 64）；分析档案/04_纪律与框架常量.md（历史硬止损位、数据源可用性）；分析档案/03_历史分析材料索引.md；分析档案/分析轮次.json 第 0 轮结论；飞书投资表云端全文（同步前 223 块，停在 2026-09-06）；memory/feishu_docs/投资表.md（旧本地镜像，停在 2026-08-28）；2026-11-07 三张持仓截图（已固化为标准视图基准）；在线看板 index.html / archive.html ｜ 关联快照：20261107c_202611070819</div>
 </div><div class="round">
   <h3>第 0 轮 · 2026-11-07 · 遗产盘点 <span class="tagm">已完成</span></h3>
   <div class="tagm">范围：核查 EasyClaw / F 盘投资遗产是否全部继承；建立持续化综合分析机制</div>
   <div class="fact" style="margin-top:6px">没有全部继承：上轮只建了持仓盈亏数字档案，分析/纪律/框架/流程/多年收益/逐日扫描仍在 EasyClaw 原路径。本次以全量索引 + 关键结论方式补齐，并补 7 个数字节点（8-28 股票端／理财通分列两条）。首轮跨层综合结论：账户从 2 个变 3 个、标的从 4 只变 13 个，但集中度与单一成长风格暴露没变，类现金占比反降至 7.0%；8-9 月硬止损位因持仓变更已失效需重设。机制已落地为分析档案六件套 + invest_intake.py + analysis.html。</div>
+  <div class="tagm" style="margin-top:6px;color:var(--warn,#d29922)">⚠️ 历史结论（当时口径）：本轮「只建索引、不搬原文」的策略已被第 4 轮全量整合取代，见本页第二节与第 4 轮；此处按「旧结论不删不覆盖」原则原样保留。</div>
   <ul class="fact" style="margin:6px 0 0 16px"><li>上轮数字档案只覆盖「当时赚/亏多少」，不等于全部投资档案</li><li>本次不搬运 200+ 份原文，建全量索引 + 关键结论继承，避免第二份副本</li><li>数字链补 7 节点后，5 月盈利期 → 8/9 月逐日 → 11 月三账户基本连贯</li><li>账户变多但集中度未改善：天孚仍占股票端 63.2%，科技成长按名称粗归类占总资产 70.6%</li><li>类现金 7.0%（两账户口径 14.0%），缓冲变薄</li><li>历史硬止损（天孚254.50/立讯50/莱克25）对当前组合失效，需重设</li></ul>
   <div class="tagm" style="margin-top:6px">调取来源：投资档案_时间线.json（数字档案）；W/memory/_Topics/投资分析.md；W/memory/cards/（投资分析透传、每周投资报告生成、持仓周报汇总、持仓更新）；W/memory-topic/（投资与金融数据、持仓监测流水线、节假日不推送投资）；W/memory/feishu_docs/投资表.md（2026-08-28 飞书镜像）；W/memory/investment_strategy_log.jsonl（16 条）；W/output/（37 份盘前指引、12 份异动扫描、绿的谐波研报）；W/memory/hermes_curated/insights/（31 份）；F/ ｜ 关联快照：20261107c_202611070819</div>
 </div>
   </div></div>
 
   <div class="row"><div class="panel">
-    <h2><span class="sect-tag">二</span>遗产继承状态 · 2026-11-07 盘点</h2>
-    <div class="p-sub">结论：<b style="color:var(--accent)">没有全部继承</b>——上轮只建了数字档案，本次以全量索引 + 关键结论补齐分析层</div>
+    <h2><span class="sect-tag">二</span>遗产继承状态 · 2026-11-07 全量整合</h2>
+    <div class="p-sub">结论：<b style="color:var(--accent)">已全部整合，单边维护</b>——丰哥定调「不用在两边弄，全部放到你这边」，原文已物理迁入统一权威目录</div>
     <div class="bar">
       <div style="width:20%;background:#3fb950">数字档案 ✅</div>
-      <div style="width:35%;background:#58a6ff">分析层 🆕 本次纳入</div>
-      <div style="width:35%;background:#8b949e">原文 📇 仅建索引</div>
-      <div style="width:10%;background:#d29922">运行时 ⚠️</div>
+      <div style="width:20%;background:#58a6ff">分析层 ✅</div>
+      <div style="width:50%;background:#3fb950">EasyClaw 原文 ✅ 全量迁入</div>
+      <div style="width:10%;background:#d29922">旧运行时 ⚠️ 冻结</div>
     </div>
     <div class="fact">
-      <b>已纳入</b>：9 年（2017–2025）年度收益报告、飞书投资表 8-28 镜像、8-19 风险纪律卡、投资能力检测双报告、7-26 复盘、7-27 投顾报告、9 月异动扫描 12 份、策略日志 16 条、八维框架、周报/报告模板、多模型交叉验证铁律。<br>
-      <b>仅建索引（全文留原路径，随时可调）</b>：raw 71 份 / analysis 66 份 / 行情 daily 69 份 / 盘前指引 37 份 / Hermes 洞察 31 份 / 绿的谐波研报等，不复制第二份副本。<br>
-      <b>依赖运行时未迁移</b>：cron、iFinD MCP（额度耗尽）、东财 push2（已失效）、飞书投资表原文。<br>
-      完整清单见 <code>分析档案\01_EasyClaw遗产盘点_20261107.md</code>。
+      <b>唯一权威副本</b>：<code>F:\金融知识库\金融数据\投资档案\历史遗产_EasyClaw全量_20261107\</code>，
+      <b>1100 份 / 6.6 MB</b>，含两套 EasyClaw 工作区、旧版 OpenClaw 归档（2017–2025 年度收益）、F 盘散落投资目录镜像；
+      凭证 <code>MANIFEST.json</code>（源路径 + SHA-256）、人读入口 <code>00_全量清单.md</code>，校验 1100/1100 一致。<br>
+      <b>已收内容</b>：9 年年度收益报告、飞书投资表镜像、8-19 风险纪律卡、投资能力检测双报告、7-26 复盘、7-27 投顾报告、
+      raw 71 份 / analysis 逐日 / 行情 daily 69 份 / 盘前指引 37+ 份 / 异动扫描 / Hermes 洞察 62 份 / 绿的谐波研报 / 全量股票操作记录 / 脚本与 cron 模板。<br>
+      <b>单边维护 🔴</b>：取用一律走该权威目录，<b>不再引用 <code>C:\Users\*\.easyclaw\...</code></b>；EasyClaw 原件保留但已冻结，不在那边新增投资档案；
+      07:10 流水线不再调用 EasyClaw 的 <code>build_invest_dashboard.py</code>，行情采集由 <code>official_data_fetch.py</code> 自持。<br>
+      <b>旧运行时</b>：cron / iFinD MCP（额度耗尽）/ 东财 push2（已失效）作为历史资产存档、不执行；飞书投资表已于第 1 轮同步到 11-07 基准。<br>
+      <b>凭证告警</b>：历史脚本含 32 处明文 PAT / API Key，仅限本地读取，绝不推 GitHub 或外发（见 <code>_凭证告警.md</code>）。<br>
+      完整规则见 <code>README_权威目录与迁移说明.md</code>；盘点沿革见 <code>分析档案\01_EasyClaw遗产盘点_20261107.md</code>。
     </div>
   </div></div>
 
