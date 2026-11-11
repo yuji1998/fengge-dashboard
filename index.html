@@ -153,7 +153,31 @@ details .inner{padding:0 14px 14px;}
   </ul>
 </section>
 
-<section class="cards">
+<!-- 概括 · 三要素（功能定位 v1 / 2026-11-12）：只做事实呈现，不研判 -->
+<section class="panel" id="overview" style="border-color:#1f6feb;margin-bottom:14px">
+  <h2><span class="sect-tag">概括</span>三要素 · 持仓情况 / 资产分布 / 盈亏情况</h2>
+  <div class="p-sub">本区只做事实概括（不研判、不给建议）　·　数据时点：2026-11-07 08:14–08:19（三张截图）｜周六休市，行情口径对应 11-06 周五收盘　·　账户数字只在丰哥发新截图并更新基准后变动，不随行情跳动</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 8px">
+    <div style="flex:1;min-width:210px;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px 14px">
+      <div style="font-size:13px;color:#58a6ff;font-weight:700">① 持仓情况　<a href="#ov-cards" style="color:#8b949e;font-weight:400;font-size:12px">明细 ↓</a></div>
+      <div style="font-size:20px;font-weight:700;margin:6px 0">¥279,212.85</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.6">持仓市值（含活期+）｜13 个标的 · 3 个账户<br>股票 92,704.00 ＋ 基金及现金类 186,508.85</div>
+    </div>
+    <div style="flex:1;min-width:210px;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px 14px">
+      <div style="font-size:13px;color:#bc8cff;font-weight:700">② 资产分布　<a href="#ov-dist" style="color:#8b949e;font-weight:400;font-size:12px">明细 ↓</a></div>
+      <div style="font-size:20px;font-weight:700;margin:6px 0">权益 93.0% / 现金 7.0%</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.6">总资产 ¥299,359.26｜三账户 37.7% / 12.4% / 49.9%<br>最大单只 天孚通信 占 19.6%（集中度）</div>
+    </div>
+    <div style="flex:1;min-width:210px;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px 14px">
+      <div style="font-size:13px;color:#f0b429;font-weight:700">③ 盈亏情况　<a href="#ov-pnl" style="color:#8b949e;font-weight:400;font-size:12px">明细 ↓</a></div>
+      <div style="font-size:20px;font-weight:700;margin:6px 0;color:#3fb950">¥-109,183.30</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.6">累计浮亏 · 占反推成本 -28.2%<br>4 盈 / 8 亏｜活期+ 累计收益另列，不并入</div>
+    </div>
+  </div>
+  <div class="stock-tip" style="margin-top:6px;line-height:1.7">概括区边界：以上三项均为截图口径的可复核事实；<b>有无优化空间、风险情况与当前研判</b>属决策层，见 <a href="strategy.html" style="color:#58a6ff">🎯 投资策略页</a>（① 资产配置策略 → ② 中期研判 → ③ 今日投资策略）。</div>
+</section>
+
+<section class="cards" id="ov-cards">
   <div class="card"><div class="label">总资产 · 三账户</div><div class="value">¥299,359.26</div><div class="sub">券商 112,850.41 ＋ 理财通 37,116.99 ＋ 基金 149,391.86</div></div>
   <div class="card"><div class="label">持仓市值（含活期+）</div><div class="value">¥279,212.85</div><div class="sub">股票 92,704.00 ＋ 基金及现金类 186,508.85</div></div>
   <div class="card"><div class="label">累计浮亏</div><div class="value neg">¥-109,183.30</div><div class="sub">占反推成本约 -28.2%　·　不含活期+累计收益</div></div>
@@ -162,7 +186,7 @@ details .inner{padding:0 14px 14px;}
 
 <main>
   <div class="row">
-    <div class="panel">
+    <div class="panel" id="ov-dist">
       <h2><span class="sect-tag">一</span>组合总体画像</h2>
       <div class="p-sub">账户结构 / 资产分布 / 集中度　·　来源：三张截图 2026-11-07 08:14–08:19（对应 11-06 收盘）</div>
       <div class="hbar"><div style="width:37.70%;background:#58a6ff">券商人民币 37.7%</div><div style="width:12.40%;background:#bc8cff">腾讯理财通 12.4%</div><div style="width:49.90%;background:#f0b429">基金账户 49.9%</div></div><div class="legend"><i style="background:#58a6ff"></i>券商人民币 112,850.41（37.7%）　<i style="background:#bc8cff"></i>腾讯理财通 37,116.99（12.4%）　<i style="background:#f0b429"></i>基金账户 149,391.86（49.9%）　</div>
@@ -186,7 +210,7 @@ details .inner{padding:0 14px 14px;}
       <div id="wrapChart1"><div id="donutChart" class="chart"></div></div>
       <div id="wrapTable1" style="display:none;max-height:300px;overflow:auto"><table><tr><th>标的</th><th class=num>市值</th><th class=num>占持仓市值</th></tr><tr><td>莱克电气</td><td class="num">19,914.00</td><td class="num">7.1%</td></tr><tr><td>埃斯顿</td><td class="num">14,230.00</td><td class="num">5.1%</td></tr><tr><td>天孚通信</td><td class="num">58,560.00</td><td class="num">21.0%</td></tr><tr><td>融通产业趋势股票</td><td class="num">11,803.54</td><td class="num">4.2%</td></tr><tr><td>广发聚荣一年持有期混合A</td><td class="num">11,487.71</td><td class="num">4.1%</td></tr><tr><td>中欧上证科创板人工智能指数C</td><td class="num">6,896.00</td><td class="num">2.5%</td></tr><tr><td>易方达科创50联接C</td><td class="num">6,060.39</td><td class="num">2.2%</td></tr><tr><td>易方达新经济混合</td><td class="num">35,951.06</td><td class="num">12.9%</td></tr><tr><td>工银科技创新混合</td><td class="num">45,947.16</td><td class="num">16.5%</td></tr><tr><td>招商中证A500ETF发起式联接A</td><td class="num">21,342.04</td><td class="num">7.6%</td></tr><tr><td>嘉实主题新动力混合</td><td class="num">35,570.51</td><td class="num">12.7%</td></tr><tr><td>摩根新兴动力A</td><td class="num">10,581.09</td><td class="num">3.8%</td></tr><tr><td>活期+</td><td class="num">869.35</td><td class="num">0.3%</td></tr></table></div>
     </div>
-    <div class="panel">
+    <div class="panel" id="ov-pnl">
       <h2>累计盈亏贡献<span class="switch" id="sw2"><button data-m="chart" class="on" onclick="sw(2,'chart')">图</button> <button data-m="table" onclick="sw(2,'table')">表</button></span></h2>
       <div class="p-sub">12 只计入浮亏的标的　·　活期+ 为累计收益口径，不并入</div>
       <div id="wrapChart2"><div id="plChart" class="chart"></div></div>
