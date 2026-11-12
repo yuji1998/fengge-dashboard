@@ -210,6 +210,54 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
       '</tr></thead><tbody>'+rows+'</tbody></table></div></div>';
   }
 
+  // === 月度视角（由 weekly 归并，上月 vs 本月）===
+  var monthlyHtml = '';
+  var monthly = D.monthly || [];
+  if(monthly.length){
+    var lastM = monthly[monthly.length-1];
+    var prevM = monthly.length>1 ? monthly[monthly.length-2] : null;
+    var pTag = function(x){ return x && x.partial ? ' <span style="color:#b5811f;font-weight:400">·不满月</span>' : ''; };
+    var mCards = '';
+    mCards += card('本月·新房成交(合计)', num(lastM.new_home)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', '环比 '+fmtPct(lastM.new_mom)+(lastM.partial?' <span style="color:#b5811f">·周数不足</span>':''));
+    mCards += card('本月·二手成交(合计)', num(lastM.second_hand)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', '环比 '+fmtPct(lastM.second_mom)+(lastM.partial?' <span style="color:#b5811f">·周数不足</span>':''));
+    mCards += card('本月·新房日均', num(lastM.new_avg)+'<span style="font-size:13px;color:var(--muted)"> 套/日</span>', '面积合计 '+num(lastM.new_area)+' 万㎡');
+    mCards += card('本月·二手日均', num(lastM.second_avg)+'<span style="font-size:13px;color:var(--muted)"> 套/日</span>', '面积合计 '+num(lastM.second_area)+' 万㎡');
+    if(prevM){
+      mCards += card('上月·新房成交', num(prevM.new_home)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', prevM.label+'（'+prevM.weeks+'周）');
+      mCards += card('上月·二手成交', num(prevM.second_hand)+'<span style="font-size:13px;color:var(--muted)"> 套</span>', prevM.label+'（'+prevM.weeks+'周）');
+    }
+    var monthLabels = monthly.map(function(x){return x.label;});
+    var mTrend =
+      '<div class="sec"><h2>月度成交量汇总（周报归并）</h2>'+
+      '<div class="chart"><div class="ct">新房 vs 二手 · 月度成交合计（套）</div><div id="chartMonth" style="width:100%;height:260px;"></div></div>'+
+      '</div>';
+    var mrows = monthly.map(function(x){
+      return '<tr>'+
+        '<td>'+x.label+pTag(x)+'</td>'+
+        '<td>'+num(x.new_home)+'</td>'+
+        '<td>'+fmtPct(x.new_mom)+'</td>'+
+        '<td>'+num(x.new_avg)+'</td>'+
+        '<td>'+num(x.new_area)+'</td>'+
+        '<td>'+num(x.second_hand)+'</td>'+
+        '<td>'+fmtPct(x.second_mom)+'</td>'+
+        '<td>'+num(x.second_avg)+'</td>'+
+        '<td>'+num(x.second_area)+'</td>'+
+        '<td style="color:var(--muted)">'+x.weeks+'</td>'+
+      '</tr>';
+    }).join('');
+    var mTable =
+      '<div class="sec"><h2>月度成交分析表</h2>'+
+      '<div style="overflow-x:auto;"><table class="tbl"><thead><tr>'+
+        '<th>月份</th><th>新房(套)</th><th>新房环比</th><th>新房日均</th><th>新房面积(万㎡)</th>'+
+        '<th>二手(套)</th><th>二手环比</th><th>二手日均</th><th>二手面积(万㎡)</th><th>周数</th>'+
+      '</tr></thead><tbody>'+mrows+'</tbody></table></div>'+
+      '<div class="note" style="margin-top:10px;">月度数据由每周周报<b>按月归并</b>：成交合计=当月各周之和，日均=各周日均均值，环比=本月合计 vs 上月合计。'+
+      '<b>标「不满月」的月份周数不足，环比非完整月对比，仅作趋势参考</b>；同比需满 12 个月历史后补充。</div></div>';
+    monthlyHtml =
+      '<div class="sec"><h2>📅 月度视角（上月 vs 本月）</h2><div class="grid">'+mCards+'</div></div>'+
+      mTrend + mTable;
+  }
+
   // 单日历史表
   var dailyHtml = '';
   if(dailyHistory.length){
@@ -224,39 +272,58 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
 
   C.innerHTML =
     '<div class="grid">'+cards+'</div>'+
-    trendHtml + tableHtml + dailyHtml +
+    trendHtml + tableHtml + monthlyHtml + dailyHtml +
     '<div class="note"><b>口径说明：</b>周报为「住宅」口径，含苏州市区六区；环比=较上周，同比=较上年同期。'+
+    '月度数据由周报按月归并，环比为上月vs本月。'+
     '单日播报为公众号裸数字，与周报口径不同。去化周期等衍生指标仅供参考。'+
     (D.note? '<br>'+D.note : '')+'</div>';
 
   // 渲染图表
   window.__loadECharts(function(ok){
-    if(!ok || !weekly.length) return;
-    var v = echarts.init(document.getElementById('chartVol'));
-    v.setOption({
-      tooltip:{trigger:'axis'},
-      legend:{data:['新房','二手'],top:0,textStyle:{color:'#1f2d3d'}},
-      grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
-      xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97a8',interval:0,rotate:weeks.length>6?30:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
-      yAxis:{type:'value',axisLabel:{color:'#8a97a8'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
-      series:[
-        {name:'新房',type:'bar',data:weekly.map(function(x){return x.new_home;}),itemStyle:{color:'#2b7de9',borderRadius:[4,4,0,0]},barMaxWidth:26},
-        {name:'二手',type:'bar',data:weekly.map(function(x){return x.second_hand;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:26}
-      ]
-    });
-    var q = echarts.init(document.getElementById('chartQoq'));
-    q.setOption({
-      tooltip:{trigger:'axis',valueFormatter:function(v){return (v>0?'+':'')+v+'%';}},
-      legend:{data:['新房环比','二手环比'],top:0,textStyle:{color:'#1f2d3d'}},
-      grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
-      xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97a8',interval:0,rotate:weeks.length>6?30:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
-      yAxis:{type:'value',axisLabel:{color:'#8a97a8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
-      series:[
-        {name:'新房环比',type:'bar',data:weekly.map(function(x){return x.new_qoq;}),itemStyle:{color:'#e8463a',borderRadius:[4,4,0,0]},barMaxWidth:22},
-        {name:'二手环比',type:'bar',data:weekly.map(function(x){return x.second_qoq;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:22}
-      ]
-    });
-    window.addEventListener('resize',function(){ v.resize(); q.resize(); });
+    if(!ok) return;
+    var v=null, q=null, mcht=null;
+    if(weekly.length){
+      v = echarts.init(document.getElementById('chartVol'));
+      v.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['新房','二手'],top:0,textStyle:{color:'#1f2d3d'}},
+        grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
+        xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97a8',interval:0,rotate:weeks.length>6?30:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
+        yAxis:{type:'value',axisLabel:{color:'#8a97a8'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
+        series:[
+          {name:'新房',type:'bar',data:weekly.map(function(x){return x.new_home;}),itemStyle:{color:'#2b7de9',borderRadius:[4,4,0,0]},barMaxWidth:26},
+          {name:'二手',type:'bar',data:weekly.map(function(x){return x.second_hand;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:26}
+        ]
+      });
+      q = echarts.init(document.getElementById('chartQoq'));
+      q.setOption({
+        tooltip:{trigger:'axis',valueFormatter:function(v){return (v>0?'+':'')+v+'%';}},
+        legend:{data:['新房环比','二手环比'],top:0,textStyle:{color:'#1f2d3d'}},
+        grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
+        xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97a8',interval:0,rotate:weeks.length>6?30:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
+        yAxis:{type:'value',axisLabel:{color:'#8a97a8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
+        series:[
+          {name:'新房环比',type:'bar',data:weekly.map(function(x){return x.new_qoq;}),itemStyle:{color:'#e8463a',borderRadius:[4,4,0,0]},barMaxWidth:22},
+          {name:'二手环比',type:'bar',data:weekly.map(function(x){return x.second_qoq;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:22}
+        ]
+      });
+    }
+    if(monthly.length){
+      var monthLabels = monthly.map(function(x){return x.label;});
+      mcht = echarts.init(document.getElementById('chartMonth'));
+      mcht.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['新房','二手'],top:0,textStyle:{color:'#1f2d3d'}},
+        grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
+        xAxis:{type:'category',data:monthLabels,axisLabel:{color:'#8a97a8',interval:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
+        yAxis:{type:'value',axisLabel:{color:'#8a97a8'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
+        series:[
+          {name:'新房',type:'bar',data:monthly.map(function(x){return x.new_home;}),itemStyle:{color:'#2b7de9',borderRadius:[4,4,0,0]},barMaxWidth:40},
+          {name:'二手',type:'bar',data:monthly.map(function(x){return x.second_hand;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:40}
+        ]
+      });
+    }
+    window.addEventListener('resize',function(){ if(v)v.resize(); if(q)q.resize(); if(mcht)mcht.resize(); });
   });
 })();
 </script>
