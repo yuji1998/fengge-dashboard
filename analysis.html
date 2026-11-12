@@ -60,6 +60,12 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
 .sect-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px;margin-right:6px;}
 @media (max-width:1080px){.row-line,.row-two,.row-three{grid-template-columns:1fr;}}
 
+/* 功能定位 v2（2026-11-12 批次 A / S01）：首页结论段压成一行状态条 */
+.statusbar{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;background:#12233b;border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;line-height:1.7;color:var(--muted);}
+.statusbar b{color:var(--text);font-weight:600;}
+.statusbar a{color:var(--accent);text-decoration:none;}
+.statusbar a:hover{text-decoration:underline;}
+/* 旧结论 / 旧盘前指引仅存 archive.html，样式由该页从本页 <style> 继承，故保留 .tldr* */
 .tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;}
 .tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
 .tldr .main{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:9px;}
@@ -151,16 +157,16 @@ details .inner{padding:0 14px 14px;}
 </script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资分析档案<span class="version">持续化 · 逐轮沉淀</span></h1>
-  <div class="meta">更新于 <b>2026-11-07 11:31:23</b>　·　持续化 · 逐轮沉淀</div>
+  <div class="meta">更新于 <b>2026-11-12 09:56:49</b>　·　持续化 · 逐轮沉淀</div>
 </header>
 <nav class="nav">
-<a href="index.html?v=20261107c"><span>📈</span>总览</a>
-<a href="strategy.html?v=20261107c"><span>🎯</span>投资策略</a>
-<a href="holdings.html?v=20261107c"><span>📊</span>持股分析</a>
-<a href="funds.html?v=20261107c"><span>🧾</span>基金分析</a>
-<a href="alerts.html?v=20261107c"><span>🚨</span>实时预警</a>
-<a href="archive.html?v=20261107c"><span>📚</span>投资档案</a>
-<a class="on" href="analysis.html?v=20261107c"><span>🧭</span>投资分析</a>
+<a href="index.html?v=20261112a"><span>📈</span>总览</a>
+<a href="strategy.html?v=20261112a"><span>🎯</span>投资策略</a>
+<a href="holdings.html?v=20261112a"><span>📊</span>持股分析</a>
+<a href="funds.html?v=20261112a"><span>🧾</span>基金分析</a>
+<a href="alerts.html?v=20261112a"><span>🚨</span>实时预警</a>
+<a href="archive.html?v=20261112a"><span>📚</span>投资档案</a>
+<a class="on" href="analysis.html?v=20261112a"><span>🧭</span>投资分析</a>
 </nav>
 
 <div class="lead"><b>规则</b>：以新为准 + 每轮明确范围的增量综合分析；旧结论进台账不删除<br>

@@ -61,6 +61,12 @@ td.unit{color:var(--muted);font-size:11px;text-align:right;}
 .sect-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px;margin-right:6px;}
 @media (max-width:1080px){.row-line,.row-two,.row-three{grid-template-columns:1fr;}}
 
+/* 功能定位 v2（2026-11-12 批次 A / S01）：首页结论段压成一行状态条 */
+.statusbar{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;background:#12233b;border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;line-height:1.7;color:var(--muted);}
+.statusbar b{color:var(--text);font-weight:600;}
+.statusbar a{color:var(--accent);text-decoration:none;}
+.statusbar a:hover{text-decoration:underline;}
+/* 旧结论 / 旧盘前指引仅存 archive.html，样式由该页从本页 <style> 继承，故保留 .tldr* */
 .tldr{background:linear-gradient(90deg,#12233b,#161b22);border:1px solid #2d4a72;border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;}
 .tldr .lead{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:7px;font-weight:600;}
 .tldr .main{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:9px;}
@@ -109,6 +115,9 @@ details .inner{padding:0 14px 14px;}
 .meta a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);}
 .scroll{max-height:420px;overflow:auto;}
 #nodeChart{height:460px;}#dailyChart{height:300px;}
+#legacy{{margin:14px 0;border:1px solid #6e3a1f;border-radius:8px;background:#161b22;padding:10px 14px;}}
+#legacy summary{{cursor:pointer;color:#e3b341;font-size:13px;font-weight:600;}}
+#legacy .inner{{margin-top:10px;font-size:12px;line-height:1.7;}}
 
 .nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;padding:9px 10px;background:var(--panel);border:1px solid var(--border);border-radius:10px;}
 .nav a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid var(--border);
@@ -147,16 +156,16 @@ details .inner{padding:0 14px 14px;}
 </script>
 <header class="header">
   <h1>丰哥<span class="dot">·</span>投资档案<span class="version">历史存量 · 只增不删</span></h1>
-  <div class="meta">生成于 <b>2026-11-12 07:16:34</b>　·　历史存量 · 只增不删</div>
+  <div class="meta">生成于 <b>2026-11-12 09:56:49</b>　·　历史存量 · 只增不删</div>
 </header>
 <nav class="nav">
-<a href="index.html?v=20261107c"><span>📈</span>总览</a>
-<a href="strategy.html?v=20261107c"><span>🎯</span>投资策略</a>
-<a href="holdings.html?v=20261107c"><span>📊</span>持股分析</a>
-<a href="funds.html?v=20261107c"><span>🧾</span>基金分析</a>
-<a href="alerts.html?v=20261107c"><span>🚨</span>实时预警</a>
-<a class="on" href="archive.html?v=20261107c"><span>📚</span>投资档案</a>
-<a href="analysis.html?v=20261107c"><span>🧭</span>投资分析</a>
+<a href="index.html?v=20261112a"><span>📈</span>总览</a>
+<a href="strategy.html?v=20261112a"><span>🎯</span>投资策略</a>
+<a href="holdings.html?v=20261112a"><span>📊</span>持股分析</a>
+<a href="funds.html?v=20261112a"><span>🧾</span>基金分析</a>
+<a href="alerts.html?v=20261112a"><span>🚨</span>实时预警</a>
+<a class="on" href="archive.html?v=20261112a"><span>📚</span>投资档案</a>
+<a href="analysis.html?v=20261112a"><span>🧭</span>投资分析</a>
 </nav>
 
 <div class="warn"><b>⚠️ 口径警示</b>：各节点口径不同，禁止直接横向比较或相加：① 2026-05 为「股票端 / 理财通」分账户台账；② 2026-07~10 逐日为监测名单内 3–4 只股票的成本口径累计盈亏（不含基金、不含第三基金账户）；③ 2026-11 看板版本为「账户总资产 / 累计浮亏」，11-07 v=a 为两账户、v=b/c 起为三账户；④ 7-26 复盘报告的 -7.4 万是 199 笔已实现 + 持仓浮亏的历史累计净亏，与浮亏口径不同。</div>
@@ -217,6 +226,70 @@ EasyClaw 原件保留但已冻结，F 盘原投资数据目录原路径不变（
       <b>更新</b>：新截图 → 改 <code>update_invest_dash.py</code> 数据常量 → 重跑（自动落新快照、重建看板与本页）→ 推送。旧数字不删不改。
     </div>
   </div></div>
+
+  <details id="legacy"><summary>🗄️ 历史留痕（已失效）· 旧结论 / 07:06 盘前指引 / 模块二·四·五·六 —— 点击展开</summary><div class="inner"><div style="background:#2d1a12;border:1px solid #6e3a1f;border-radius:6px;padding:9px 11px;margin-bottom:10px;font-size:11px;line-height:1.7;color:#e3b341">🗄️ <b>本区为 2026-11-12 从总览页迁入的历史留痕，原文一字未改</b>：旧结论段（TL;DR）、2026-11-07 07:06 自动流水线盘前指引及模块二/四/五/六。其中出现的「本页上方」指当时总览页；<b>全部已失效，不作为当前持仓判断依据</b>，现行口径以 07:10 主流水线与三账户截图基准为准。</div>
+<section class="tldr">
+  <div class="lead">结论先行 · TL;DR</div>
+  <div class="main">三账户合计 <b>299,359.26</b> 元，权益类 <b>93.0%</b>、类现金仅 <b>7.0%</b>；累计浮亏 <b>-109,183.30</b>（占反推成本约 -28.2%）。13 个标的看似分散，但科技／成长主线高度重合，实质是一笔集中的成长风格暴露。本页只做数据整理与结构呈现；<b>投资策略与条件式仓位微调</b>见 <a href="strategy.html" style="color:#58a6ff">🎯 投资策略页</a>（条件 → 动作 → 幅度上限 → 风险 → 失效条件，最终由丰哥确认）。</div>
+  <ul>
+    <li>拖累高度集中：天孚通信 + 融通产业趋势合计 -91,586.03，占总浮亏 <b>83.9%</b>；再加摩根新兴动力A，三只占 <b>92.5%</b>。</li>
+    <li>现金缓冲变薄：类现金 21,015.76，占比由两账户口径 14.0% 降至 <b>7.0%</b>（并入第三账户后分母扩大）。</li>
+    <li>11-06 当日两个基金账户合计 <b>-5,002.63</b>；基金账户 5 只当日全负，但累计有两只仍盈利。</li>
+  </ul>
+</section>
+<div style="background:#2d1a12;border:1px solid #6e3a1f;border-radius:6px;padding:9px 11px;margin-bottom:10px;font-size:11px;line-height:1.7;color:#e3b341">⚠️ <b>以下为 2026-11-07 07:06 自动流水线生成的盘前指引，基于当时行情与旧持仓名单</b>（含亨通光电、立讯精密等，三张截图已不含）。其中当日涨跌、个股操作建议与 08:14–08:19 截图口径不一致，<b>仅作历史留痕，不作为当前持仓判断依据</b>。当前持仓以本页上方三账户明细为准。</div>
+<div class="row row-two">
+    <div class="panel">
+      <h2><span class="sect-tag">模块四</span>今日关注经济数据/事件</h2>
+      <div class="p-sub">宏观日历</div>
+      <div style="max-height:260px;overflow:auto;"><div class="econ-item"><span class="econ-date">08-14 09:30</span><span class="econ-name">70城房价 / 社会消费品零售 / 规上工业</span><span class="econ-region" style="color:#58a6ff">[国内]</span></div><div class="econ-item"><span class="econ-date">08-14 20:30</span><span class="econ-name">美国初请失业金 / 零售销售</span><span class="econ-region" style="color:#58a6ff">[海外]</span></div><div class="econ-item"><span class="econ-date">本周</span><span class="econ-name">美联储官员讲话 / 地缘进展</span><span class="econ-region" style="color:#58a6ff">[海外]</span></div><div class="econ-item"><span class="econ-date">8月</span><span class="econ-name">MLF / LPR 报价窗口</span><span class="econ-region" style="color:#58a6ff">[国内]</span></div></div>
+    </div>
+    <div class="panel">
+      <h2><span class="sect-tag">模块五</span>历史风险清单对照</h2>
+      <div class="p-sub">当前状态评估</div>
+      <div style="max-height:260px;overflow:auto;"><div class="risk-item"><span class="risk-name">霍尔木兹海峡/中东地缘</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注油价与避险传导</span></div><div class="risk-item"><span class="risk-name">美联储利率政策</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注纪要/点阵图</span></div><div class="risk-item"><span class="risk-name">A股踩踏/流动性</span><span class="risk-lvl" style="color:#3fb950">●低</span><span class="risk-note">当前量能正常</span></div><div class="risk-item"><span class="risk-name">中美经贸/关税</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注新增关税措施</span></div><div class="risk-item"><span class="risk-name">台海/技术封锁</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">关注科技股情绪</span></div><div class="risk-item"><span class="risk-name">美股高位回调</span><span class="risk-lvl" style="color:#f0b429">●中</span><span class="risk-note">纳指高位，防情绪逆转</span></div></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">模块二</span>盘前重要消息流</h2>
+      <div class="p-sub">扣子搜索 · 政策/产业/地缘/科技</div>
+      <div style="max-height:320px;overflow:auto;"><div class="news-item"><div class="news-title">🕘 2026-11-07 盘前关注要点（Kimi整理·模型观点）</div><div class="news-body">说明：我无法真正获取2026-11-07当日的即时新闻，以下为基于你给定背景与“截至我可掌握常识”的条件式盘前观察，具体事件、数据与公告请以开盘前交易所/新华社/央行/公司披露和行情终端为准，仅供研究参考、不构成投资建议。
+
+1. 政策面：临近年末政策窗口，关注稳增长、地产风险化解、资本市场中长期资金入市与“十五五”相关产业定调是否有增量表述，若无超预期落地则易高位兑现——【中性偏利好】。  
+2. 产业/情绪：纳指、标普收涨但阿里、拼多多、京东等中概电商大跌，或压制A股平台经济映射、互联网券商与消费权重风险偏好——【利空】。  
+3. 地缘/商品：国际金价高位、油价相对高位，提示避险与供给扰动未消，关注中东、俄乌、关税及红海航运保险成本对油运、航空、化工、有色与输入型通胀的分化影响——【中性偏利空】。  
+4. 科技主线：AI算力、半导体、CPO/先进封装仍受美股映射，但需同时防高位拥挤交易与出口管制升级，国产算力、信创、设备材料或相对占优——【中性，结构利好】。  
+5. 流动性与汇率：重点看隔夜美债收益率、美元指数、离岸CNH与人民币中间价，若美元走强或人民币承压，北向与成长股估值易受扰动，反之利好修复——【中性】。  
+6. A股节奏：上证约3920点处高位震荡，若成交额不能放大且外围中概拖累，警惕高位分歧、题材高低切换，红利/资源/高股息防御与业绩确定性方向相对抗跌——【中性偏利空短线情绪】。
+
+盘前核验清单：隔夜中概与金龙指数、离岸人民币、10年美债/美元指数、布伦特与COMEX金、两融余额与前一交易日成交额、是否有部委/交易所重要公告、权重公司业绩预告与限售解禁。</div></div></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2><span class="sect-tag">模块六</span>10维框架盘前指引 <span style="font-size:11px;color:#8b949e;font-weight:400;">（Kimi 生成）</span></h2>
+      <div class="p-sub">宏观 / 政策 / 资金 / 技术 / 情绪 / 估值 / 产业 / 汇率 / 商品 / 风险 · 综合评级</div>
+      <div id="tenBlock" style="max-height:560px;overflow:auto;"><div class="ten-h2">十维框架研判</div>
+<div class="ten-line">**【宏观】** 中性偏多：外需科技景气和人民币走强托底风险偏好。纳指+1.09%、纳指100+1.35%，A股昨日上证+0.89%、创业板+4.16%显示成长弹性仍在，但全球高利率与高位商品仍压制估值扩张。</div>
+<div class="ten-line">**【政策】** 谨慎偏多：年末政策窗口临近但需验证增量落地。稳增长、地产化险、中长期资金入市与“十五五”产业定调为潜在催化，若无超预期表述，高位板块易兑现。</div>
+<div class="ten-line">**【资金】** 中性偏多：情绪资金回流成长，但需成交放大确认。创业板+4.16%、科创50+3.04%、中证1000+2.38%强于上证50+1.65%，说明风偏偏向中小创，若今日缩量高开则易分歧。</div>
+<div class="ten-line">**【技术】** 偏多但防高开低走：指数短线强势，偏离度偏高。上证3,690.48续强、创业板2,684.10大阳后逼近情绪高点，上方需放量突破，否则小时级别回踩5日/10日均线概率上升。</div>
+<div class="ten-line">**【情绪】** 偏热：赚钱效应强但拥挤度同步抬升。两市核心指数单日大幅上行、隔夜台积电+6.33%与英伟达+2.78%强化AI映射，短线追高性价比下降，题材高低切风险增加。</div>
+<div class="ten-line">**【估值】** 结构性偏贵：科技成长估值扩张快于盈利验证。纳指与A股算力链同步走强，但出口管制、订单兑现与毛利率压力未消，应以“业绩确定性+国产替代”筛选而非无差别拔估值。</div>
+<div class="ten-line">**【产业】** 结构利好AI硬件与国产算力：美股映射仍是主线。英伟达、台积电大涨利好CPO、先进封装、PCB、光模块、半导体设备材料；但天孚通信-5.79%、亨通光电-6.43%显示个股分化，产业β强不等于持仓α修复。</div>
+<div class="ten-line">**【汇率】** 利多人民币资产：CNH明显偏强提升北向与成长估值容忍度。USD/CNH 6.6736处于强势区间，若中间价继续稳，利于核心资产与港股/A股科技修复；反之若美元反弹需降风偏。</div>
+<div class="ten-line">**【商品】** 中性偏通胀：金油铜齐强提示避险与成本压力并存。WTI 90.24、布油97.85、黄金4083.17、伦铜13762.43偏高，利多有色/油气/黄金，利空航空、化工中下游与输入型通胀敏感行业。</div>
+<div class="ten-line">**【风险】** 风险为高位兑现与持仓尾部风险共振：消息不一致以实时终端为准。中概并非普跌（阿里+1.28%、京东+1.64%、拼多多-1.10%），A股重点在量能与高位分歧；丰哥累计浮亏-91,866元、天孚-58.7%已属深度套牢，禁止情绪化补仓摊平。</div>
+<div class="ten-h2">综合评级</div>
+<div class="ten-line">**中性偏多、结构市，操作倾向“不追高、去弱留强、反弹降风险”**：A股开盘或受隔夜科技与人民币升值提振，但昨日创业板+4.16%后更适合冲高兑现而非加仓。</div>
+<div class="ten-line">持仓上：天孚通信深度套牢且当日-5.79%，若反弹无量先降仓位止损尾部风险；立讯精密-22.9%与亨通光电-32.0%仅在放量站回关键均线后考虑小幅做T；莱克电气-3.4%相对抗跌可持有但设硬止损，整体建议把单票与总仓位风险先降下来。</div>
+<div class="ten-h2">风险提示</div>
+<div class="ten-line">一句话：以上为基于给定数据的模型观点，行情与政策以交易所/央行/公司公告及终端实时数据为准，不构成投资建议；高波动与深套持仓下严格控制仓位、止损与流动性风险。</div></div>
+    </div>
+  </div></div></details>
 
   <div class="row"><div class="panel" style="border-color:#30363d"><div class="disc"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。</div></div></div>
 </main>
