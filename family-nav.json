@@ -21,7 +21,7 @@
  },
  {
   "title": "专题学习",
-  "url": "https://yuji1998.github.io/fengge-dashboard/topics/index.html?v=20261113a",
+  "url": "https://yuji1998.github.io/fengge-dashboard/topics/index.html?v=20261112n",
   "emoji": "📚"
  },
  {
@@ -31,8 +31,13 @@
  },
  {
   "title": "苏州楼市",
-  "url": "https://yuji1998.github.io/fengge-dashboard/suzhou_property.html?v=20261113",
+  "url": "https://yuji1998.github.io/fengge-dashboard/suzhou_property.html?v=20261112",
   "emoji": "🏠"
+ },
+ {
+  "title": "苏州楼市·月度",
+  "url": "https://yuji1998.github.io/fengge-dashboard/suzhou_property_monthly.html?v=20261113",
+  "emoji": "📅"
  },
  {
   "title": "行程演示",
