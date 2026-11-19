@@ -105,6 +105,10 @@ try:
         for _fn in _v.get("auto_wx", []):
             if _fn not in _dst:
                 _dst.append(_fn)
+        # extra_products：绝对路径素材（行内声音/工行动态等，不在公众号目录）
+        for _fn in _v.get("extra_products", []):
+            if _fn not in _dst:
+                _dst.append(_fn)
 except Exception as _e:
     print("WARN 专题路由表读取失败（沿用手工清单）:", _e)
 
@@ -361,7 +365,10 @@ def parse_md(path):
 
 def fname_date(name):
     m = re.match(r'(\d{4}-\d{2}-\d{2})', name)
-    return m.group(1) if m else ''
+    if m:
+        return m.group(1)
+    m = re.match(r'(\d{4})(\d{2})(\d{2})', name)  # 行内动态 20261116_ 格式
+    return '%s-%s-%s' % m.groups() if m else ''
 
 
 # ============ 主流程 ============
@@ -418,17 +425,18 @@ for meta in TOPIC_META:
 
     # ---- 1) 微信文章转换 ----
     for fn in WX_MAP.get(tdir, []):
-        src = os.path.join(KB, fn)
+        src = fn if os.path.isabs(fn) else os.path.join(KB, fn)  # 绝对路径素材直接读
         if not os.path.exists(src):
             report.append("SKIP(缺文件) %s" % fn)
             continue
         title, meta_html, body_html = parse_md(src)
-        date = fname_date(fn)
+        base = os.path.basename(fn)
+        date = fname_date(base)
         if meta_html:
             meta_html += '<br><b>日期</b>：%s' % date
         else:
             meta_html = '<b>日期</b>：%s' % date
-        key = re.sub(r'[^0-9A-Za-z\u4e00-\u9fff]+', '_', os.path.splitext(fn)[0])[:60]
+        key = re.sub(r'[^0-9A-Za-z\u4e00-\u9fff]+', '_', os.path.splitext(base)[0])[:60]
         out_name = date + '_' + key + '.html'
         out_dir = os.path.join(tpath, 'wx')
         os.makedirs(out_dir, exist_ok=True)
