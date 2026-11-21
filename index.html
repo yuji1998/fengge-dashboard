@@ -165,18 +165,18 @@ details .inner{padding:0 14px 14px;}
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 8px">
     <div style="flex:1;min-width:210px;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px 14px">
       <div style="font-size:13px;color:#58a6ff;font-weight:700">① 持仓情况　<a href="#ov-cards" style="color:#8b949e;font-weight:400;font-size:12px">明细 ↓</a></div>
-      <div style="font-size:20px;font-weight:700;margin:6px 0">¥279,212.85</div>
-      <div style="font-size:12px;color:#8b949e;line-height:1.6">持仓市值（含活期+）｜13 个标的 · 3 个账户<br>股票 92,704.00 ＋ 基金及现金类 186,508.85</div>
+      <div style="font-size:20px;font-weight:700;margin:6px 0">¥346,049.14</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.6">四类资产总值｜16 个标的 · 4 个账户<br>股票 98,142.81 ＋ 基金 177,571.87 ＋ 黄金 30,792.96 ＋ 美元折算 39,541.50</div>
     </div>
     <div style="flex:1;min-width:210px;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px 14px">
       <div style="font-size:13px;color:#bc8cff;font-weight:700">② 资产分布　<a href="#ov-dist" style="color:#8b949e;font-weight:400;font-size:12px">明细 ↓</a></div>
-      <div style="font-size:20px;font-weight:700;margin:6px 0">权益 93.0% / 现金 7.0%</div>
-      <div style="font-size:12px;color:#8b949e;line-height:1.6">总资产 ¥299,359.26｜三账户 37.7% / 12.4% / 49.9%<br>最大单只 天孚通信 占 19.6%（集中度）</div>
+      <div style="font-size:20px;font-weight:700;margin:6px 0">股票+基金 79.7% / 黄金+美元 20.3%</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.6">总资产 ¥346,049.14｜四账户（含黄金、美元）<br>最大单只 天孚通信 占 14.2%（集中度）</div>
     </div>
     <div style="flex:1;min-width:210px;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:12px 14px">
       <div style="font-size:13px;color:#f0b429;font-weight:700">③ 盈亏情况　<a href="#ov-pnl" style="color:#8b949e;font-weight:400;font-size:12px">明细 ↓</a></div>
-      <div style="font-size:20px;font-weight:700;margin:6px 0;color:#3fb950">¥-109,183.30</div>
-      <div style="font-size:12px;color:#8b949e;line-height:1.6">累计浮亏 · 占反推成本 -28.2%<br>4 盈 / 8 亏｜活期+ 累计收益另列，不并入</div>
+      <div style="font-size:20px;font-weight:700;margin:6px 0;color:#3fb950">¥-143,022.23</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.6">累计盈亏 · 占成本 -29.24%<br>4 盈 / 12 亏｜美元浮盈 488.11 为利息收益（红正绿负）</div>
     </div>
   </div>
   <div class="stock-tip" style="margin-top:6px;line-height:1.7">概括区边界：以上三项均为截图口径的可复核事实；<b>有无优化空间、风险情况与当前研判</b>属决策层，见 <a href="strategy.html" style="color:#58a6ff">🎯 投资策略页</a>（① 资产配置策略 → ② 中期研判 → ③ 今日投资策略）。</div>
@@ -185,27 +185,28 @@ details .inner{padding:0 14px 14px;}
 <!-- 批次 A / S05：四张数字卡与概括三卡完全重复，已移除；#ov-cards 锚点改挂下方三账户明细表 -->
 
 <main>
+  <div class="stock-tip" style="margin-top:10px;line-height:1.7">📌 口径已更新至 <b>2026-11-21 四类快照</b>（股票 / 基金 / 黄金 / 美元，美元按 11-20 中间价 6.7131 折算；总资产 346,049.14 / 累计盈亏 -143,022.23）。下方「深度诊断」「策略」等研析章节仍基于 11-07 三账户基准撰写，方向性结论不变，具体比例以本页图表为准。</div>
   <div class="row">
     <div class="panel" id="ov-dist">
       <h2><span class="sect-tag">一</span>组合总体画像</h2>
-      <div class="p-sub">账户结构 / 资产分布 / 集中度　·　来源：三张截图 2026-11-07 08:14–08:19（对应 11-06 收盘）</div>
-      <div class="hbar"><div style="width:37.70%;background:#58a6ff">券商人民币 37.7%</div><div style="width:12.40%;background:#bc8cff">腾讯理财通 12.4%</div><div style="width:49.90%;background:#f0b429">基金账户 49.9%</div></div><div class="legend"><i style="background:#58a6ff"></i>券商人民币 112,850.41（37.7%）　<i style="background:#bc8cff"></i>腾讯理财通 37,116.99（12.4%）　<i style="background:#f0b429"></i>基金账户 149,391.86（49.9%）　</div>
-      <table><tr><th>账户</th><th class=num>总资产</th><th class=num>占比</th><th class=num>持仓市值</th><th class=num>资金余额</th><th class=num>累计盈亏</th></tr><tr><td>券商人民币账户</td><td class="num">112,850.41</td><td class="num">37.7%</td><td class="num">92,704.00</td><td class="num">20,146.41</td><td class="num" style="color:#3fb950">-75,746.15</td></tr><tr><td>腾讯理财通</td><td class="num">37,116.99</td><td class="num">12.4%</td><td class="num">37,116.99</td><td class="num">0.00</td><td class="num" style="color:#3fb950">-18,626.95</td></tr><tr><td>基金账户（我的基金）</td><td class="num">149,391.86</td><td class="num">49.9%</td><td class="num">149,391.86</td><td class="num">0.00</td><td class="num" style="color:#3fb950">-14,810.20</td></tr></table>
+      <div class="p-sub">账户结构 / 资产分布 / 集中度　·　来源：持仓快照 2026-11-21（券商 / 理财通 / 基金 / 积存金 / 美元定存），美元按 11-20 中间价 6.7131 折算</div>
+      <div class="hbar"><div style="width:28.36%;background:#58a6ff">股票投资 28.4%</div><div style="width:51.31%;background:#bc8cff">基金投资 51.3%</div><div style="width:11.43%;background:#39c5cf">美元投资 11.4%</div><div style="width:8.90%;background:#f0b429">黄金投资 8.9%</div></div><div class="legend"><i style="background:#58a6ff"></i>股票投资 98,142.81（28.4%）　<i style="background:#bc8cff"></i>基金投资 177,571.87（51.3%）　<i style="background:#39c5cf"></i>美元投资 39,541.50（11.4%）　<i style="background:#f0b429"></i>黄金投资 30,792.96（8.9%）　</div>
+      <table><tr><th>资产类别</th><th class=num>市值（元）</th><th class=num>占比</th><th class=num>累计盈亏（元）</th><th>明细</th></tr><tr><td>股票投资</td><td class="num">98,142.81</td><td class="num">28.4%</td><td class="num" style="color:#3fb950">-90,449.18</td><td>3 只个股＋资金余额 10,994.41</td></tr><tr><td>基金投资</td><td class="num">177,571.87</td><td class="num">51.3%</td><td class="num" style="color:#3fb950">-44,374.47</td><td>理财通＋我的基金（含活期+ 869.69）</td></tr><tr><td>黄金投资</td><td class="num">30,792.96</td><td class="num">8.9%</td><td class="num" style="color:#3fb950">-8,686.69</td><td>积存金 40.51 克（-22.01%）</td></tr><tr><td>美元投资</td><td class="num">39,541.50</td><td class="num">11.4%</td><td class="num" style="color:#f85149">+488.11</td><td>定存 5,890.20 美元 @6.7131</td></tr></table>
       <div class="kv">
-        <div><span>标的数</span><b>13 个</b></div>
-        <div><span>账户数</span><b>3 个</b></div>
-        <div><span>权益类</span><b>278,343.50（93.0%）</b></div>
-        <div><span>反推总成本</span><b>387,526.80</b></div>
-        <div><span>最大单只市值</span><b>天孚通信 58,560.00</b></div>
-        <div><span>盈利 / 亏损只数</span><b>4 盈 / 8 亏</b></div>
+        <div><span>标的数</span><b>16 个</b></div>
+        <div><span>账户数</span><b>4 个</b></div>
+        <div><span>股票+基金</span><b>275,714.68（79.7%）</b></div>
+        <div><span>总成本</span><b>489,071.37</b></div>
+        <div><span>最大单只市值</span><b>天孚通信 49,046.40</b></div>
+        <div><span>盈利 / 亏损只数</span><b>4 盈 / 12 亏</b></div>
       </div>
-      <div class="stock-tip" style="margin-top:9px;line-height:1.6">最大单只市值占总资产 19.6%、占股票端 63.2%；持仓市值含活期+ 869.35，扣除后权益类为 278,343.50。</div>
+      <div class="stock-tip" style="margin-top:9px;line-height:1.6">最大单只市值占总资产 14.2%、占股票端 50.0%；持仓含资金余额 10,994.41 与活期+ 869.69；美元按 11-20 中间价 6.7131 折算 39,541.50。</div>
     </div>
   </div>
 
   <div class="row row-two">
     <div class="panel">
-      <h2>持仓市值占比<span class="switch" id="sw1"><button data-m="chart" class="on" onclick="sw(1,'chart')">图</button> <button data-m="table" onclick="sw(1,'table')">表</button></span></h2>
+      <h2>资产配置结构（四类）<span class="switch" id="sw1"><button data-m="chart" class="on" onclick="sw(1,'chart')">图</button> <button data-m="table" onclick="sw(1,'table')">表</button></span></h2>
       <div class="p-sub">13 个标的 + 活期+　·　按截图持有金额</div>
       <div id="wrapChart1"><div id="donutChart" class="chart"></div></div>
       <div id="wrapTable1" style="display:none;max-height:300px;overflow:auto"><table><tr><th>标的</th><th class=num>市值</th><th class=num>占持仓市值</th></tr><tr><td>莱克电气</td><td class="num">19,914.00</td><td class="num">7.1%</td></tr><tr><td>埃斯顿</td><td class="num">14,230.00</td><td class="num">5.1%</td></tr><tr><td>天孚通信</td><td class="num">58,560.00</td><td class="num">21.0%</td></tr><tr><td>融通产业趋势股票</td><td class="num">11,803.54</td><td class="num">4.2%</td></tr><tr><td>广发聚荣一年持有期混合A</td><td class="num">11,487.71</td><td class="num">4.1%</td></tr><tr><td>中欧上证科创板人工智能指数C</td><td class="num">6,896.00</td><td class="num">2.5%</td></tr><tr><td>易方达科创50联接C</td><td class="num">6,060.39</td><td class="num">2.2%</td></tr><tr><td>易方达新经济混合</td><td class="num">35,951.06</td><td class="num">12.9%</td></tr><tr><td>工银科技创新混合</td><td class="num">45,947.16</td><td class="num">16.5%</td></tr><tr><td>招商中证A500ETF发起式联接A</td><td class="num">21,342.04</td><td class="num">7.6%</td></tr><tr><td>嘉实主题新动力混合</td><td class="num">35,570.51</td><td class="num">12.7%</td></tr><tr><td>摩根新兴动力A</td><td class="num">10,581.09</td><td class="num">3.8%</td></tr><tr><td>活期+</td><td class="num">869.35</td><td class="num">0.3%</td></tr></table></div>
@@ -223,7 +224,7 @@ details .inner{padding:0 14px 14px;}
       <h2><span class="sect-tag">二</span>主要风险暴露</h2>
       <div class="p-sub">从组合视角看，不逐只点评</div>
       <div class="fact">
-        <p><b>① 单一标的集中度</b>：天孚通信市值 58,560.00，占股票端 63.2%、占总资产 19.6%；单只累计浮亏 -75,837.98，占总浮亏 69.5%。</p>
+        <p><b>① 单一标的集中度</b>：天孚通信市值 49,046.40，占股票端 50.0%、占总资产 14.2%；单只累计浮亏 -85,345.05，占总浮亏 59.7%；黄金、美元并入后集中度较旧口径（19.6%/69.5%）边际下降。</p>
         <p><b>② 同类题材重复暴露</b>：按基金名称与主题标签粗归类（<b>未穿透底层持仓</b>），科技／成长主线 8 个标的合计 211,369.75，占总资产 <b>70.6%</b>；股票端天孚、理财通科创AI／科创50、基金账户 4 只主动成长基金属同一风险因子，不能按 13 个分散标的看待。</p>
         <p><b>③ 深度亏损标的</b>：反推盈亏率 ≤ -30% 的有 4 只（融通产业趋势 -57.2%、天孚通信 -56.4%、摩根新兴动力A -47.1%、中欧科创AI C -31.0%），合计浮亏 -104,108.94，占总浮亏 95.4%。</p>
         <p><b>④ 口径风险</b>：所有成本与盈亏率均为「持有金额 − 持仓收益」反推，未核实真实买入成本；券商 App 存在「修改成本价」功能，基准可能被调整过。</p>
@@ -240,7 +241,7 @@ details .inner{padding:0 14px 14px;}
         <p>2. <b>风格高度单一</b>：几乎全是成长／科技风格，仅招商中证A500联接A 一只宽基（21,342.04，占总资产 7.1%）与活期+ 具备稳定器属性，缺少低波动防守仓。</p>
         <p>3. <b>票数偏多但跟踪失效</b>：3 个账户、13 个标的、两套口径（持仓收益 / 累计收益），靠截图手工合并，容易出现重复计或漏计；本次已按账户分表列示，避免混算。</p>
         <p>4. <b>台账与截图不一致</b>：投资表(6-01)与 9-22 监测名单中的亨通光电、立讯精密、世嘉科技、迈为股份、汇川技术本次截图未出现，埃斯顿为截图新增；是否清仓或不在该人民币账户，待确认。</p>
-        <p>5. <b>现金缓冲偏薄</b>：类现金 21,015.76，占总资产 7.0%，权益类 93.0%。</p>
+        <p>5. <b>现金缓冲偏薄</b>：类现金（资金余额+活期+）11,864.10，占总资产 3.4%；另有黄金+美元合计 70,334.46（20.3%）非权益资产。</p>
       </div>
     </div>
   </div>
@@ -306,7 +307,7 @@ details .inner{padding:0 14px 14px;}
 </main>
 
 <script>
-var D = {"pl_names": ["莱克电气", "埃斯顿", "天孚通信", "融通产业趋势股票", "广发聚荣一年持有期混合…", "中欧上证科创板人工智能…", "易方达科创50联接C", "易方达新经济混合", "工银科技创新混合", "招商中证A500ETF…", "嘉实主题新动力混合", "摩根新兴动力A"], "pl_values": [-711.05, 802.88, -75837.98, -15748.05, 1487.71, -3104.0, -1262.61, -5048.94, -7254.9, 1342.04, 5570.51, -9418.91], "donut": [{"name": "莱克电气", "value": 19914, "itemStyle": {"color": "#58a6ff"}}, {"name": "埃斯顿", "value": 14230, "itemStyle": {"color": "#f0b429"}}, {"name": "天孚通信", "value": 58560, "itemStyle": {"color": "#3fb950"}}, {"name": "融通产业趋势股票", "value": 11803, "itemStyle": {"color": "#bc8cff"}}, {"name": "广发聚荣一年持有期…", "value": 11487, "itemStyle": {"color": "#e3b341"}}, {"name": "中欧上证科创板人工…", "value": 6896, "itemStyle": {"color": "#39c5cf"}}, {"name": "易方达科创50联接…", "value": 6060, "itemStyle": {"color": "#ff7b72"}}, {"name": "易方达新经济混合", "value": 35951, "itemStyle": {"color": "#a371f7"}}, {"name": "工银科技创新混合", "value": 45947, "itemStyle": {"color": "#8b949e"}}, {"name": "招商中证A500E…", "value": 21342, "itemStyle": {"color": "#d29922"}}, {"name": "嘉实主题新动力混合", "value": 35570, "itemStyle": {"color": "#db61a2"}}, {"name": "摩根新兴动力A", "value": 10581, "itemStyle": {"color": "#56d364"}}, {"name": "活期+", "value": 869, "itemStyle": {"color": "#79c0ff"}}]};
+var D = {"pl_names": ["股票投资", "基金投资", "黄金投资", "美元投资"], "pl_values": [-90449.18, -44374.47, -8686.69, 488.11], "donut": [{"name": "股票投资", "value": 98142.81, "itemStyle": {"color": "#58a6ff"}}, {"name": "基金投资", "value": 177571.87, "itemStyle": {"color": "#bc8cff"}}, {"name": "美元投资", "value": 39541.50, "itemStyle": {"color": "#39c5cf"}}, {"name": "黄金投资", "value": 30792.96, "itemStyle": {"color": "#f0b429"}}]};
 var dark={backgroundColor:'rgba(22,27,34,0.95)',borderColor:'#30363d',textStyle:{color:'#e6edf3',fontSize:12}};
 var muted={color:'#8b949e',fontSize:11};
 var split={lineStyle:{color:'#21262d'}};
