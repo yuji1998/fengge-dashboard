@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<title>家庭导航</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:#0d1117; color:#e6edf3; min-height:100vh;
+    padding:max(20px, env(safe-area-inset-top)) 16px 40px;
+  }
+  h1 { font-size:22px; text-align:center; padding:18px 0 6px; letter-spacing:2px; }
+  .sub { text-align:center; color:#8b949e; font-size:12px; margin-bottom:22px; }
+  .grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    max-width:520px; margin:0 auto;
+  }
+  @media (max-width:360px){ .grid{ grid-template-columns:repeat(2,1fr);} }
+  .card {
+    background:#161b22; border:1px solid #30363d; border-radius:14px;
+    padding:20px 8px 14px; text-align:center; text-decoration:none; color:#e6edf3;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  .card:active { transform:scale(.95); border-color:#58a6ff; }
+  .emoji { font-size:34px; line-height:1; }
+  .title { font-size:13px; color:#c9d1d9; }
+  .foot { text-align:center; color:#484f58; font-size:11px; margin-top:28px; }
+</style>
+</head>
+<body>
+<h1>🏠 家庭导航</h1>
+<div class="sub">丰哥专属 · 一键直达</div>
+<div class="grid" id="grid"></div>
+<div class="foot">家庭导航网页版 · 数据与App同源</div>
+<script>
+const CARDS = [
+  { title:"家庭相册",   url:"http://100.121.209.120:5002", emoji:"📸" },
+  { title:"投资看板",   url:"https://yuji1998.github.io/fengge-dashboard/?v=20261121c", emoji:"📈" },
+  { title:"报价看板",   url:"https://yuji1998.github.io/fengge-dashboard/finprice.html?v=20261113a", emoji:"💰" },
+  { title:"Token 看板", url:"https://yuji1998.github.io/fengge-dashboard/token.html?v=20261108", emoji:"🪙" },
+  { title:"专题学习",   url:"https://yuji1998.github.io/fengge-dashboard/topics/index.html?v=20261120h", emoji:"📚" },
+  { title:"每日要闻",   url:"https://yuji1998.github.io/fengge-dashboard/news.html?v=20260916", emoji:"📰" },
+  { title:"苏州楼市",   url:"https://yuji1998.github.io/fengge-dashboard/suzhou_property.html?v=20261112", emoji:"🏠" },
+  { title:"楼市·月度", url:"https://yuji1998.github.io/fengge-dashboard/suzhou_property_monthly.html?v=20261113", emoji:"📅" },
+  { title:"行程演示",   url:"https://yuji1998.github.io/fengge-pages/suzhou-trip.html", emoji:"🗺️" }
+];
+// 优先拉远程配置（与App同源），失败用内置兜底
+fetch('family-nav.json?ts='+Date.now()).then(r=>r.json()).then(list=>{
+  render(list);
+}).catch(()=>render(CARDS));
+function render(list){
+  document.getElementById('grid').innerHTML = list.map(c=>
+    `<a class="card" href="${c.url}" target="_blank" rel="noopener">
+       <span class="emoji">${c.emoji||'🔗'}</span><span class="title">${c.title}</span>
+     </a>`).join('');
+}
+</script>
+</body>
+</html>
