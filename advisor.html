@@ -92,6 +92,11 @@ code{font-size:11px;color:var(--accent);}
 .empty{color:var(--muted);font-size:13px;padding:10px 0;}
 .meta-line{color:var(--muted);font-size:12px;margin-bottom:12px;}
 .disc{color:var(--muted);font-size:11px;line-height:1.7;margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
+section table{border-collapse:collapse;width:100%;font-size:13px;}
+section th{color:var(--muted);font-weight:500;text-align:left;padding:7px 9px;border-bottom:1px solid var(--border);}
+section th.num,section td.num{text-align:right;font-variant-numeric:tabular-nums;}
+section td{padding:8px 9px;border-bottom:1px solid var(--border);}
+section tr:last-child td{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -122,8 +127,8 @@ code{font-size:11px;color:var(--accent);}
 </script>
 <div class="wrap">
   <div class="header">
-    <h1><span class="dot">🤖</span> 投资顾问 · 持续跟踪 <span class="version">20261121_三账户</span></h1>
-    <div class="meta">数据截至 <b>2026-11-21 08:14</b> ｜ 生成 2026-11-21 09:38:06</div>
+    <h1><span class="dot">🤖</span> 投资顾问 · 持续跟踪 <span class="version">第 001 期</span></h1>
+    <div class="meta">数据截至 <b>2026-11-21 08:14</b> ｜ 生成 2026-11-21 09:43:58</div>
   </div>
   <nav class="nav">
 <a href="index.html?v=20261121a"><span>📈</span>总览</a>
@@ -137,15 +142,28 @@ code{font-size:11px;color:var(--accent);}
 </nav>
   <main>
     <div class="cards">
-      <div class="card"><div class="label">基准版本</div><div class="value" style="font-size:15px;">20261121_三账户</div></div>
-      <div class="card"><div class="label">三账户总资产</div><div class="value">275,714.68</div></div>
-      <div class="card"><div class="label">累计浮亏</div><div class="value" style="color:var(--red);">-134,823.65</div></div>
-      <div class="card"><div class="label">持续跟踪条目</div><div class="value">1</div></div>
+      <div class="card"><div class="label">简报期号</div><div class="value" style="font-size:18px;">第 001 期</div></div>
+      <div class="card"><div class="label">四账户总资产</div><div class="value">346,049.14</div></div>
+      <div class="card"><div class="label">累计盈亏</div><div class="value neg">-143,022.23</div></div>
+      <div class="card"><div class="label">持续跟踪条目</div><div class="value">2</div></div>
     </div>
+    <section>
+      <h2>📊 四类资产结构（第 001 期 · 红=盈利 绿=亏损）</h2>
+      <div class="meta-line">美元按 中国外汇交易中心11-20中间价 折算；黄金按参考市值。权重按总资产 346,049.14 计算。</div>
+      <table><thead><tr><th>资产类别</th><th class="num">市值（元）</th><th class="num">权重</th><th class="num">累计盈亏</th><th class="num">盈亏率</th></tr></thead>
+      <tbody><tr><td><b>股票投资</b><div style='font-size:10px;color:var(--muted)'>3只个股+资金余额</div></td><td class='num'>98,142.81</td><td class='num'>28.4%</td><td class='num neg'>-90,449.18</td><td class='num neg'>—</td></tr><tr><td><b>基金投资</b><div style='font-size:10px;color:var(--muted)'>理财通+我的基金</div></td><td class='num'>177,571.87</td><td class='num'>51.3%</td><td class='num neg'>-44,374.47</td><td class='num neg'>—</td></tr><tr><td><b>黄金投资</b><div style='font-size:10px;color:var(--muted)'>积存金40.51克</div></td><td class='num'>30,792.96</td><td class='num'>8.9%</td><td class='num neg'>-8,686.69</td><td class='num neg'>-22.01%</td></tr><tr><td><b>美元投资</b><div style='font-size:10px;color:var(--muted)'>定存@6.7131</div></td><td class='num'>39,541.50</td><td class='num'>11.4%</td><td class='num pos'>+488.11</td><td class='num pos'>+1.25%</td></tr></tbody></table>
+      <div class="disc">期号按内容流水编号（每产出一份新简报 +1），不再用日期版本号。简报最新：<code>04_周末简报/2026-11-21_投资组合周末简报_第001期.docx</code></div>
+    </section>
     <section>
       <h2>📥 收集整理（本地保存 · 持续跟踪）</h2>
       <div class="meta-line">凡投资类来料，按「事件定性→双向传导→持仓映射→观察信号」结构化归档，本地永久留痕。</div>
       <div class="item">
+          <div class="item-h"><span class="badge" style="color:var(--red);border-color:var(--red);">高</span>
+            <b>投资组合周末简报·第001期（四类全并·11-16~11-20交易周）</b> <span class="tag">周末简报</span></div>
+          <div class="item-m">四账户总资产346,049.14/浮亏-143,022.23(-29.24%)；四类权重 股28.4%/基51.3%/美11.4%/黄8.9%；黄金亏8,686.69、美元盈488.11(按6.7131折算)；本周上证-2.78%/创业板-8.82%；天孚+融通占总浮亏71.4%；BIS算力管制双向传导</div>
+          <div class="item-s">来源：本人持仓截图+公开信息 ｜ 归档： ｜ <code>04_周末简报/2026-11-21_投资组合周末简报_第001期.docx</code></div>
+        </div>
+<div class="item">
           <div class="item-h"><span class="badge" style="color:var(--red);border-color:var(--red);">高</span>
             <b>美国BIS远程算力新规（AI芯片管制升级）</b> <span class="tag">重大政策</span></div>
           <div class="item-m">管制从芯片实物首次延伸到海外数据中心远程算力租用，向中国企业提供超1200万TPP算力的须逐案许可、存量90天补办；中方定性长臂管辖并将反制</div>
@@ -154,7 +172,9 @@ code{font-size:11px;color:var(--accent);}
     </section>
     <section>
       <h2>📤 推送存档（按规划推送给康哥）</h2>
-      <div class='push'>📤 <code>02_推送存档/2026-11-21_093751_info.md</code> <span class='item-s'>2026-11-21</span></div>
+      <div class='push'>📤 <code>02_推送存档/2026-11-21_094358_close.md</code> <span class='item-s'>2026-11-21</span></div>
+<div class='push'>📤 <code>02_推送存档/2026-11-21_094342_close.md</code> <span class='item-s'>2026-11-21</span></div>
+<div class='push'>📤 <code>02_推送存档/2026-11-21_093751_info.md</code> <span class='item-s'>2026-11-21</span></div>
     </section>
     <div class="disc"><b>免责声明</b>：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。<br>补充口径：「投资策略」页给出的是<b>条件式微调预案</b>（条件 → 动作 → 幅度上限 → 风险提示 → 失效条件），仅作研究参考，不含具体买卖价位、不代为下单，最终决策与执行由丰哥确认；其余页面只做数据整理与结构呈现。凡标注【待核实】【待补充】【待调权威源】处均为数据缺口，未以估算值替代。</div>
   </main>
