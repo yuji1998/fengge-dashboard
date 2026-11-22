@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>背单词引擎 · 译林9A</title>
+<script src="vocab_words.js?v=20261122a"></script>
 <style>
 :root{
   --bg:#eef2f7; --card:#ffffff; --card2:#f8fafc; --primary:#4f46e5; --primary2:#06b6d4;
@@ -48,7 +49,6 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .q .dir{font-size:12px;color:var(--primary);font-weight:700;letter-spacing:1px;margin-bottom:10px}
 .q .word{font-size:38px;font-weight:800;letter-spacing:-.5px;word-break:break-word}
 .q .hint{font-size:13px;color:var(--muted);margin-top:8px}
-.q .speak{margin-left:10px;cursor:pointer;color:var(--primary2);font-size:26px;vertical-align:middle}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:18px}
 .opt{border:2px solid var(--line);background:var(--card2);border-radius:12px;padding:15px 12px;font-size:16px;font-weight:600;cursor:pointer;text-align:center;transition:.12s;color:var(--text)}
 .opt:hover{border-color:var(--primary)}
@@ -65,8 +65,6 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .spellin.no{border-color:var(--danger);background:var(--danger-bg);color:var(--danger)}
 .spellrow{display:flex;gap:9px;margin-top:10px}
 .spellrow .btn{flex:1;padding:12px;font-size:14px}
-.listenbtn{display:flex;width:100%;align-items:center;justify-content:center;gap:10px;border:2px dashed var(--primary2);background:var(--card2);color:var(--primary2);border-radius:14px;padding:18px;font-size:17px;font-weight:800;cursor:pointer;margin-top:6px}
-.listenbtn:active{background:rgba(6,182,212,.12)}
 .fb{margin-top:16px;border-radius:12px;padding:13px 15px;font-size:14px;display:none}
 .fb.show{display:block;animation:fade .2s}
 .fb.ok{background:var(--success-bg);color:var(--success)}.fb.no{background:var(--danger-bg);color:var(--danger)}
@@ -203,7 +201,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <h3>⚙️ 学习参数</h3>
     <div class="setrow"><div><div class="t">每日新词数</div><div class="d">每天最多投放多少个新词</div></div><input type="number" id="setNew" min="0" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习方向</div><div class="d">英→中=看单词选中文；中→英=看中文选单词</div></div><div class="seg" id="setDir"><button data-d="both" class="on">双向</button><button data-d="e2c">英→中</button><button data-d="c2e">中→英</button></div></div>
-    <div class="setrow"><div><div class="t">练习形式</div><div class="d">选择=四选一识别；拼写=看中文写单词；听写=听发音写/选；混合=随机交替（推荐，最贴近考场）</div></div><div class="seg" id="setMode"><button data-m="mix">混合</button><button data-m="choice">选择</button><button data-m="spell">拼写</button><button data-m="dictation">听写</button></div></div>
+    <div class="setrow"><div><div class="t">练习形式</div><div class="d">选择=四选一识别；拼写=看中文写单词；混合=随机交替（推荐，最贴近考场）</div></div><div class="seg" id="setMode"><button data-m="mix">混合</button><button data-m="choice">选择</button><button data-m="spell">拼写</button></div></div>
     <div class="setrow"><div><div class="t">每轮题数</div><div class="d">一次连续做多少题后结算</div></div><input type="number" id="setRound" min="5" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习范围</div><div class="d">只背诵选中单元（单词本里勾选，留空=全部）</div></div><span id="setUnitInfo" style="font-size:12px;color:var(--muted)">全部单元</span></div>
   </div>
@@ -218,14 +216,16 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
 </div>
 
-<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>练习形式：🔘 选择 · ✍️ 拼写 · 🎧 听音辨义 · 🎧 听写（混合随机交替，主动回忆对抗遗忘）<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
+<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>练习形式：🔘 选择 · ✍️ 拼写（混合随机交替，主动回忆对抗遗忘）<br>词库：<span id="vocabInfo">—</span>（独立文件动态维护，增减词不影响已有进度）<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
 </div>
 
 <div class="mask" id="mask"><div class="modal"><h3 id="modalTitle">新增用户</h3><input id="modalInput" placeholder="输入名字，如：朱陈昕" maxlength="12"><div class="row"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalOk">确定</button></div></div></div>
 
 <script>
-/* ============ 词库：2024新课标版 译林9A Unit1-8（多来源交叉核对） ============ */
-const WORDS_RAW={
+/* ============ 词库：2024新课标版 译林9A Unit1-8（多来源交叉核对） ============
+   词库已外置为 vocab_words.js，可独立增减而不改页面；
+   本文件内嵌一份同数据作为离线兑底（外置文件加载失败时使用）。 */
+const FALLBACK_WORDS_RAW={
 1:[["organized","有条理的","adj"],["order","条理；顺序","n"],["keep ... in good order","使……保持整齐","phr"],["explain","解释","v"],["come up with","想出，想到（答案）","phr"],["careless","粗心的","adj"],["neither","也不；两者都不","adv"],["neither ... nor ...","既不……也不……","phr"],["nor","也不","conj"],["accountant","会计","n"],["suppose","认为，推断；假设","v"],["social","好交际的；社交的","adj"],["either ... or ...","要么……要么……","phr"],["decide on","决定，选定","phr"],["involve","包含，需要；牵涉","v"],["impress","使留下深刻的好印象","v"],["imagination","想象力","n"],["manager","经理","n"],["quit","离开，离任","v"],["suit","适合","v"],["railway","铁路；铁路系统","n"],["mention","提到，说到，写到","v"],["standard","标准；标准的","n"],["tough","艰难的","adj"],["at all times","总是，随时，永远","phr"],["passenger","乘客","n"],["exactly","完全正确；准确地","adv"],["improvement","改进，改善","n"],["personality","性格，个性","n"],["take on","承担；决定做","phr"],["challenge","挑战","n"],["winner","获胜者","n"],["outgoing","外向的，友好的","adj"],["opposite","对立的人（或事物）","n"],["kindness","善良","n"],["matter","关乎……的事情；问题","n"],["as a matter of fact","事实上","phr"],["let sb down","使失望","phr"],["probably","很可能，大概","adv"],["encouragement","鼓励","n"],["behaviour","表现方式；行为","n"],["pass sth on to sb","传给某人","phr"],["son","儿子","n"],["remain","保持不变，仍然是","v"],["confident","自信的","adj"],["likely","可能；可能的","adv"],["negative","消极的；否定的","adj"],["lecture","演讲，讲座","n"],["connection","关联；联结","n"],["speaker","发言者","n"],["point","指向，指引","v"],["point out","指出","phr"],["pay off","成功，奏效","phr"],["succeed","成功","v"],["position","职位；位置","n"],["president","主席；董事长","n"],["cooperate","合作","v"],["voice","表达","v"],["consider","仔细考虑","v"],["energetic","精力充沛的","adj"],["study","研究；学业","n"]],
 2:[["teenage","青少年的","adj"],["drive","迫使；驾驶","v"],["mad","气愤；疯的","adj"],["be in low spirits","情绪低落","phr"],["lately","最近","adv"],["cut back on sth","减少，削减","phr"],["decision","决定","n"],["patience","耐心","n"],["stick","粘贴；刺入","v"],["stick to sth","坚持","phr"],["stress","精神压力","n"],["under stress","承受压力","phr"],["waste","浪费","v"],["mobile phone","手机","n"],["regret","懊悔，遗憾","v"],["hate","极不喜欢，厌恶","v"],["exam","考试","n"],["focused","注意力集中的","adj"],["argue","争论，争吵","v"],["silly","傻的，愚蠢的","adj"],["normal","正常的，典型的","adj"],["stressed","焦虑不安的","adj"],["bottom","底部；底","n"],["dialogue","对话","n"],["communicate","沟通；交流","v"],["dictionary","词典","n"],["hear of","听说","phr"],["youth","青年；青春","n"],["stage","阶段；舞台","n"],["experience","经历；体验","v"],["rapid","快速的","adj"],["mood","情绪，心情","n"],["ugly","丑陋的","adj"],["probably","很可能","adv"],["risk","冒……的风险","v"],["risk sth/doing sth","冒……的风险","phr"],["go through","经历，遭受","phr"],["unkind","不友善的，刻薄的","adj"],["adult","成年人","n"],["stranger","陌生人","n"],["bully","恐吓；恶霸","v"],["stand up for sb/sth","支持，维护","phr"],["screen","屏幕","n"],["bedtime","就寝时间","n"],["pain","痛苦；疼痛","n"],["put up with sb/sth","忍受，容忍","phr"],["get sb down","使悲伤","phr"],["shame","羞耻；遗憾的事","n"]],
 3:[["seed","种子；起因","n"],["dancer","舞蹈演员","n"],["recognize","赞赏；认识；辨别","v"],["inspire","激励；鼓舞","v"],["contribution","贡献","n"],["overcome","克服，解决","v"],["suffering","痛苦，苦难","n"],["household","家庭，一户","n"],["household name","家喻户晓的人物","phr"],["inspiration","灵感；鼓舞人心的人","n"],["further","促进，增进","v"],["diagnose","诊断","v"],["be diagnosed with","被诊断出患有","phr"],["shortly","不久","adv"],["rob","掠夺","v"],["rob sb of sth","剥夺某人某物","phr"],["muscle","肌肉","n"],["yet","然而，但是","conj"],["surprisingly","使人惊奇地","adv"],["attitude","态度","n"],["despite","尽管，即使","prep"],["universe","宇宙","n"],["continued","连续不断的","adj"],["scientific","科学的","adj"],["audience","读者，观众，听众","n"],["highly","很，非常","adv"],["whenever","无论何时","conj"],["achievement","成就","n"],["stand in sb's way","妨碍某人","phr"],["however","不管多么","adv"],["will","意志，毅力；意愿","n"],["musician","音乐家","n"],["death","死亡","n"],["shoulder","肩膀","n"],["make it (to)","获得成功","phr"],["coach","教练","n"],["pretty","相当","adv"],["knee","膝盖","n"],["challenging","有挑战性的","adj"],["cheers","再见；干杯","exclam"],["fair","公平的，公正的","adj"],["fair play","公平竞赛","phr"],["Irish","爱尔兰的","adj"],["gymnast","体操运动员","n"],["compete","参加比赛；竞争","v"],["injure","伤害，使受伤","v"],["performance","表现；表演","n"],["runner","赛跑运动员","n"],["semi-final","半决赛","n"],["whatever","无论什么","pron"],["diary","日记","n"],["victory","胜利","n"],["live through sth","经历灾难而幸存","phr"],["perform","做，执行；表演","v"],["disappoint","使失望","v"],["self","自我","n"],["progress","进展；前进","v"],["final","最终的","adj"],["take away","减弱；消除","phr"],["condition","状态，状况","n"]],
@@ -235,9 +235,14 @@ const WORDS_RAW={
 7:[["action","动作片；行动","n"],["comedy","喜剧","n"],["cartoon","卡通片；漫画","n"],["documentary","纪录片","n"],["romance","爱情故事；传奇","n"],["all-time","空前的","adj"],["actress","女演员","n"],["loss","去世；丧失，损失","n"],["humanitarian","人道主义者","n"],["ballet","芭蕾舞","n"],["charm","魅力","n"],["insist","坚持说；坚决要求","v"],["based","基于","adj"],["based upon/on","以……为基础","phr"],["major","主要的；专业","adj"],["mark","是……的迹象；标记；分数","v"],["career","事业；职业","n"],["princess","公主","n"],["appearance","演出；出现；外貌","n"],["angel","天使","n"],["radio","无线电广播；收音机","n"],["discover","发现","v"],["cancer","癌症","n"],["pass away","去世","phr"],["peacefully","平静地","adv"],["star","主演；星星","v"],["a number of","一些","phr"],["aid","援助，帮助","n"],["tireless","不知疲倦的","adj"],["rush hour","交通高峰期","n"],["park","停车；公园","v"],["actor","演员","n"],["storyteller","故事作者","n"],["script","剧本；脚本","n"],["mistake","误会；错误","v"],["steal","偷，窃取","v"],["supporting","次要的，配角的","adj"],["kung fu","功夫","n"],["handsome","英俊的","adj"],["inspiring","激励的","adj"],["price","价格；代价","n"],["scriptwriter","编剧","n"],["director","导演","n"],["film-maker","制片人","n"],["film","拍摄；电影","v"],["shoot","拍摄；射击","v"],["post-production","后期制作","n"],["editor","剪辑员；编辑","n"],["bring sb/sth to life","使更生动","phr"],["come to life","活了过来","phr"],["world-class","世界级的","adj"],["wrestler","摔跤运动员","n"],["touching","感人的","adj"],["fighter","斗士","n"],["elder","年纪较长的","adj"]],
 8:[["classic","最优秀的；典雅的","adj"],["short story","短篇小说","n"],["take one's time","从容不迫，慢慢来","phr"],["against","倚，紧靠；以……为背景","prep"],["branch","树枝","n"],["bedside","床边","n"],["anger","愤怒，怒气","n"],["make sense","有意义，讲得通","phr"],["have (...) to do with","与……有关","phr"],["apartment","公寓套房","n"],["masterpiece","杰作","n"],["fool","傻瓜","n"],["remain","剩余；逗留","v"],["widely","普遍地，广泛地","adv"],["run out of","用完，耗尽","phr"],["fair","展销会；集市","n"],["act","（戏剧等）一幕；行为；表演","n"],["seat","（使）就座","v"],["throne","宝座；王位","n"],["unable","未能，无法","adj"],["enemy","敌人","n"],["writing","著作，作品","n"],["image","意象；图像","n"],["lasting","持久的","adj"],["show up","出现，露面","phr"],["mirror","镜子","n"],["knock","敲门声；敲击","n"],["hurry up","赶快","phr"],["doorbell","门铃","n"],["ring","发出铃声","v"]]
 };
-// 展平成全局数组，id 唯一
+// 展平成全局数组：优先用外置词库（可动态增减），失败时用内嵌兑底
+const WORDS_RAW=(window.VOCAB_WORDS&&Object.keys(window.VOCAB_WORDS).length)?window.VOCAB_WORDS:FALLBACK_WORDS_RAW;
+const VOCAB_META=window.VOCAB_META||{v:'built-in',updated:'',note:''};
 const WORDS=[];
-Object.keys(WORDS_RAW).forEach(u=>{WORDS_RAW[u].forEach(([en,zh,pos])=>WORDS.push({id:WORDS.length,en,zh,pos,unit:+u}));});
+Object.keys(WORDS_RAW).forEach(u=>{WORDS_RAW[u].forEach(([en,zh,pos])=>WORDS.push({key:u+'|'+en.toLowerCase(),en,zh,pos,unit:+u}));});
+// 旧版进度按“位置序号”存，序号会随词库增减错位——此处建立旧id→稳定key的映射，只用于一次性迁移
+const LEGACY_KEYS=[];
+Object.keys(FALLBACK_WORDS_RAW).forEach(u=>{FALLBACK_WORDS_RAW[u].forEach(([en])=>LEGACY_KEYS.push(u+'|'+en.toLowerCase()));});
 
 /* ============ 记忆算法（艾宾浩斯 + SM-2 简化，纯函数、可测） ============ */
 const INTERVALS=[10,60,1440,2880,5760,10080,21600,43200,86400]; // 分钟：10分/1h/1d/2d/4d/7d/15d/30d/60d
@@ -267,8 +272,8 @@ function schedule(state,correct,now){
   s.last=now;
   return s;
 }
-function wstate(user,id,dir){const u=DB.users[user];return u.states[id]&&u.states[id][dir]?u.states[id][dir]:blankState();}
-function setWstate(user,id,dir,st){const u=DB.users[user];if(!u.states[id])u.states[id]={};u.states[id][dir]=st;}
+function wstate(user,key,dir){const u=DB.users[user];return u.states[key]&&u.states[key][dir]?u.states[key][dir]:blankState();}
+function setWstate(user,key,dir,st){const u=DB.users[user];if(!u.states[key])u.states[key]={};u.states[key][dir]=st;}
 // 构建4选项：正确 + 3干扰（优先同单元，不足补全库）
 function buildOptions(word,dir,pool){
   const field=dir==='e2c'?'zh':'en';
@@ -294,7 +299,7 @@ function scanPool(user,now){
   WORDS.forEach(w=>{
     if(scope&&!scope.includes(w.unit))return;
     dirs.forEach(dir=>{
-      const st=wstate(user,w.id,dir);
+      const st=wstate(user,w.key,dir);
       const learned=st.last>0;
       if(!learned){fresh.push({w,dir});return;}
       const item={w,dir,st};
@@ -314,7 +319,7 @@ function scanPool(user,now){
 const KEY='vocab9a_v1', KEY_MIRROR='vocab9a_v1_mirror';
 function validDB(d){return d&&d.users&&typeof d.users==='object'&&Object.keys(d.users).length>0;}
 function defaultUser(name){return {name,created:Date.now(),states:{},settings:{newPerDay:20,dir:'both',round:20,scope:[],mode:'mix'},daily:{},streak:0,lastDay:''};}
-let DB=loadDB();
+let DB=migrateDB(loadDB());
 function loadDB(){
   let recovered=false;
   try{const d=JSON.parse(localStorage.getItem(KEY));if(validDB(d))return d;}catch(e){}
@@ -333,6 +338,23 @@ function saveDB(){
   try{localStorage.setItem(KEY,s);}catch(e){alert('保存失败：本地存储空间不足');}
   try{localStorage.setItem(KEY_MIRROR,s);}catch(e){} // 镜像冗余，防误清
   if(typeof scheduleBackup==='function')scheduleBackup(); // 自动写入已绑定的本地文件
+}
+/* ---- 词库进化迁移（一次性）：旧进度按位置序号存储 → 改为按词的稳定 key 存储。
+   映射基准永远用内嵌兑底词表的原始顺序（与历史版本完全一致），
+   因此无论外置词库怎么增减，老用户的进度都能一一对上，不受影响。 ---- */
+function migrateDB(db){
+  if(db&&db.v>=2)return db;
+  Object.keys(db.users).forEach(uk=>{
+    const u=db.users[uk],ns={};
+    Object.keys(u.states||{}).forEach(id=>{
+      const k=LEGACY_KEYS[+id];if(!k)return;
+      if(!ns[k])ns[k]={};
+      Object.assign(ns[k],u.states[id]);
+    });
+    u.states=ns;
+  });
+  db.v=2;
+  return db;
 }
 
 /* ---- 本地备份模块：File System Access API（桌面） + 下载/恢复（通用） ---- */
@@ -442,22 +464,19 @@ function logReview(ok){
 
 /* ============ 会话 ============ */
 let SESSION={queue:[],idx:0,done:0,correct:0,answered:false,cur:null};
-// 练习形式判定：choice=四选一 | spell=看中文拼英文 | listen=听音选中文 | dictate=听音写单词
+// 练习形式判定：choice=四选一 | spell=看中文拼英文（纯视觉，不依赖发音）
 function pickQType(item){
   const mode=(U().settings&&U().settings.mode)||'mix';
   const single=!/\s/.test(item.w.en.trim());   // 多词短语拼写太繁琐，仍走选择
   if(item.dir==='c2e'){
-    if(mode==='choice')return 'choice';
+    if(mode==='choice'||mode==='dictation')return 'choice';
     if(!single)return 'choice';
     if(mode==='spell')return 'spell';
-    if(mode==='dictation')return 'dictate';
     return Math.random()<0.55?'spell':'choice';   // mix：拼写为主
   }
-  if(mode==='dictation')return 'listen';
-  if(mode==='choice'||mode==='spell')return 'choice';
-  return Math.random()<0.45?'listen':'choice';      // mix：听音辨义穿插
+  return 'choice';  // e2c 方向不再有听音题，统一为选择
 }
-function qtText(q){return q==='spell'?'✍️ 拼写':q==='listen'?'🎧 听音辨义':q==='dictate'?'🎧 听写':'🔘 选择';}
+function qtText(q){return q==='spell'?'✍️ 拼写':'🔘 选择';}
 // 拼写判分归一化：忽略大小写/首尾空格/连续空格/弯引号/省略号写法
 function normWord(s){return (s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[…]/g,'...').replace(/\s+/g,' ').trim();}
 function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m||!n)return Math.max(m,n);const d=[];for(let i=0;i<=m;i++){d[i]=[i];}for(let j=1;j<=n;j++){d[0][j]=j;}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));}return d[m][n];}
@@ -500,39 +519,21 @@ function renderStudy(){
     const qText=dir==='e2c'?item.w.en:item.w.zh;
     const sub=dir==='e2c'?'看单词 → 选中文':'看中文 → 选单词';
     box.innerHTML=head+
-      '<div class="q"><div class="dir">'+sub+'</div><div class="word">'+(dir==='e2c'?qText+'<span class="speak" id="spk">🔊</span>':qText)+'</div>'+
-      (dir==='e2c'?'<div class="hint">'+item.w.pos+' · 点击喇叭听发音</div>':'<div class="hint">请选择对应的英文单词</div>')+'</div>'+
+      '<div class="q"><div class="dir">'+sub+'</div><div class="word">'+qText+'</div>'+
+      (dir==='e2c'?'<div class="hint">'+item.w.pos+' · 请选择正确的中文释义</div>':'<div class="hint">请选择对应的英文单词</div>')+'</div>'+
       '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
       '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
       '<div class="fb" id="fb"></div>';
     document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false,''));
     document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true,'');
-    const spk=document.getElementById('spk');if(spk)spk.onclick=()=>speak(item.w.en);
     return;
   }
-  if(qt==='listen'){
-    const opts=buildOptions(item.w,'e2c');
-    box.innerHTML=head+
-      '<div class="q"><div class="dir">听发音 → 选中文</div>'+
-      '<button class="listenbtn" id="listenBtn"><span style="font-size:26px">🔊</span>点击播放（可反复听）</button>'+
-      '<div class="hint">'+item.w.pos+' · 听不清就多播几次，考听说就这么练</div></div>'+
-      '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
-      '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
-      '<div class="fb" id="fb"></div>';
-    document.getElementById('listenBtn').onclick=()=>speak(item.w.en);
-    setTimeout(()=>speak(item.w.en),350);
-    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false,''));
-    document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true,'');
-    return;
-  }
-  // spell / dictate：主动产出（拼写）
-  const w=item.w, hear=(qt==='dictate');
+  // spell：主动产出（看中文拼英文）
+  const w=item.w;
   const hintLetter=w.en.trim().charAt(0).toUpperCase(), letters=w.en.replace(/\s/g,'').length;
-  const sub=hear?'听发音 → 拼写单词':'看中文 → 拼写单词';
-  const cue=hear?'<button class="listenbtn" id="listenBtn"><span style="font-size:26px">🔊</span>点击播放（可反复听）</button>'
-                :'<div class="word">'+w.zh+'</div>';
+  const sub='看中文 → 拼写单词';
   box.innerHTML=head+
-    '<div class="q"><div class="dir">'+sub+'</div>'+cue+
+    '<div class="q"><div class="dir">'+sub+'</div><div class="word">'+w.zh+'</div>'+
     '<div class="hint">'+w.pos+' · 首字母 '+hintLetter+' · 共 '+letters+' 个字母</div></div>'+
     '<div class="spellwrap"><input class="spellin" id="spellInput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="输入英文后回车">'+
     '<div class="spellrow"><button class="btn" id="unknowBtn">🤷 不知道（算错，强化）</button><button class="btn primary" id="submitBtn">提交 ✓</button></div></div>'+
@@ -542,8 +543,6 @@ function renderStudy(){
   document.getElementById('submitBtn').onclick=submitSpell;
   document.getElementById('unknowBtn').onclick=()=>answer(-1,null,item,true,'');
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!SESSION.answered)submitSpell();}});
-  const lb=document.getElementById('listenBtn');if(lb)lb.onclick=()=>speak(w.en);
-  if(hear)setTimeout(()=>speak(w.en),350);
   setTimeout(()=>inp.focus(),60);
 }
 function dirText(d){return d==='e2c'?'英→中':'中→英';}
@@ -551,7 +550,7 @@ function answer(i,opts,item,unsure,typed){
   if(SESSION.answered)return;SESSION.answered=true;
   const qt=item.qtype||'choice';
   let ok=false, closeSpell=false;
-  if(qt==='spell'||qt==='dictate'){
+  if(qt==='spell'){
     const guess=normWord(typed), target=normWord(item.w.en);
     ok=!unsure&&guess===target;
     if(!ok&&!unsure&&guess&&target.replace(/\s/g,'').length>=5)closeSpell=(lev(guess,target)<=2);
@@ -560,14 +559,14 @@ function answer(i,opts,item,unsure,typed){
     const picked=unsure?null:(i>=0?opts[i]:null);
     ok=!unsure&&picked===item.w[field];
   }
-  const old=wstate(DB.current,item.w.id,item.dir);
+  const old=wstate(DB.current,item.w.key,item.dir);
   const isNew=old.last===0;
   const nst=schedule(old,ok,Date.now());      // 走同一套降阶/错词逻辑
-  setWstate(DB.current,item.w.id,item.dir,nst);
+  setWstate(DB.current,item.w.key,item.dir,nst);
   logReview(ok);
   if(isNew){const d=U().daily[todayStr()];if(d)d.n++;}
   SESSION.done++;if(ok)SESSION.correct++;
-  if(qt==='choice'||qt==='listen'){
+  if(qt==='choice'){
     const field=item.dir==='e2c'?'zh':'en';
     document.querySelectorAll('.opt').forEach((b,idx)=>{
       if(opts[idx]===item.w[field])b.classList.add('correct');
@@ -593,7 +592,6 @@ function answer(i,opts,item,unsure,typed){
   saveDB();
 }
 function fmtDue(ts){const m=Math.round((ts-Date.now())/60000);if(m<1)return '马上';if(m<60)return m+' 分钟后';if(m<1440)return Math.round(m/60)+' 小时后';return Math.round(m/1440)+' 天后';}
-function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
 
 /* ============ 各视图 ============ */
 let bookUnit=0;
@@ -606,7 +604,7 @@ function renderBook(){
   const dirs=U().settings.dir==='both'?['e2c','c2e']:[U().settings.dir];
   document.getElementById('wlist').innerHTML=list.map(w=>{
     let cls='',tip='未学';
-    const arr=dirs.map(d=>wstate(DB.current,w.id,d));
+    const arr=dirs.map(d=>wstate(DB.current,w.key,d));
     if(arr.some(s=>s.wrong)){cls='wrong';tip='错词强化中';}
     else if(arr.every(s=>s.stage>=5)){cls='ok';tip='已掌握';}
     else if(arr.some(s=>s.last>0)){cls='learning';tip='学习中';}
@@ -632,7 +630,7 @@ function renderStats(){
   let learned=0,wrong=0,master=0,learning=0;
   WORDS.forEach(w=>{
     if(cfg.scope.length&&!cfg.scope.includes(w.unit))return;
-    const arr=dirs.map(d=>wstate(DB.current,w.id,d));
+    const arr=dirs.map(d=>wstate(DB.current,w.key,d));
     if(arr.some(s=>s.last>0))learned++;
     if(arr.some(s=>s.wrong))wrong++;
     else if(arr.every(s=>s.stage>=5))master++;
@@ -654,7 +652,8 @@ function renderStats(){
     '<i style="width:'+(learning/tot*100)+'%;background:var(--warn)"></i>'+
     '<i style="width:'+(master/tot*100)+'%;background:var(--success)"></i>';
   document.getElementById('curveHint').innerHTML='<b>记忆曲线说明</b><br>间隔阶梯：'+INTERVALS.map((m,i)=>i===0?'10分钟':(m<1440?Math.round(m/60)+'小时':Math.round(m/1440)+'天')).join(' → ')+
-    '。<br>答对进入下一阶梯、间隔拉长；答错降 2 阶并在 10 分钟后重新出现，连对 3 次才从错词本毕业——这就是对抗遗忘曲线的关键机制。';
+    '。<br>答对进入下一阶梯、间隔拉长；答错降 2 阶并在 10 分钟后重新出现，连对 3 次才从错词本毕业——这就是对抗遗忘曲线的关键机制。'+
+    '<br>当前词库：<b>'+WORDS.length+' 词</b>'+(VOCAB_META.updated?(' · 词库版本 '+VOCAB_META.updated):'');
 }
 function renderSetting(){
   const u=U();
@@ -786,13 +785,14 @@ try{const th=localStorage.getItem('vocab9a_theme');if(th){document.documentEleme
 function refreshAll(){
   document.getElementById('userName').textContent=U().name;
   document.getElementById('avatar').textContent=U().name.charAt(0);
+  const vi=document.getElementById('vocabInfo');if(vi)vi.textContent=WORDS.length+' 词 · 版本 '+(VOCAB_META.updated||VOCAB_META.v||'内嵌');
   SESSION={queue:[],idx:0};buildSession();renderSetting();renderStats();renderBook();updateBackupStatus();
 }
 refreshAll();
 bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
