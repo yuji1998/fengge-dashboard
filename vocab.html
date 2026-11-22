@@ -58,6 +58,15 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .unsure{display:block;width:100%;margin-top:12px;padding:10px;border:1px dashed var(--warn);background:transparent;color:var(--warn);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
 .unsure:hover{background:rgba(245,158,11,.1)}
 .unsure:disabled{opacity:.5;cursor:default}
+.spellwrap{margin-top:18px}
+.spellin{width:100%;border:2px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:14px 16px;font-size:22px;font-weight:700;letter-spacing:1.5px;text-align:center;outline:none;transition:.15s;font-family:inherit}
+.spellin:focus{border-color:var(--primary)}
+.spellin.ok{border-color:var(--success);background:var(--success-bg);color:var(--success)}
+.spellin.no{border-color:var(--danger);background:var(--danger-bg);color:var(--danger)}
+.spellrow{display:flex;gap:9px;margin-top:10px}
+.spellrow .btn{flex:1;padding:12px;font-size:14px}
+.listenbtn{display:flex;width:100%;align-items:center;justify-content:center;gap:10px;border:2px dashed var(--primary2);background:var(--card2);color:var(--primary2);border-radius:14px;padding:18px;font-size:17px;font-weight:800;cursor:pointer;margin-top:6px}
+.listenbtn:active{background:rgba(6,182,212,.12)}
 .fb{margin-top:16px;border-radius:12px;padding:13px 15px;font-size:14px;display:none}
 .fb.show{display:block;animation:fade .2s}
 .fb.ok{background:var(--success-bg);color:var(--success)}.fb.no{background:var(--danger-bg);color:var(--danger)}
@@ -194,6 +203,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <h3>⚙️ 学习参数</h3>
     <div class="setrow"><div><div class="t">每日新词数</div><div class="d">每天最多投放多少个新词</div></div><input type="number" id="setNew" min="0" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习方向</div><div class="d">英→中=看单词选中文；中→英=看中文选单词</div></div><div class="seg" id="setDir"><button data-d="both" class="on">双向</button><button data-d="e2c">英→中</button><button data-d="c2e">中→英</button></div></div>
+    <div class="setrow"><div><div class="t">练习形式</div><div class="d">选择=四选一识别；拼写=看中文写单词；听写=听发音写/选；混合=随机交替（推荐，最贴近考场）</div></div><div class="seg" id="setMode"><button data-m="mix">混合</button><button data-m="choice">选择</button><button data-m="spell">拼写</button><button data-m="dictation">听写</button></div></div>
     <div class="setrow"><div><div class="t">每轮题数</div><div class="d">一次连续做多少题后结算</div></div><input type="number" id="setRound" min="5" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习范围</div><div class="d">只背诵选中单元（单词本里勾选，留空=全部）</div></div><span id="setUnitInfo" style="font-size:12px;color:var(--muted)">全部单元</span></div>
   </div>
@@ -208,7 +218,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
 </div>
 
-<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
+<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>练习形式：🔘 选择 · ✍️ 拼写 · 🎧 听音辨义 · 🎧 听写（混合随机交替，主动回忆对抗遗忘）<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
 </div>
 
 <div class="mask" id="mask"><div class="modal"><h3 id="modalTitle">新增用户</h3><input id="modalInput" placeholder="输入名字，如：朱陈昕" maxlength="12"><div class="row"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalOk">确定</button></div></div></div>
@@ -303,7 +313,7 @@ function scanPool(user,now){
 // 双写镜像：主 key 损坏/被误清时，从镜像自动恢复，确保"更新/清洗后不用重新学"。
 const KEY='vocab9a_v1', KEY_MIRROR='vocab9a_v1_mirror';
 function validDB(d){return d&&d.users&&typeof d.users==='object'&&Object.keys(d.users).length>0;}
-function defaultUser(name){return {name,created:Date.now(),states:{},settings:{newPerDay:20,dir:'both',round:20,scope:[]},daily:{},streak:0,lastDay:''};}
+function defaultUser(name){return {name,created:Date.now(),states:{},settings:{newPerDay:20,dir:'both',round:20,scope:[],mode:'mix'},daily:{},streak:0,lastDay:''};}
 let DB=loadDB();
 function loadDB(){
   let recovered=false;
@@ -432,6 +442,25 @@ function logReview(ok){
 
 /* ============ 会话 ============ */
 let SESSION={queue:[],idx:0,done:0,correct:0,answered:false,cur:null};
+// 练习形式判定：choice=四选一 | spell=看中文拼英文 | listen=听音选中文 | dictate=听音写单词
+function pickQType(item){
+  const mode=(U().settings&&U().settings.mode)||'mix';
+  const single=!/\s/.test(item.w.en.trim());   // 多词短语拼写太繁琐，仍走选择
+  if(item.dir==='c2e'){
+    if(mode==='choice')return 'choice';
+    if(!single)return 'choice';
+    if(mode==='spell')return 'spell';
+    if(mode==='dictation')return 'dictate';
+    return Math.random()<0.55?'spell':'choice';   // mix：拼写为主
+  }
+  if(mode==='dictation')return 'listen';
+  if(mode==='choice'||mode==='spell')return 'choice';
+  return Math.random()<0.45?'listen':'choice';      // mix：听音辨义穿插
+}
+function qtText(q){return q==='spell'?'✍️ 拼写':q==='listen'?'🎧 听音辨义':q==='dictate'?'🎧 听写':'🔘 选择';}
+// 拼写判分归一化：忽略大小写/首尾空格/连续空格/弯引号/省略号写法
+function normWord(s){return (s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[…]/g,'...').replace(/\s+/g,' ').trim();}
+function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m||!n)return Math.max(m,n);const d=[];for(let i=0;i<=m;i++){d[i]=[i];}for(let j=1;j<=n;j++){d[0][j]=j;}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));}return d[m][n];}
 function buildSession(){
   const {review,wrong,fresh}=scanPool(DB.current,Date.now());
   const cfg=U().settings;
@@ -440,6 +469,7 @@ function buildSession(){
   const dirCount=cfg.dir==='both'?2:1;
   const quota=Math.max(0,cfg.newPerDay*dirCount-(U().daily[todayStr()]?.n||0));
   q=q.concat(fresh.slice(0,quota));
+  q.forEach(it=>it.qtype=pickQType(it));   // 每题先定练习形式，重渲染时保持稳定
   SESSION={queue:q.slice(0,cfg.round),idx:0,done:0,correct:0,answered:false,cur:null};
   renderStudy();
 }
@@ -460,30 +490,76 @@ function renderStudy(){
   }
   const item=SESSION.queue[SESSION.idx];
   SESSION.cur=item;SESSION.answered=false;
-  const dir=item.dir;
-  const qText=dir==='e2c'?item.w.en:item.w.zh;
-  const sub=dir==='e2c'?'看单词 → 选中文':'看中文 → 选单词';
-  const opts=buildOptions(item.w,dir);
+  const dir=item.dir, qt=item.qtype||'choice';
   const st=item.st||blankState();
   const wrongTag=(st.wrong?'<span class="pill wrong">⚠ 错词强化</span>':'');
-  box.innerHTML=
-    '<div class="meta"><span>第 '+(SESSION.idx+1)+' / '+SESSION.queue.length+' 题　'+wrongTag+'</span><span class="pill">'+dirText(dir)+' · U'+item.w.unit+'</span></div>'+
-    '<div class="progress"><i style="width:'+(SESSION.idx/SESSION.queue.length*100)+'%"></i></div>'+
-    '<div class="q"><div class="dir">'+sub+'</div><div class="word">'+(dir==='e2c'?qText+'<span class="speak" id="spk">🔊</span>':qText)+'</div>'+
+  const head='<div class="meta"><span>第 '+(SESSION.idx+1)+' / '+SESSION.queue.length+' 题　'+wrongTag+'</span><span class="pill">'+qtText(qt)+' · U'+item.w.unit+'</span></div>'+
+    '<div class="progress"><i style="width:'+(SESSION.idx/SESSION.queue.length*100)+'%"></i></div>';
+  if(qt==='choice'){
+    const opts=buildOptions(item.w,dir);
+    const qText=dir==='e2c'?item.w.en:item.w.zh;
+    const sub=dir==='e2c'?'看单词 → 选中文':'看中文 → 选单词';
+    box.innerHTML=head+
+      '<div class="q"><div class="dir">'+sub+'</div><div class="word">'+(dir==='e2c'?qText+'<span class="speak" id="spk">🔊</span>':qText)+'</div>'+
       (dir==='e2c'?'<div class="hint">'+item.w.pos+' · 点击喇叭听发音</div>':'<div class="hint">请选择对应的英文单词</div>')+'</div>'+
-    '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
-    '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
+      '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
+      '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
+      '<div class="fb" id="fb"></div>';
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false,''));
+    document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true,'');
+    const spk=document.getElementById('spk');if(spk)spk.onclick=()=>speak(item.w.en);
+    return;
+  }
+  if(qt==='listen'){
+    const opts=buildOptions(item.w,'e2c');
+    box.innerHTML=head+
+      '<div class="q"><div class="dir">听发音 → 选中文</div>'+
+      '<button class="listenbtn" id="listenBtn"><span style="font-size:26px">🔊</span>点击播放（可反复听）</button>'+
+      '<div class="hint">'+item.w.pos+' · 听不清就多播几次，考听说就这么练</div></div>'+
+      '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
+      '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
+      '<div class="fb" id="fb"></div>';
+    document.getElementById('listenBtn').onclick=()=>speak(item.w.en);
+    setTimeout(()=>speak(item.w.en),350);
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false,''));
+    document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true,'');
+    return;
+  }
+  // spell / dictate：主动产出（拼写）
+  const w=item.w, hear=(qt==='dictate');
+  const hintLetter=w.en.trim().charAt(0).toUpperCase(), letters=w.en.replace(/\s/g,'').length;
+  const sub=hear?'听发音 → 拼写单词':'看中文 → 拼写单词';
+  const cue=hear?'<button class="listenbtn" id="listenBtn"><span style="font-size:26px">🔊</span>点击播放（可反复听）</button>'
+                :'<div class="word">'+w.zh+'</div>';
+  box.innerHTML=head+
+    '<div class="q"><div class="dir">'+sub+'</div>'+cue+
+    '<div class="hint">'+w.pos+' · 首字母 '+hintLetter+' · 共 '+letters+' 个字母</div></div>'+
+    '<div class="spellwrap"><input class="spellin" id="spellInput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="输入英文后回车">'+
+    '<div class="spellrow"><button class="btn" id="unknowBtn">🤷 不知道（算错，强化）</button><button class="btn primary" id="submitBtn">提交 ✓</button></div></div>'+
     '<div class="fb" id="fb"></div>';
-  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false));
-  document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true);
-  const spk=document.getElementById('spk');if(spk)spk.onclick=()=>speak(item.w.en);
+  const inp=document.getElementById('spellInput');
+  const submitSpell=()=>{const v=inp.value.trim();if(v)answer(-1,null,item,false,v);else document.getElementById('unknowBtn').click();};
+  document.getElementById('submitBtn').onclick=submitSpell;
+  document.getElementById('unknowBtn').onclick=()=>answer(-1,null,item,true,'');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!SESSION.answered)submitSpell();}});
+  const lb=document.getElementById('listenBtn');if(lb)lb.onclick=()=>speak(w.en);
+  if(hear)setTimeout(()=>speak(w.en),350);
+  setTimeout(()=>inp.focus(),60);
 }
 function dirText(d){return d==='e2c'?'英→中':'中→英';}
-function answer(i,opts,item,unsure){
+function answer(i,opts,item,unsure,typed){
   if(SESSION.answered)return;SESSION.answered=true;
-  const field=item.dir==='e2c'?'zh':'en';
-  const picked=unsure?null:(i>=0?opts[i]:null);
-  const ok=!unsure&&picked===item.w[field];   // 不确信一律按"未答对"处理，纳入强化
+  const qt=item.qtype||'choice';
+  let ok=false, closeSpell=false;
+  if(qt==='spell'||qt==='dictate'){
+    const guess=normWord(typed), target=normWord(item.w.en);
+    ok=!unsure&&guess===target;
+    if(!ok&&!unsure&&guess&&target.replace(/\s/g,'').length>=5)closeSpell=(lev(guess,target)<=2);
+  }else{
+    const field=item.dir==='e2c'?'zh':'en';
+    const picked=unsure?null:(i>=0?opts[i]:null);
+    ok=!unsure&&picked===item.w[field];
+  }
   const old=wstate(DB.current,item.w.id,item.dir);
   const isNew=old.last===0;
   const nst=schedule(old,ok,Date.now());      // 走同一套降阶/错词逻辑
@@ -491,15 +567,24 @@ function answer(i,opts,item,unsure){
   logReview(ok);
   if(isNew){const d=U().daily[todayStr()];if(d)d.n++;}
   SESSION.done++;if(ok)SESSION.correct++;
-  document.querySelectorAll('.opt').forEach((b,idx)=>{
-    if(opts[idx]===item.w[field])b.classList.add('correct');
-    else if(idx===i)b.classList.add('wrongsel');
-    b.disabled=true;
-  });
-  const ub=document.getElementById('unsureBtn');if(ub)ub.disabled=true;
+  if(qt==='choice'||qt==='listen'){
+    const field=item.dir==='e2c'?'zh':'en';
+    document.querySelectorAll('.opt').forEach((b,idx)=>{
+      if(opts[idx]===item.w[field])b.classList.add('correct');
+      else if(idx===i)b.classList.add('wrongsel');
+      b.disabled=true;
+    });
+    const ub=document.getElementById('unsureBtn');if(ub)ub.disabled=true;
+  }else{
+    const inp=document.getElementById('spellInput');
+    if(inp){inp.value=typed||'';inp.disabled=true;inp.classList.add(ok?'ok':'no');}
+    const sb=document.getElementById('submitBtn');if(sb)sb.disabled=true;
+    const kb=document.getElementById('unknowBtn');if(kb)kb.disabled=true;
+  }
   const fb=document.getElementById('fb');
+  const msg=ok?'✅ 答对了！':(unsure?'🤔 已标记「不确信」，纳入强化记忆':'❌ 答错了，已加入强化记忆'+(closeSpell?'（拼写很接近，注意字母顺序）':''));
   fb.className='fb show '+(ok?'ok':'no');
-  fb.innerHTML=(ok?'✅ 答对了！':(unsure?'🤔 已标记「不确信」，纳入强化记忆':'❌ 答错了，已加入强化记忆'))+
+  fb.innerHTML=msg+
     '<div class="ans">'+item.w.en+'　'+item.w.zh+'</div>'+
     '<div style="font-size:12px;opacity:.8;margin-top:3px">下次复习：'+fmtDue(nst.due)+'　·　记忆阶段 '+nst.stage+'/'+MAX_STAGE+'</div>';
   const btn=document.createElement('button');btn.className='nextbtn';btn.textContent=SESSION.idx+1>=SESSION.queue.length?'查看结果 →':'下一题 →';
@@ -576,6 +661,7 @@ function renderSetting(){
   document.getElementById('setNew').value=u.settings.newPerDay;
   document.getElementById('setRound').value=u.settings.round;
   document.querySelectorAll('#setDir button').forEach(b=>b.classList.toggle('on',b.dataset.d===u.settings.dir));
+  document.querySelectorAll('#setMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===(u.settings.mode||'mix')));
   document.getElementById('setUnitInfo').textContent=u.settings.scope.length?'Unit '+u.settings.scope.join(', '):'全部单元';
   const ul=document.getElementById('userList');
   ul.innerHTML=Object.keys(DB.users).map(k=>{
@@ -617,6 +703,9 @@ document.getElementById('setNew').onchange=e=>{U().settings.newPerDay=Math.max(0
 document.getElementById('setRound').onchange=e=>{U().settings.round=Math.max(5,+e.target.value||20);saveDB();};
 document.querySelectorAll('#setDir button').forEach(b=>b.onclick=()=>{
   U().settings.dir=b.dataset.d;saveDB();renderSetting();SESSION={queue:[],idx:0};buildSession();
+});
+document.querySelectorAll('#setMode button').forEach(b=>b.onclick=()=>{
+  U().settings.mode=b.dataset.m;saveDB();renderSetting();SESSION={queue:[],idx:0};buildSession();
 });
 document.getElementById('resetBtn').onclick=()=>{
   if(!confirm('确定清空「'+U().name+'」的全部学习进度？不可恢复。'))return;
@@ -687,6 +776,7 @@ document.getElementById('addUserBtn').onclick=()=>openModal('新增用户','',na
   const k='u'+Date.now();DB.users[k]=defaultUser(name);DB.current=k;saveDB();refreshAll();
 });
 document.addEventListener('keydown',e=>{
+  if(e.target&&e.target.tagName==='INPUT')return;   // 拼写输入时不抢按键
   if(document.getElementById('mask').classList.contains('on')){if(e.key==='Enter')document.getElementById('modalOk').click();return;}
   if(!document.getElementById('v-study').classList.contains('on')||SESSION.answered)return;
   if(e.key==='0'||e.key==='Backspace'){const u=document.getElementById('unsureBtn');if(u&&!u.disabled){e.preventDefault();u.click();}return;}
@@ -702,7 +792,7 @@ refreshAll();
 bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
