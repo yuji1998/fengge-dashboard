@@ -201,7 +201,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <h3>💾 本地备份与恢复（防丢失）</h3>
     <div class="hintbox" style="margin-bottom:10px">程序更新只会更新页面本身，<b>不会动你的学习进度</b>；进度还做了双份存储，即使主记录被误清也能自动恢复。换设备/彻底清缓存前，请用下面的方式备份。</div>
     <div class="setrow"><div><div class="t">自动备份到本地文件</div><div class="d" id="bindDesc">桌面 Chrome / Edge 可绑定一个本地文件，每次学习后自动写入磁盘，清缓存也不丢</div></div><button class="btn primary" id="bindBtn">绑定文件</button></div>
-    <div class="setrow"><div><div class="t">备份状态</div><div class="d" id="backupStatus">尚未备份</div></div><button class="btn" id="nowBtn">立即备份</button></div>
+    <div class="setrow"><div><div class="t">备份状态</div><div class="d" id="backupStatus">尚未备份</div></div><button class="btn" id="nowBtn">立即备份</button><button class="btn" id="checkBtn" style="margin-left:6px">自检</button></div>
     <div class="setrow"><div><div class="t">下载备份文件</div><div class="d">所有浏览器可用，建议定期下载存到网盘/U盘</div></div><button class="btn" id="exportBtn">下载 JSON</button></div>
     <div class="setrow"><div><div class="t">从备份文件恢复</div><div class="d">清了缓存/换设备后，用之前下载的 JSON 恢复全部进度</div></div><button class="btn" id="importBtn">选择文件恢复</button><input type="file" id="importFile" accept=".json,application/json" style="display:none"></div>
     <div class="setrow"><div><div class="t">清空当前用户进度</div><div class="d">不可恢复，请谨慎</div></div><button class="btn danger" id="resetBtn">清空</button></div>
@@ -331,13 +331,15 @@ function idbOpen(){return new Promise((res,rej)=>{try{const r=indexedDB.open(BK_
 async function bkGetHandle(){try{const db=await idbOpen();return await new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readonly').objectStore(BK_STORE).get('file');t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);});}catch(e){return null;}}
 async function bkSetHandle(h){const db=await idbOpen();return new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readwrite').objectStore(BK_STORE).put(h,'file');t.onsuccess=()=>res();t.onerror=()=>rej(t.error);});}
 function bkPayload(){return {meta:{app:'vocab9a',v:1,time:Date.now(),note:'背单词引擎进度备份 · 译林9A'},data:DB};}
-let bkTimer=null;
+let bkTimer=null,bkStatus='idle'; // idle|ok|needperm|failed|nohandle|unsupported
+function bkSetStatus(s){bkStatus=s;try{localStorage.setItem('vocab9a_bk_status',s);}catch(e){}updateBackupTip();}
 function scheduleBackup(){clearTimeout(bkTimer);bkTimer=setTimeout(()=>{bkWrite(false).catch(()=>{});},1200);}
 async function bkWrite(force){
-  const h=await bkGetHandle();if(!h)return {ok:false,reason:'nohandle'};
+  const h=await bkGetHandle();if(!h){bkSetStatus('nohandle');return {ok:false,reason:'nohandle'};}
   let perm='granted';
   try{perm=await h.queryPermission({mode:'readwrite'});}catch(e){perm='prompt';}
   if(perm!=='granted'){
+    bkSetStatus('needperm'); // 关键：权限失效不再静默，立即报警
     if(!force)return {ok:false,reason:'needperm'};
     try{perm=await h.requestPermission({mode:'readwrite'});}catch(e){return {ok:false,reason:'denied'};}
     if(perm!=='granted')return {ok:false,reason:'denied'};
@@ -347,8 +349,16 @@ async function bkWrite(force){
     await w.write(JSON.stringify(bkPayload(),null,1));
     await w.close();
     try{localStorage.setItem(BK_LAST,String(Date.now()));localStorage.setItem(BK_BOUND,'1');}catch(e){}
-    updateBackupStatus();return {ok:true};
-  }catch(e){return {ok:false,reason:'write:'+e.name};}
+    bkSetStatus('ok');updateBackupStatus();return {ok:true};
+  }catch(e){bkSetStatus('failed');updateBackupStatus();return {ok:false,reason:'write:'+e.name};}
+}
+// 打开页面时主动查权限：绑定了文件但权限失效 → 报警（不弹授权框，等用户手势）
+async function bkCheckOnLoad(){
+  const h=await bkGetHandle();if(!h)return;
+  let perm='granted';try{perm=await h.queryPermission({mode:'readwrite'});}catch(e){perm='prompt';}
+  if(perm!=='granted')bkSetStatus('needperm');
+  else bkSetStatus('ok');
+  updateBackupStatus();
 }
 async function bkBind(){
   if(!window.showSaveFilePicker){alert('当前浏览器不支持自动写入本地文件。请用「下载 JSON」定期备份，存到网盘或U盘。');return;}
@@ -366,28 +376,47 @@ async function updateBackupStatus(){
   if(!desc||!st||!btn)return;
   const h=await bkGetHandle(),supported=!!window.showSaveFilePicker;
   const last=+(localStorage.getItem(BK_LAST)||0);
+  const s=bkStatus;
+  st.style.fontWeight='';
   if(h){
-    desc.textContent='已绑定本地文件：'+(h.name||'备份文件')+'（每次学习后自动写入磁盘）';
     btn.textContent='更换文件';
-    st.textContent=last?('上次自动备份：'+new Date(last).toLocaleString()):'已绑定，等待首次写入';
+    const nm=h.name||'备份文件';
+    if(s==='needperm'){
+      st.style.color='var(--danger)';st.style.fontWeight='600';
+      st.textContent='⚠️ 自动备份已暂停：浏览器重启需重新授权。请点「立即备份」恢复';
+      desc.textContent='已绑定 '+nm+'，但当前无写入权限（重启浏览器后会失效，属正常现象）';
+    }else if(s==='failed'){
+      st.style.color='var(--danger)';st.style.fontWeight='600';
+      st.textContent='⚠️ 写入失败：请点「立即备份」重试，或改用「下载 JSON」';
+      desc.textContent='已绑定 '+nm+'，但最近一次写入失败';
+    }else{
+      st.style.color='';
+      st.textContent=(last?('✓ 上次成功备份：'+new Date(last).toLocaleString()):'已绑定，等待首次写入')+(last?('（已写入 '+nm+'）'):'');
+      desc.textContent='已绑定本地文件：'+nm+'（每次学习后自动写入磁盘）';
+    }
     try{localStorage.setItem(BK_BOUND,'1');}catch(e){}
   }else{
     desc.textContent=supported?'桌面 Chrome / Edge 可绑定一个本地文件，每次学习后自动写入磁盘，清缓存也不丢':'当前浏览器不支持自动写入本地文件，请用「下载 JSON」定期备份后存到网盘/U盘';
     btn.textContent='绑定文件';
-    st.textContent='未绑定自动备份 — 请下载 JSON 手动保存';
+    st.style.color='';st.textContent='未绑定自动备份 — 请下载 JSON 手动保存';
   }
   updateBackupTip();
 }
 function updateBackupTip(){
-  const tip=document.getElementById('backupTip'),txt=document.getElementById('backupTipText');
+  const tip=document.getElementById('backupTip'),txt=document.getElementById('backupTipText'),tbtn=document.getElementById('backupTipBtn');
   if(!tip||!txt)return;
-  try{if(localStorage.getItem(BK_TIPHIDE)==='1'){tip.style.display='none';return;}}catch(e){}
+  if(tbtn)tbtn.textContent=(bkStatus==='needperm'||bkStatus==='failed')?'立即恢复':'去备份'; // 先恢复按钮文字，再判断隐藏
+  tip.style.borderColor=(bkStatus==='needperm'||bkStatus==='failed')?'var(--danger)':'';
+  try{if(localStorage.getItem(BK_TIPHIDE)==='1'&&bkStatus==='ok'){tip.style.display='none';return;}}catch(e){}
   const bound=(localStorage.getItem(BK_BOUND)==='1');
   const last=+(localStorage.getItem(BK_LAST)||0);
   const days=last?Math.floor((Date.now()-last)/86400000):null;
   let msg='';
-  if(!bound)msg='进度目前只存在浏览器里，清缓存或换设备会丢失。建议绑定本地文件或下载备份。';
-  else if(days===null)msg='已开启自动备份，但还没成功写入过。点「去备份」确认一次。';
+  if(bkStatus==='needperm')msg='⚠️ 自动备份已暂停：浏览器重启后权限失效。点右侧按钮重新授权，否则新进度不会写进本地文件！';
+  else if(bkStatus==='failed')msg='⚠️ 最近一次自动备份写入失败，进度可能未落盘。请立即检查。';
+  else if(!bound)msg='进度目前只存在浏览器里，清缓存或换设备会丢失。建议绑定本地文件或下载备份。';
+  else if(bkStatus==='nohandle')msg='未绑定本地文件，进度只存浏览器。建议绑定或下载备份。';
+  else if(days===null)msg='已开启自动备份，但还没成功写入过。点「立即备份」确认一次。';
   else if(days>=7)msg='距上次备份已 '+days+' 天，建议手动备份一次。';
   if(msg){txt.textContent=msg;tip.style.display='flex';}else tip.style.display='none';
 }
@@ -608,14 +637,25 @@ document.getElementById('exportBtn').onclick=()=>{
 };
 // 绑定本地文件 / 立即备份
 document.getElementById('bindBtn').onclick=()=>bkBind();
+document.getElementById('checkBtn').onclick=async()=>{
+  await bkCheckOnLoad();
+  const h=await bkGetHandle();
+  if(!h){alert('自检结果：未绑定本地文件。\n请用「绑定文件」或「下载 JSON」备份，否则清缓存会丢进度。');return;}
+  let perm='?';try{perm=await h.queryPermission({mode:'readwrite'});}catch(e){perm='error';}
+  const last=+(localStorage.getItem(BK_LAST)||0);
+  const ok=(perm==='granted'&&last);
+  alert('自检结果：\n• 文件：'+(h.name||'备份文件')+'\n• 写入权限：'+(perm==='granted'?'正常':perm==='prompt'?'已失效，需重新授权':perm)+'\n• 上次成功写入：'+(last?new Date(last).toLocaleString():'从未成功')
+    +'\n\n'+(ok?'✅ 自动备份正常工作。':perm!=='granted'?'⚠️ 请点「立即备份」重新授权并写入一次。':'⚠️ 尚未成功写入，请点「立即备份」。'));
+};
 document.getElementById('nowBtn').onclick=async()=>{
   const r=await bkWrite(true);
-  if(r.ok)alert('备份成功，已写入本地文件。');
+  if(r.ok)alert('✅ 备份成功，进度已写入本地文件。');
   else if(r.reason==='nohandle'){
     if(window.showSaveFilePicker){await bkBind();}
     else{alert('尚未绑定文件，且当前浏览器不支持自动写入。请点「下载 JSON」手动备份。');}
   }
-  else alert('备份失败：'+r.reason);
+  else if(r.reason==='denied')alert('授权被拒绝：浏览器弹窗时请点「允许」，才能自动写入本地文件。');
+  else alert('备份失败：'+r.reason+'。可改用「下载 JSON」备份。');
 };
 // 从文件恢复
 document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
@@ -659,9 +699,10 @@ function refreshAll(){
   SESSION={queue:[],idx:0};buildSession();renderSetting();renderStats();renderBook();updateBackupStatus();
 }
 refreshAll();
+bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
