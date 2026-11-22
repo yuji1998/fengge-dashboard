@@ -131,6 +131,11 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
 
 <!-- 学习 -->
 <div class="view on" id="v-study">
+  <div id="backupTip" style="display:none;background:var(--card2);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:16px">💾</span><span id="backupTipText" style="flex:1;min-width:200px"></span>
+    <button class="btn" id="backupTipBtn" style="padding:6px 12px">去备份</button>
+    <button class="iconbtn" id="backupTipClose" style="padding:6px 9px">×</button>
+  </div>
   <div class="plan">
     <div class="pl r"><div class="num" id="pReview">0</div><div class="lbl">待复习</div></div>
     <div class="pl n"><div class="num" id="pNew">0</div><div class="lbl">今日新词</div></div>
@@ -180,14 +185,17 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <div class="setrow"><div><div class="t">每轮题数</div><div class="d">一次连续做多少题后结算</div></div><input type="number" id="setRound" min="5" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习范围</div><div class="d">只背诵选中单元（单词本里勾选，留空=全部）</div></div><span id="setUnitInfo" style="font-size:12px;color:var(--muted)">全部单元</span></div>
   </div>
-  <div class="set">
-    <h3>🔄 数据</h3>
+  <div class="set" id="backupSet">
+    <h3>💾 本地备份与恢复（防丢失）</h3>
+    <div class="setrow"><div><div class="t">自动备份到本地文件</div><div class="d" id="bindDesc">桌面 Chrome / Edge 可绑定一个本地文件，每次学习后自动写入磁盘，清缓存也不丢</div></div><button class="btn primary" id="bindBtn">绑定文件</button></div>
+    <div class="setrow"><div><div class="t">备份状态</div><div class="d" id="backupStatus">尚未备份</div></div><button class="btn" id="nowBtn">立即备份</button></div>
+    <div class="setrow"><div><div class="t">下载备份文件</div><div class="d">所有浏览器可用，建议定期下载存到网盘/U盘</div></div><button class="btn" id="exportBtn">下载 JSON</button></div>
+    <div class="setrow"><div><div class="t">从备份文件恢复</div><div class="d">清了缓存/换设备后，用之前下载的 JSON 恢复全部进度</div></div><button class="btn" id="importBtn">选择文件恢复</button><input type="file" id="importFile" accept=".json,application/json" style="display:none"></div>
     <div class="setrow"><div><div class="t">清空当前用户进度</div><div class="d">不可恢复，请谨慎</div></div><button class="btn danger" id="resetBtn">清空</button></div>
-    <div class="setrow"><div><div class="t">导出进度</div><div class="d">备份到剪贴板</div></div><button class="btn" id="exportBtn">导出</button></div>
   </div>
 </div>
 
-<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 数据仅存本机浏览器</footer>
+<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
 </div>
 
 <div class="mask" id="mask"><div class="modal"><h3 id="modalTitle">新增用户</h3><input id="modalInput" placeholder="输入名字，如：朱陈昕" maxlength="12"><div class="row"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalOk">确定</button></div></div></div>
@@ -285,7 +293,77 @@ function loadDB(){
   try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.users&&Object.keys(d.users).length)return d;}catch(e){}
   const u=defaultUser('默认用户');return {users:{u0:u},current:'u0'};
 }
-function saveDB(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){alert('保存失败：本地存储空间不足');}}
+function saveDB(){
+  try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){alert('保存失败：本地存储空间不足');}
+  if(typeof scheduleBackup==='function')scheduleBackup(); // 自动写入已绑定的本地文件
+}
+
+/* ---- 本地备份模块：File System Access API（桌面） + 下载/恢复（通用） ---- */
+const BK_IDB='vocab9a_fs',BK_STORE='handles',BK_LAST='vocab9a_bk_last',BK_BOUND='vocab9a_bk_bound',BK_TIPHIDE='vocab9a_tip_hidden';
+function idbOpen(){return new Promise((res,rej)=>{try{const r=indexedDB.open(BK_IDB,1);r.onupgradeneeded=()=>{try{r.result.createObjectStore(BK_STORE);}catch(e){}};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
+async function bkGetHandle(){try{const db=await idbOpen();return await new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readonly').objectStore(BK_STORE).get('file');t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);});}catch(e){return null;}}
+async function bkSetHandle(h){const db=await idbOpen();return new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readwrite').objectStore(BK_STORE).put(h,'file');t.onsuccess=()=>res();t.onerror=()=>rej(t.error);});}
+function bkPayload(){return {meta:{app:'vocab9a',v:1,time:Date.now(),note:'背单词引擎进度备份 · 译林9A'},data:DB};}
+let bkTimer=null;
+function scheduleBackup(){clearTimeout(bkTimer);bkTimer=setTimeout(()=>{bkWrite(false).catch(()=>{});},1200);}
+async function bkWrite(force){
+  const h=await bkGetHandle();if(!h)return {ok:false,reason:'nohandle'};
+  let perm='granted';
+  try{perm=await h.queryPermission({mode:'readwrite'});}catch(e){perm='prompt';}
+  if(perm!=='granted'){
+    if(!force)return {ok:false,reason:'needperm'};
+    try{perm=await h.requestPermission({mode:'readwrite'});}catch(e){return {ok:false,reason:'denied'};}
+    if(perm!=='granted')return {ok:false,reason:'denied'};
+  }
+  try{
+    const w=await h.createWritable();
+    await w.write(JSON.stringify(bkPayload(),null,1));
+    await w.close();
+    try{localStorage.setItem(BK_LAST,String(Date.now()));localStorage.setItem(BK_BOUND,'1');}catch(e){}
+    updateBackupStatus();return {ok:true};
+  }catch(e){return {ok:false,reason:'write:'+e.name};}
+}
+async function bkBind(){
+  if(!window.showSaveFilePicker){alert('当前浏览器不支持自动写入本地文件。请用「下载 JSON」定期备份，存到网盘或U盘。');return;}
+  try{
+    const h=await window.showSaveFilePicker({suggestedName:'背单词进度备份.json',types:[{description:'JSON 备份文件',accept:{'application/json':['.json']}}]});
+    await bkSetHandle(h);
+    const r=await bkWrite(true);
+    try{localStorage.setItem(BK_BOUND,'1');}catch(e){}
+    updateBackupStatus();
+    alert(r.ok?('已绑定 '+h.name+'\n以后每次学习后会自动写入这个文件，清浏览器缓存也不会丢。'):('已选择文件，但首次写入失败：'+r.reason+'\n请用「立即备份」重试。'));
+  }catch(e){if(e&&e.name!=='AbortError')alert('绑定失败：'+(e.message||e));}
+}
+async function updateBackupStatus(){
+  const desc=document.getElementById('bindDesc'),st=document.getElementById('backupStatus'),btn=document.getElementById('bindBtn');
+  if(!desc||!st||!btn)return;
+  const h=await bkGetHandle(),supported=!!window.showSaveFilePicker;
+  const last=+(localStorage.getItem(BK_LAST)||0);
+  if(h){
+    desc.textContent='已绑定本地文件：'+(h.name||'备份文件')+'（每次学习后自动写入磁盘）';
+    btn.textContent='更换文件';
+    st.textContent=last?('上次自动备份：'+new Date(last).toLocaleString()):'已绑定，等待首次写入';
+    try{localStorage.setItem(BK_BOUND,'1');}catch(e){}
+  }else{
+    desc.textContent=supported?'桌面 Chrome / Edge 可绑定一个本地文件，每次学习后自动写入磁盘，清缓存也不丢':'当前浏览器不支持自动写入本地文件，请用「下载 JSON」定期备份后存到网盘/U盘';
+    btn.textContent='绑定文件';
+    st.textContent='未绑定自动备份 — 请下载 JSON 手动保存';
+  }
+  updateBackupTip();
+}
+function updateBackupTip(){
+  const tip=document.getElementById('backupTip'),txt=document.getElementById('backupTipText');
+  if(!tip||!txt)return;
+  try{if(localStorage.getItem(BK_TIPHIDE)==='1'){tip.style.display='none';return;}}catch(e){}
+  const bound=(localStorage.getItem(BK_BOUND)==='1');
+  const last=+(localStorage.getItem(BK_LAST)||0);
+  const days=last?Math.floor((Date.now()-last)/86400000):null;
+  let msg='';
+  if(!bound)msg='进度目前只存在浏览器里，清缓存或换设备会丢失。建议绑定本地文件或下载备份。';
+  else if(days===null)msg='已开启自动备份，但还没成功写入过。点「去备份」确认一次。';
+  else if(days>=7)msg='距上次备份已 '+days+' 天，建议手动备份一次。';
+  if(msg){txt.textContent=msg;tip.style.display='flex';}else tip.style.display='none';
+}
 function U(){return DB.users[DB.current];}
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function logReview(ok){
@@ -471,11 +549,50 @@ document.getElementById('resetBtn').onclick=()=>{
   if(!confirm('确定清空「'+U().name+'」的全部学习进度？不可恢复。'))return;
   const name=U().name;DB.users[DB.current]=defaultUser(name);SESSION={queue:[],idx:0};saveDB();refreshAll();
 };
+// 下载备份文件（通用兜底）
 document.getElementById('exportBtn').onclick=()=>{
-  const txt=JSON.stringify(DB);
-  if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>alert('已复制进度数据到剪贴板'));
-  else prompt('复制以下内容保存：',txt);
+  try{
+    const payload=JSON.stringify(bkPayload(),null,1);
+    const blob=new Blob([payload],{type:'application/json;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='背单词进度备份_'+todayStr()+'.json';document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+    try{localStorage.setItem(BK_LAST,String(Date.now()));}catch(e){}
+    updateBackupStatus();
+    alert('已下载备份文件：背单词进度备份_'+todayStr()+'.json\n请存到网盘 / U盘 / 微信收藏，换设备时用「选择文件恢复」导入。');
+  }catch(e){alert('下载失败：'+e.message);}
 };
+// 绑定本地文件 / 立即备份
+document.getElementById('bindBtn').onclick=()=>bkBind();
+document.getElementById('nowBtn').onclick=async()=>{
+  const r=await bkWrite(true);
+  if(r.ok)alert('备份成功，已写入本地文件。');
+  else if(r.reason==='nohandle'){
+    if(window.showSaveFilePicker){await bkBind();}
+    else{alert('尚未绑定文件，且当前浏览器不支持自动写入。请点「下载 JSON」手动备份。');}
+  }
+  else alert('备份失败：'+r.reason);
+};
+// 从文件恢复
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d=null;
+    try{const p=JSON.parse(rd.result);d=p&&p.data&&p.data.users?p.data:(p&&p.users?p:null);}catch(err){}
+    if(!d||!d.users||typeof d.users!=='object'||!Object.keys(d.users).length){alert('文件无效：不是本程序导出的备份 JSON');e.target.value='';return;}
+    const names=Object.values(d.users).map(u=>u.name||'?').join('、');
+    if(!confirm('将用备份覆盖当前全部进度。\n备份中的用户：'+names+'\n当前进度会被替换，确定恢复？')){e.target.value='';return;}
+    DB=d;if(!DB.users[DB.current]||!DB.current)DB.current=Object.keys(DB.users)[0];
+    saveDB();refreshAll();
+    alert('恢复完成：'+Object.keys(DB.users).length+' 个用户');e.target.value='';
+  };
+  rd.readAsText(f,'utf-8');
+};
+// 备份提醒条
+document.getElementById('backupTipBtn').onclick=()=>{document.querySelector('.tab[data-v="setting"]').click();setTimeout(()=>document.getElementById('backupSet').scrollIntoView({behavior:'smooth',block:'center'}),100);};
+document.getElementById('backupTipClose').onclick=()=>{try{localStorage.setItem(BK_TIPHIDE,'1');}catch(e){}document.getElementById('backupTip').style.display='none';};
 let modalCb=null;
 function openModal(title,val,cb){document.getElementById('modalTitle').textContent=title;document.getElementById('modalInput').value=val||'';modalCb=cb;document.getElementById('mask').classList.add('on');document.getElementById('modalInput').focus();}
 function closeModal(){document.getElementById('mask').classList.remove('on');modalCb=null;}
@@ -494,12 +611,12 @@ try{const th=localStorage.getItem('vocab9a_theme');if(th){document.documentEleme
 function refreshAll(){
   document.getElementById('userName').textContent=U().name;
   document.getElementById('avatar').textContent=U().name.charAt(0);
-  SESSION={queue:[],idx:0};buildSession();renderSetting();renderStats();renderBook();
+  SESSION={queue:[],idx:0};buildSession();renderSetting();renderStats();renderBook();updateBackupStatus();
 }
 refreshAll();
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();}};
+window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
