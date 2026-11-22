@@ -41,6 +41,9 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .pl .lbl{font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
 .pl.r .num{color:var(--primary)}.pl.n .num{color:var(--primary2)}.pl.w .num{color:var(--danger)}
 /* study card */
+.dvbar{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px}
+.dvbar button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.dvbar button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
 .study{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);position:relative;min-height:330px}
 .study .meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:18px}
 .pill{background:var(--card2);border:1px solid var(--line);border-radius:20px;padding:4px 11px;font-size:11px}
@@ -151,6 +154,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <div class="pl n"><div class="num" id="pNew">0</div><div class="lbl">今日新词</div></div>
     <div class="pl w"><div class="num" id="pWrong">0</div><div class="lbl">错词强化</div></div>
   </div>
+  <div class="dvbar" id="dvBar"></div>
   <div class="study" id="studyBox"></div>
 </div>
 
@@ -302,7 +306,7 @@ function buildOptions(word,dir,pool){
 }
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 // 调度：返回到期词 / 错词 / 可投放新词
-function scanPool(user,now){
+function scanPool(user,now,filterFn){
   now=now||Date.now();
   const cfg=DB.users[user].settings;
   const scope=cfg.scope&&cfg.scope.length?cfg.scope:null;
@@ -311,6 +315,7 @@ function scanPool(user,now){
   const dKey=(cfg.dict&&WORDS_BY_DICT[cfg.dict])?cfg.dict:DICT_IDS[0];
   const review=[],wrong=[],fresh=[];
   WORDS_BY_DICT[dKey].forEach(w=>{
+    if(filterFn&&!filterFn(w))return;
     if(scope&&!scope.includes(w.unit))return;
     dirs.forEach(dir=>{
       const st=wstate(user,w.key,dir);
@@ -499,16 +504,117 @@ function qtText(q){return q==='spell'?'✍️ 拼写':'🔘 选择';}
 // 拼写判分归一化：忽略大小写/首尾空格/连续空格/弯引号/省略号写法
 function normWord(s){return (s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[…]/g,'...').replace(/\s+/g,' ').trim();}
 function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m||!n)return Math.max(m,n);const d=[];for(let i=0;i<=m;i++){d[i]=[i];}for(let j=1;j<=n;j++){d[0][j]=j;}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));}return d[m][n];}
+/* ============ 巩固模式：词性/短语/拼写/易混/主题（词以类记） ============ */
+const DV_MODES=[
+  {id:'normal',name:'📅 常规',tip:'按记忆曲线调度（默认）'},
+  {id:'v',name:'⚡ 动词',tip:'动词专项巩固'},
+  {id:'n',name:'📦 名词',tip:'名词专项巩固'},
+  {id:'adj',name:'🎨 形容词',tip:'形容词专项巩固'},
+  {id:'adv',name:'🔗 副词·虚词',tip:'副词/连词/介词专项'},
+  {id:'phr',name:'🧩 短语搭配',tip:'固定搭配与短语专项'},
+  {id:'spell',name:'✍️ 拼写攻坚',tip:'长难词强制拼写'},
+  {id:'confuse',name:'⚔️ 易混辨析',tip:'形近词对比辨析'},
+  {id:'theme',name:'🗂 主题词场',tip:'按主题归类记忆（词以类记）'},
+];
+function dvFilter(mode){
+  if(mode==='v')return w=>/^v/.test(w.pos);
+  if(mode==='n')return w=>/^n/.test(w.pos);
+  if(mode==='adj')return w=>/^adj/.test(w.pos);
+  if(mode==='adv')return w=>/^(adv|conj|pron|prep|num|interj|art)/.test(w.pos);
+  if(mode==='phr')return w=>/\s/.test(w.en)||/phr/i.test(w.pos);
+  if(mode==='spell')return w=>w.en.replace(/\s/g,'').length>=8;
+  return null;
+}
+// 主题词场：中文释义关键词 + 英文词根双重匹配（词以类记，后续可在词库数据里精细化）
+const THEMES=[
+  {id:'study',name:'📚 学习考试',kw:'学考课题读写书习教知记思练',
+   en:/\b(learn|stud|read|writ|book|lesson|class|school|teach|test|exam|question|answer|knowledge|practis|pract|spell|understand|remember|forget|think|idea|mean|homework|dictation|course|paper|report)/i},
+  {id:'emotion',name:'💛 情感态度',kw:'情感喜怒哀怕心勇信欲愿惧欢恨满疑',
+   en:/\b(happ|sad|angr|glad|afraid|fear|brave|confident|proud|shame|calm|worr|anx|excit|enjoy|love|hate|hope|wish|satisf|surpris|lonel|nervous|patient|pleas|smile|laugh|cry|joy|regret|trust|respect|courage)/i},
+  {id:'talk',name:'💬 沟通表达',kw:'说话谈讲问答达议诉呼解述辩',
+   en:/\b(say|speak|tell|talk|discuss|expl|express|announc|mention|describ|communicat|convers|call|ask|reply|dialog|argu|apolog|introduct|introduc|advic|advis|suggest|explain)/i},
+  {id:'action',name:'🏃 动作行为',kw:'走跑跳拿带扔接推拉打踢爬搬捉抓持举落退进移展',
+   en:/\b(run|walk|jump|mov|carry|throw|catch|push|pull|hit|kick|climb|ride|driv|fly|swim|break|cut|hold|lift|drop|fall|rise|enter|leav|arriv|reach|fetch|shake|press|knock|touch|point|act)/i},
+  {id:'nature',name:'🌿 自然环境',kw:'然境天水雨风云山河海树花林石空气温湿',
+   en:/\b(weather|rain|wind|cloud|snow|storm|sun|moon|star|sky|sea|ocean|river|lake|mountain|forest|tree|flower|grass|animal|bird|earth|land|environment|pollution|energy|nature|plant|wild|fire|ice)/i},
+  {id:'society',name:'🏙 社会生活',kw:'社法家市城民政钱工商业庆节日礼规矩制',
+   en:/\b(city|town|countr|government|law|rule|police|market|money|cost|pay|buy|sell|business|compan|factor|job|work|culture|tradit|festival|celebrat|famil|parent|neighbour|neighbor|commun|servic|public|social|hotel|restaurant|shopp)/i},
+  {id:'health',name:'🩺 身体健康',kw:'体身病医药健血脏眠餐食睡痛伤',
+   en:/\b(body|health|healt|sick|ill|medicin|doctor|hospital|hurt|pain|blood|heart|sleep|rest|food|eat|drink|meal|tired|exercis|sport|diseas|fit|strong|weak)/i},
+  {id:'time',name:'⏳ 时间数量',kw:'时年月日分秒数量度期早迟缓急',
+   en:/\b(time|year|month|week|day|hour|minute|moment|period|date|season|early|late|soon|today|tomorrow|yesterday|future|past|histor|modern|age|century|schedule|deadline|instant|final|last|next|first)/i},
+];
+function themeOf(w){
+  for(const t of THEMES){
+    if(w.zh){for(const ch of t.kw){if(w.zh.includes(ch))return t.id;}}
+    if(t.en.test(w.en))return t.id;
+  }
+  return null;
+}
+// 易混辨析：同库内编辑距离≤2 的形近词自动聚类（运行时计算一次）
+let CONFUSE_MAP=null;
+function confuseMap(){
+  if(CONFUSE_MAP)return CONFUSE_MAP;
+  const words=curWords().filter(w=>w.en.length>=4&&!/\s/.test(w.en));
+  const map={};
+  for(let i=0;i<words.length;i++)for(let j=i+1;j<words.length;j++){
+    const a=words[i].en.toLowerCase(),b=words[j].en.toLowerCase();
+    if(Math.abs(a.length-b.length)>2)continue;
+    if(lev(a,b)<=2){
+      (map[words[i].key]=map[words[i].key]||[]).push(words[j]);
+      (map[words[j].key]=map[words[j].key]||[]).push(words[i]);
+    }
+  }
+  CONFUSE_MAP=map;return map;
+}
+function renderDvBar(){
+  const bar=document.getElementById('dvBar');
+  const mode=SESSION.refreshMode||'normal';
+  bar.innerHTML=DV_MODES.map(d=>'<button data-dv="'+d.id+'" title="'+d.tip+'" class="'+(mode===d.id?'on':'')+'">'+d.name+'</button>').join('')+
+    (mode==='theme'?'<div class="dvbar" style="padding-top:8px">'+THEMES.map(t=>'<button data-th="'+t.id+'" class="'+((SESSION.refreshTheme||'')===t.id?'on':'')+'">'+t.name+'</button>').join('')+'</div>':'');
+  bar.querySelectorAll('[data-dv]').forEach(b=>b.onclick=()=>{
+    SESSION.refreshMode=b.dataset.dv;
+    if(b.dataset.dv!=='theme')SESSION.refreshTheme=null;
+    buildSession();
+  });
+  bar.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{SESSION.refreshTheme=b.dataset.th;buildSession();});
+}
 function buildSession(){
-  const {review,wrong,fresh}=scanPool(DB.current,Date.now());
   const cfg=U().settings;
+  const mode=SESSION.refreshMode||'normal';
+  const filt=dvFilter(mode);
+  const filterFn=(mode==='confuse')?(w=>!!confuseMap()[w.key])
+    :(mode==='theme')?(w=>!SESSION.refreshTheme||themeOf(w)===SESSION.refreshTheme)
+    :filt;
+  const {review,wrong,fresh}=scanPool(DB.current,Date.now(),filterFn);
   let q=wrong.concat(review);
+  // 巩固模式核心：把已学未到期的词也拉进来（定期巩固，不受复习时间表约束）
+  if(mode!=='normal'){
+    const now=Date.now(),dirs=cfg.dir==='both'?['e2c','c2e']:[cfg.dir];
+    const seen=new Set(q.map(it=>it.w.key+'§'+it.dir));
+    const learned=[];
+    WORDS_BY_DICT[curDict()].forEach(w=>{
+      if(filterFn&&!filterFn(w))return;
+      if(cfg.scope.length&&!cfg.scope.includes(w.unit))return;
+      dirs.forEach(dir=>{
+        const k=w.key+'§'+dir;if(seen.has(k))return;
+        const st=wstate(DB.current,w.key,dir);
+        if(st.last>0&&st.due>now&&!st.wrong)learned.push({w,dir,st});
+      });
+    });
+    shuffle(learned);
+    q=q.concat(learned.slice(0,Math.max(0,cfg.round*2-q.length)));
+  }
   // 今日新词额度 = newPerDay × 方向数
   const dirCount=cfg.dir==='both'?2:1;
   const quota=Math.max(0,cfg.newPerDay*dirCount-(U().daily[todayStr()]?.n||0));
   q=q.concat(fresh.slice(0,quota));
-  q.forEach(it=>it.qtype=pickQType(it));   // 每题先定练习形式，重渲染时保持稳定
-  SESSION={queue:q.slice(0,cfg.round),idx:0,done:0,correct:0,answered:false,cur:null};
+  q.forEach(it=>{
+    it.qtype=pickQType(it);
+    if(mode==='spell')it.qtype='spell';        // 拼写攻坚：强制拼写
+    if(mode==='confuse')it.confuse=confuseMap()[it.w.key];
+  });
+  SESSION={queue:q.slice(0,cfg.round),idx:0,done:0,correct:0,answered:false,cur:null,refreshMode:mode,refreshTheme:SESSION.refreshTheme};
   renderStudy();
 }
 function renderPlan(){
@@ -521,6 +627,7 @@ function renderPlan(){
 }
 function renderStudy(){
   const box=document.getElementById('studyBox');
+  renderDvBar();
   renderPlan();
   if(!SESSION.queue.length||SESSION.idx>=SESSION.queue.length){
     box.innerHTML='<div class="done"><div class="big">🎉</div><h2>今日一轮完成</h2><p>本轮答对 '+SESSION.correct+' / '+SESSION.done+' 题</p><p style="margin:6px 0 18px">记忆曲线会自动安排下次复习时间，明天再来巩固</p><button class="btn primary" id="againBtn">再练一轮（错词优先）</button></div>';
@@ -531,8 +638,9 @@ function renderStudy(){
   const dir=item.dir, qt=item.qtype||'choice';
   const st=item.st||blankState();
   const wrongTag=(st.wrong?'<span class="pill wrong">⚠ 错词强化</span>':'');
-  const head='<div class="meta"><span>第 '+(SESSION.idx+1)+' / '+SESSION.queue.length+' 题　'+wrongTag+'</span><span class="pill">'+qtText(qt)+' · U'+item.w.unit+'</span></div>'+
-    '<div class="progress"><i style="width:'+(SESSION.idx/SESSION.queue.length*100)+'%"></i></div>';
+  const head='<div class="meta"><span>第 '+(SESSION.idx+1)+' / '+SESSION.queue.length+' 题　'+wrongTag+'</span><span class="pill">'+qtText(qt)+' · '+item.w.unit+'</span></div>'+
+    '<div class="progress"><i style="width:'+(SESSION.idx/SESSION.queue.length*100)+'%"></i></div>'+
+    (item.confuse?'<div style="font-size:12px;color:var(--warn);margin:-4px 0 8px">⚔️ 注意区分：'+item.confuse.map(x=>x.en+'（'+x.zh+'）').join('　')+'</div>':'');
   if(qt==='choice'){
     const opts=buildOptions(item.w,dir);
     const qText=dir==='e2c'?item.w.en:item.w.zh;
@@ -693,7 +801,7 @@ function renderSetting(){
     b.classList.toggle('on',b.dataset.dict===curDict());
     b.onclick=()=>{
       const to=b.dataset.dict;if(to===curDict())return;
-      u.settings.dict=to;u.settings.scope=[];bookUnit=0;   // 换库后重置单元筛选
+      u.settings.dict=to;u.settings.scope=[];bookUnit=0;CONFUSE_MAP=null;   // 换库后重置筛选与易混缓存
       saveDB();refreshAll();
     };
   });
@@ -830,7 +938,7 @@ refreshAll();
 bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
