@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>背单词引擎 · 译林9A</title>
-<script src="vocab_words.js?v=20261122a"></script>
+<title>背单词引擎 · 多词库</title>
+<script src="vocab_words.js?v=20261123a"></script>
 <style>
 :root{
   --bg:#eef2f7; --card:#ffffff; --card2:#f8fafc; --primary:#4f46e5; --primary2:#06b6d4;
@@ -201,6 +201,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <h3>⚙️ 学习参数</h3>
     <div class="setrow"><div><div class="t">每日新词数</div><div class="d">每天最多投放多少个新词</div></div><input type="number" id="setNew" min="0" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习方向</div><div class="d">英→中=看单词选中文；中→英=看中文选单词</div></div><div class="seg" id="setDir"><button data-d="both" class="on">双向</button><button data-d="e2c">英→中</button><button data-d="c2e">中→英</button></div></div>
+    <div class="setrow"><div><div class="t">词库</div><div class="d">每个用户可单独选库：中考=译林9A+核心补充（563词）；四六级=CET4/6高频（300词）。切换后各自进度独立保存，互不影响；后续可随时增减体量或新增词库（考研/雅思等）</div></div><div class="seg" id="setDict"></div></div>
     <div class="setrow"><div><div class="t">练习形式</div><div class="d">选择=四选一识别；拼写=看中文写单词；混合=随机交替（推荐，最贴近考场）</div></div><div class="seg" id="setMode"><button data-m="mix">混合</button><button data-m="choice">选择</button><button data-m="spell">拼写</button></div></div>
     <div class="setrow"><div><div class="t">每轮题数</div><div class="d">一次连续做多少题后结算</div></div><input type="number" id="setRound" min="5" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习范围</div><div class="d">只背诵选中单元（单词本里勾选，留空=全部）</div></div><span id="setUnitInfo" style="font-size:12px;color:var(--muted)">全部单元</span></div>
@@ -216,13 +217,13 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
 </div>
 
-<footer>词表：2024 新课标版译林英语九年级上册（9A）Unit 1–8 · 多来源交叉核对<br>练习形式：🔘 选择 · ✍️ 拼写（混合随机交替，主动回忆对抗遗忘）<br>词库：<span id="vocabInfo">—</span>（独立文件动态维护，增减词不影响已有进度）<br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
+<footer>词库：中考（译林9A Unit1-8+高频核心补充 563词）· 四六级（CET4/6 高频 300词）· 独立文件动态维护，增减词不影响已有进度<br>练习形式：🔘 选择 · ✍️ 拼写（混合随机交替，主动回忆对抗遗忘）<br>多用户：每人可单独选词库，进度独立保存 · <span id="vocabInfo">—</span><br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
 </div>
 
 <div class="mask" id="mask"><div class="modal"><h3 id="modalTitle">新增用户</h3><input id="modalInput" placeholder="输入名字，如：朱陈昕" maxlength="12"><div class="row"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalOk">确定</button></div></div></div>
 
 <script>
-/* ============ 词库：2024新课标版 译林9A Unit1-8（多来源交叉核对） ============
+/* ============ 词库：多词库架构 ============
    词库已外置为 vocab_words.js，可独立增减而不改页面；
    本文件内嵌一份同数据作为离线兑底（外置文件加载失败时使用）。 */
 const FALLBACK_WORDS_RAW={
@@ -235,14 +236,25 @@ const FALLBACK_WORDS_RAW={
 7:[["action","动作片；行动","n"],["comedy","喜剧","n"],["cartoon","卡通片；漫画","n"],["documentary","纪录片","n"],["romance","爱情故事；传奇","n"],["all-time","空前的","adj"],["actress","女演员","n"],["loss","去世；丧失，损失","n"],["humanitarian","人道主义者","n"],["ballet","芭蕾舞","n"],["charm","魅力","n"],["insist","坚持说；坚决要求","v"],["based","基于","adj"],["based upon/on","以……为基础","phr"],["major","主要的；专业","adj"],["mark","是……的迹象；标记；分数","v"],["career","事业；职业","n"],["princess","公主","n"],["appearance","演出；出现；外貌","n"],["angel","天使","n"],["radio","无线电广播；收音机","n"],["discover","发现","v"],["cancer","癌症","n"],["pass away","去世","phr"],["peacefully","平静地","adv"],["star","主演；星星","v"],["a number of","一些","phr"],["aid","援助，帮助","n"],["tireless","不知疲倦的","adj"],["rush hour","交通高峰期","n"],["park","停车；公园","v"],["actor","演员","n"],["storyteller","故事作者","n"],["script","剧本；脚本","n"],["mistake","误会；错误","v"],["steal","偷，窃取","v"],["supporting","次要的，配角的","adj"],["kung fu","功夫","n"],["handsome","英俊的","adj"],["inspiring","激励的","adj"],["price","价格；代价","n"],["scriptwriter","编剧","n"],["director","导演","n"],["film-maker","制片人","n"],["film","拍摄；电影","v"],["shoot","拍摄；射击","v"],["post-production","后期制作","n"],["editor","剪辑员；编辑","n"],["bring sb/sth to life","使更生动","phr"],["come to life","活了过来","phr"],["world-class","世界级的","adj"],["wrestler","摔跤运动员","n"],["touching","感人的","adj"],["fighter","斗士","n"],["elder","年纪较长的","adj"]],
 8:[["classic","最优秀的；典雅的","adj"],["short story","短篇小说","n"],["take one's time","从容不迫，慢慢来","phr"],["against","倚，紧靠；以……为背景","prep"],["branch","树枝","n"],["bedside","床边","n"],["anger","愤怒，怒气","n"],["make sense","有意义，讲得通","phr"],["have (...) to do with","与……有关","phr"],["apartment","公寓套房","n"],["masterpiece","杰作","n"],["fool","傻瓜","n"],["remain","剩余；逗留","v"],["widely","普遍地，广泛地","adv"],["run out of","用完，耗尽","phr"],["fair","展销会；集市","n"],["act","（戏剧等）一幕；行为；表演","n"],["seat","（使）就座","v"],["throne","宝座；王位","n"],["unable","未能，无法","adj"],["enemy","敌人","n"],["writing","著作，作品","n"],["image","意象；图像","n"],["lasting","持久的","adj"],["show up","出现，露面","phr"],["mirror","镜子","n"],["knock","敲门声；敲击","n"],["hurry up","赶快","phr"],["doorbell","门铃","n"],["ring","发出铃声","v"]]
 };
-// 展平成全局数组：优先用外置词库（可动态增减），失败时用内嵌兑底
-const WORDS_RAW=(window.VOCAB_WORDS&&Object.keys(window.VOCAB_WORDS).length)?window.VOCAB_WORDS:FALLBACK_WORDS_RAW;
+// 展平成全局数组：优先用外置多词库（可动态增减），失败时用内嵌兑底（仅中考）
+const DICTS_RAW=(window.VOCAB_DICTS&&Object.keys(window.VOCAB_DICTS).length)
+  ? window.VOCAB_DICTS
+  : {zhongkao:{name:'中考 · 译林9A',unitLabel:'Unit',units:FALLBACK_WORDS_RAW}};
 const VOCAB_META=window.VOCAB_META||{v:'built-in',updated:'',note:''};
-const WORDS=[];
-Object.keys(WORDS_RAW).forEach(u=>{WORDS_RAW[u].forEach(([en,zh,pos])=>WORDS.push({key:u+'|'+en.toLowerCase(),en,zh,pos,unit:+u}));});
-// 旧版进度按“位置序号”存，序号会随词库增减错位——此处建立旧id→稳定key的映射，只用于一次性迁移
-const LEGACY_KEYS=[];
-Object.keys(FALLBACK_WORDS_RAW).forEach(u=>{FALLBACK_WORDS_RAW[u].forEach(([en])=>LEGACY_KEYS.push(u+'|'+en.toLowerCase()));});
+const WORDS_BY_DICT={};
+Object.keys(DICTS_RAW).forEach(dk=>{
+  const arr=[];
+  Object.keys(DICTS_RAW[dk].units).forEach(u=>{
+    DICTS_RAW[dk].units[u].forEach(([en,zh,pos])=>arr.push({key:dk+'|'+u+'|'+en.toLowerCase(),en,zh,pos,unit:+u}));
+  });
+  WORDS_BY_DICT[dk]=arr;
+});
+const DICT_IDS=Object.keys(WORDS_BY_DICT);
+function curDict(){const s=U().settings;return (s&&s.dict&&WORDS_BY_DICT[s.dict])?s.dict:DICT_IDS[0];}
+function curWords(){return WORDS_BY_DICT[curDict()];}
+// 旧版进度按“位置序号”存（v1），后按「单元|单词」存（v2）——统一升级为「词库|单元|单词」(v3)
+const LEGACY_KEYS=[]; // v1 数字序号 → 全新 key（基准永远用内嵌兑底词表原始顺序）
+Object.keys(FALLBACK_WORDS_RAW).forEach(u=>{FALLBACK_WORDS_RAW[u].forEach(([en])=>LEGACY_KEYS.push('zhongkao|'+u+'|'+en.toLowerCase()));});
 
 /* ============ 记忆算法（艾宾浩斯 + SM-2 简化，纯函数、可测） ============ */
 const INTERVALS=[10,60,1440,2880,5760,10080,21600,43200,86400]; // 分钟：10分/1h/1d/2d/4d/7d/15d/30d/60d
@@ -278,8 +290,8 @@ function setWstate(user,key,dir,st){const u=DB.users[user];if(!u.states[key])u.s
 function buildOptions(word,dir,pool){
   const field=dir==='e2c'?'zh':'en';
   const correct=word[field];
-  const same=(pool||WORDS).filter(w=>w[field]!==correct&&(w.unit===word.unit));
-  const others=(pool||WORDS).filter(w=>w[field]!==correct);
+  const same=(pool||curWords()).filter(w=>w[field]!==correct&&(w.unit===word.unit));
+  const others=(pool||curWords()).filter(w=>w[field]!==correct);
   let cand=same.slice();
   shuffle(cand);
   if(cand.length<3){const extra=others.filter(w=>!cand.includes(w));shuffle(extra);cand=cand.concat(extra);}
@@ -295,8 +307,10 @@ function scanPool(user,now){
   const cfg=DB.users[user].settings;
   const scope=cfg.scope&&cfg.scope.length?cfg.scope:null;
   const dirs=cfg.dir==='both'?['e2c','c2e']:[cfg.dir];
+  // 关键：用「被查询用户自己选的词库」，而不是当前登录用户——多用户各自选库不串
+  const dKey=(cfg.dict&&WORDS_BY_DICT[cfg.dict])?cfg.dict:DICT_IDS[0];
   const review=[],wrong=[],fresh=[];
-  WORDS.forEach(w=>{
+  WORDS_BY_DICT[dKey].forEach(w=>{
     if(scope&&!scope.includes(w.unit))return;
     dirs.forEach(dir=>{
       const st=wstate(user,w.key,dir);
@@ -318,7 +332,7 @@ function scanPool(user,now){
 // 双写镜像：主 key 损坏/被误清时，从镜像自动恢复，确保"更新/清洗后不用重新学"。
 const KEY='vocab9a_v1', KEY_MIRROR='vocab9a_v1_mirror';
 function validDB(d){return d&&d.users&&typeof d.users==='object'&&Object.keys(d.users).length>0;}
-function defaultUser(name){return {name,created:Date.now(),states:{},settings:{newPerDay:20,dir:'both',round:20,scope:[],mode:'mix'},daily:{},streak:0,lastDay:''};}
+function defaultUser(name){return {name,created:Date.now(),states:{},settings:{newPerDay:20,dir:'both',round:20,scope:[],mode:'mix',dict:DICT_IDS[0]},daily:{},streak:0,lastDay:''};}
 let DB=migrateDB(loadDB());
 function loadDB(){
   let recovered=false;
@@ -339,21 +353,26 @@ function saveDB(){
   try{localStorage.setItem(KEY_MIRROR,s);}catch(e){} // 镜像冗余，防误清
   if(typeof scheduleBackup==='function')scheduleBackup(); // 自动写入已绑定的本地文件
 }
-/* ---- 词库进化迁移（一次性）：旧进度按位置序号存储 → 改为按词的稳定 key 存储。
-   映射基准永远用内嵌兑底词表的原始顺序（与历史版本完全一致），
-   因此无论外置词库怎么增减，老用户的进度都能一一对上，不受影响。 ---- */
+/* ---- 词库进化迁移：v1 数字序号 → v2「单元|单词」 → v3「词库|单元|单词」。
+   每一步的映射基准永远用内嵌兑底词表的原始顺序（与历史版本完全一致），
+   因此无论词库怎么增减、加几个库，老用户的进度都能一一对上，不受影响。 ---- */
 function migrateDB(db){
-  if(db&&db.v>=2)return db;
+  const was=(db&&db.v)||1;
   Object.keys(db.users).forEach(uk=>{
     const u=db.users[uk],ns={};
     Object.keys(u.states||{}).forEach(id=>{
-      const k=LEGACY_KEYS[+id];if(!k)return;
+      let k=id;
+      if(was<2){
+        k=LEGACY_KEYS[+id];if(!k)return;          // v1: 数字序号 → 全新 key
+      }else if(was<3){
+        if((id.split('|').length===2)&&DICT_IDS.indexOf(id.split('|')[0])<0)k='zhongkao|'+id;  // v2: 补词库前缀
+      }
       if(!ns[k])ns[k]={};
       Object.assign(ns[k],u.states[id]);
     });
     u.states=ns;
   });
-  db.v=2;
+  db.v=3;
   return db;
 }
 
@@ -362,7 +381,7 @@ const BK_IDB='vocab9a_fs',BK_STORE='handles',BK_LAST='vocab9a_bk_last',BK_BOUND=
 function idbOpen(){return new Promise((res,rej)=>{try{const r=indexedDB.open(BK_IDB,1);r.onupgradeneeded=()=>{try{r.result.createObjectStore(BK_STORE);}catch(e){}};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
 async function bkGetHandle(){try{const db=await idbOpen();return await new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readonly').objectStore(BK_STORE).get('file');t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);});}catch(e){return null;}}
 async function bkSetHandle(h){const db=await idbOpen();return new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readwrite').objectStore(BK_STORE).put(h,'file');t.onsuccess=()=>res();t.onerror=()=>rej(t.error);});}
-function bkPayload(){return {meta:{app:'vocab9a',v:1,time:Date.now(),note:'背单词引擎进度备份 · 译林9A'},data:DB};}
+function bkPayload(){return {meta:{app:'vocab9a',v:2,time:Date.now(),note:'背单词引擎进度备份 · 多词库版'},data:DB};}
 let bkTimer=null,bkStatus='idle'; // idle|ok|needperm|failed|nohandle|unsupported
 function bkSetStatus(s){bkStatus=s;try{localStorage.setItem('vocab9a_bk_status',s);}catch(e){}updateBackupTip();}
 function scheduleBackup(){clearTimeout(bkTimer);bkTimer=setTimeout(()=>{bkWrite(false).catch(()=>{});},1200);}
@@ -596,11 +615,14 @@ function fmtDue(ts){const m=Math.round((ts-Date.now())/60000);if(m<1)return '马
 /* ============ 各视图 ============ */
 let bookUnit=0;
 function renderBook(){
+  const dict=DICTS_RAW[curDict()], words=curWords();
+  const ulabel=dict.unitLabel||'Unit';
   const chips=document.getElementById('unitChips');
-  chips.innerHTML='<span style="font-size:12px;color:var(--muted);align-self:center;margin-right:4px">筛选：</span>'+
-    [0,1,2,3,4,5,6,7,8].map(u=>'<button class="unit-chip'+(bookUnit===u?' on':'')+'" data-u="'+u+'">'+(u===0?'全部':'Unit '+u)+'</button>').join('');
+  const units=[0].concat(words.map(w=>w.unit).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b));
+  chips.innerHTML='<span style="font-size:12px;color:var(--muted);align-self:center;margin-right:4px">'+dict.name+' · 筛选：</span>'+
+    units.map(u=>'<button class="unit-chip'+(bookUnit===u?' on':'')+'" data-u="'+u+'">'+(u===0?'全部':ulabel+' '+u)+'</button>').join('');
   chips.querySelectorAll('.unit-chip').forEach(b=>b.onclick=()=>{bookUnit=+b.dataset.u;renderBook();});
-  const list=WORDS.filter(w=>!bookUnit||w.unit===bookUnit);
+  const list=words.filter(w=>!bookUnit||w.unit===bookUnit);
   const dirs=U().settings.dir==='both'?['e2c','c2e']:[U().settings.dir];
   document.getElementById('wlist').innerHTML=list.map(w=>{
     let cls='',tip='未学';
@@ -608,7 +630,7 @@ function renderBook(){
     if(arr.some(s=>s.wrong)){cls='wrong';tip='错词强化中';}
     else if(arr.every(s=>s.stage>=5)){cls='ok';tip='已掌握';}
     else if(arr.some(s=>s.last>0)){cls='learning';tip='学习中';}
-    return '<div class="wrow"><span class="dot '+cls+'" title="'+tip+'"></span><span class="en">'+w.en+'</span><span class="zh">'+w.zh+'</span><span class="u">U'+w.unit+'</span></div>';
+    return '<div class="wrow"><span class="dot '+cls+'" title="'+tip+'"></span><span class="en">'+w.en+'</span><span class="zh">'+w.zh+'</span><span class="u">'+ulabel+' '+w.unit+'</span></div>';
   }).join('');
 }
 // 记忆指纹：对全部用户进度做稳定哈希（与 key 顺序无关），用于更新前后核对
@@ -628,7 +650,8 @@ function renderStats(){
   const t=u.daily[todayStr()]||{r:0,c:0};
   const fpEl=document.getElementById('fingerprint');if(fpEl)fpEl.textContent=memoryFingerprint();
   let learned=0,wrong=0,master=0,learning=0;
-  WORDS.forEach(w=>{
+  const words=curWords();
+  words.forEach(w=>{
     if(cfg.scope.length&&!cfg.scope.includes(w.unit))return;
     const arr=dirs.map(d=>wstate(DB.current,w.key,d));
     if(arr.some(s=>s.last>0))learned++;
@@ -636,8 +659,9 @@ function renderStats(){
     else if(arr.every(s=>s.stage>=5))master++;
     else if(arr.some(s=>s.last>0))learning++;
   });
-  const fresh=WORDS.length-(cfg.scope.length?WORDS.filter(w=>cfg.scope.includes(w.unit)).length:WORDS.length)-0;
-  const newLeft=WORDS.length-learned-wrong-master-learning;
+  const totalInScope=cfg.scope.length?words.filter(w=>cfg.scope.includes(w.unit)).length:words.length;
+  const fresh=totalInScope;
+  const newLeft=totalInScope-learned-wrong-master-learning;
   document.getElementById('sTotal').textContent=learned;
   document.getElementById('sStreak').textContent=u.streak;
   document.getElementById('sToday').textContent=t.r;
@@ -653,18 +677,32 @@ function renderStats(){
     '<i style="width:'+(master/tot*100)+'%;background:var(--success)"></i>';
   document.getElementById('curveHint').innerHTML='<b>记忆曲线说明</b><br>间隔阶梯：'+INTERVALS.map((m,i)=>i===0?'10分钟':(m<1440?Math.round(m/60)+'小时':Math.round(m/1440)+'天')).join(' → ')+
     '。<br>答对进入下一阶梯、间隔拉长；答错降 2 阶并在 10 分钟后重新出现，连对 3 次才从错词本毕业——这就是对抗遗忘曲线的关键机制。'+
-    '<br>当前词库：<b>'+WORDS.length+' 词</b>'+(VOCAB_META.updated?(' · 词库版本 '+VOCAB_META.updated):'');
+    '<br>当前词库：<b>'+DICTS_RAW[curDict()].name+' · '+curWords().length+' 词</b>'+(VOCAB_META.updated?(' · 词库版本 '+VOCAB_META.updated):'')+
+    '<br>全部词库：'+DICT_IDS.map(k=>DICTS_RAW[k].name+' '+WORDS_BY_DICT[k].length+'词').join(' / ');
 }
 function renderSetting(){
-  const u=U();
+  const u=U(),dict=DICTS_RAW[curDict()];
   document.getElementById('setNew').value=u.settings.newPerDay;
   document.getElementById('setRound').value=u.settings.round;
   document.querySelectorAll('#setDir button').forEach(b=>b.classList.toggle('on',b.dataset.d===u.settings.dir));
   document.querySelectorAll('#setMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===(u.settings.mode||'mix')));
-  document.getElementById('setUnitInfo').textContent=u.settings.scope.length?'Unit '+u.settings.scope.join(', '):'全部单元';
+  // 词库切换按钮（每个用户独立选库，进度互不影响）
+  const ds=document.getElementById('setDict');
+  ds.innerHTML=DICT_IDS.map(k=>'<button data-dict="'+k+'" title="'+WORDS_BY_DICT[k].length+'词">'+DICTS_RAW[k].name.replace('大学英语','四六').replace(' · 译林9A+核心补充','')+'</button>').join('');
+  ds.querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('on',b.dataset.dict===curDict());
+    b.onclick=()=>{
+      const to=b.dataset.dict;if(to===curDict())return;
+      u.settings.dict=to;u.settings.scope=[];bookUnit=0;   // 换库后重置单元筛选
+      saveDB();refreshAll();
+    };
+  });
+  const ulb=dict.unitLabel||'Unit';
+  document.getElementById('setUnitInfo').textContent=u.settings.scope.length?ulb+' '+u.settings.scope.join(', '):dict.name+' 全部单元';
   const ul=document.getElementById('userList');
   ul.innerHTML=Object.keys(DB.users).map(k=>{
-    const x=DB.users[k];return '<div class="uchip'+(k===DB.current?' on':'')+'" data-k="'+k+'"><span class="avatar">'+x.name.charAt(0)+'</span>'+x.name+(Object.keys(DB.users).length>1?'<span class="x" data-del="'+k+'">×</span>':'')+'</div>';
+    const x=DB.users[k];const dtag=(x.settings&&x.settings.dict&&DICTS_RAW[x.settings.dict])?DICTS_RAW[x.settings.dict].name.replace('大学英语','四六').replace(' · 译林9A+核心补充',''):'';
+    return '<div class="uchip'+(k===DB.current?' on':'')+'" data-k="'+k+'"><span class="avatar">'+x.name.charAt(0)+'</span>'+x.name+'<small>'+dtag+'</small>'+(Object.keys(DB.users).length>1?'<span class="x" data-del="'+k+'">×</span>':'')+'</div>';
   }).join('');
   ul.querySelectorAll('.uchip').forEach(c=>c.onclick=e=>{
     if(e.target.dataset.del){delUser(e.target.dataset.del);return;}
@@ -785,14 +823,14 @@ try{const th=localStorage.getItem('vocab9a_theme');if(th){document.documentEleme
 function refreshAll(){
   document.getElementById('userName').textContent=U().name;
   document.getElementById('avatar').textContent=U().name.charAt(0);
-  const vi=document.getElementById('vocabInfo');if(vi)vi.textContent=WORDS.length+' 词 · 版本 '+(VOCAB_META.updated||VOCAB_META.v||'内嵌');
+  const vi=document.getElementById('vocabInfo');if(vi)vi.textContent=curDict()+'库 '+curWords().length+' 词';
   SESSION={queue:[],idx:0};buildSession();renderSetting();renderStats();renderBook();updateBackupStatus();
 }
 refreshAll();
 bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
