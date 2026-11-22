@@ -161,6 +161,15 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <div class="sc"><div class="v" id="sToday">0</div><div class="l">今日复习次数</div></div>
     <div class="sc"><div class="v" id="sAcc">0%</div><div class="l">今日正确率</div></div>
   </div>
+  <div class="set" style="background:var(--card2)">
+    <h3>🔐 记忆指纹（更新前后对比，确认进度没丢）</h3>
+    <div style="font-size:12px;color:var(--muted);line-height:1.9">
+      你的学习记录<b>只存在这台设备的浏览器里</b>，GitHub 只存页面程序、不含任何个人记忆。<br>
+      所以每次程序更新都<b>不会动你的进度</b>。下面这个码是记忆的"校验指纹"：
+      <div style="font-family:ui-monospace,Consolas,monospace;font-size:20px;font-weight:800;color:var(--primary);letter-spacing:2px;margin:10px 0;word-break:break-all" id="fingerprint">—</div>
+      更新前后这个码<b>不变</b>，就证明记忆分毫未动。（它会随你每次背词自然变化，这是正常的）
+    </div>
+  </div>
   <div class="mastery">
     <h3 style="font-size:14px;margin-bottom:6px">掌握度分布</h3>
     <div class="bar" id="masteryBar"></div>
@@ -490,9 +499,22 @@ function renderBook(){
     return '<div class="wrow"><span class="dot '+cls+'" title="'+tip+'"></span><span class="en">'+w.en+'</span><span class="zh">'+w.zh+'</span><span class="u">U'+w.unit+'</span></div>';
   }).join('');
 }
+// 记忆指纹：对全部用户进度做稳定哈希（与 key 顺序无关），用于更新前后核对
+function memoryFingerprint(){
+  function stable(o){
+    if(o===null||typeof o!=='object')return JSON.stringify(o);
+    if(Array.isArray(o))return '['+o.map(stable).join(',')+']';
+    return '{'+Object.keys(o).sort().map(k=>JSON.stringify(k)+':'+stable(o[k])).join(',')+'}';
+  }
+  const s=stable(DB.users);
+  let h1=0x811c9dc5,h2=0x01000193;
+  for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,0x01000193)>>>0;h2=Math.imul(h2+c,0x85ebca6b)>>>0;}
+  return ('00000000'+h1.toString(16)).slice(-8)+'-'+('00000000'+h2.toString(16)).slice(-8);
+}
 function renderStats(){
   const u=U(),cfg=u.settings,dirs=cfg.dir==='both'?['e2c','c2e']:[cfg.dir];
   const t=u.daily[todayStr()]||{r:0,c:0};
+  const fpEl=document.getElementById('fingerprint');if(fpEl)fpEl.textContent=memoryFingerprint();
   let learned=0,wrong=0,master=0,learning=0;
   WORDS.forEach(w=>{
     if(cfg.scope.length&&!cfg.scope.includes(w.unit))return;
@@ -639,7 +661,7 @@ function refreshAll(){
 refreshAll();
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS,INTERVALS,schedule,buildOptions,scanPool,blankState,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=p.data&&p.data.users?p.data:p;saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
