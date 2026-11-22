@@ -55,6 +55,9 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .opt .k{display:inline-block;width:20px;height:20px;line-height:19px;border-radius:6px;background:var(--card);border:1px solid var(--line);font-size:11px;color:var(--muted);margin-right:8px}
 .opt.correct{background:var(--success-bg);border-color:var(--success);color:var(--success)}
 .opt.wrongsel{background:var(--danger-bg);border-color:var(--danger);color:var(--danger)}
+.unsure{display:block;width:100%;margin-top:12px;padding:10px;border:1px dashed var(--warn);background:transparent;color:var(--warn);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.unsure:hover{background:rgba(245,158,11,.1)}
+.unsure:disabled{opacity:.5;cursor:default}
 .fb{margin-top:16px;border-radius:12px;padding:13px 15px;font-size:14px;display:none}
 .fb.show{display:block;animation:fade .2s}
 .fb.ok{background:var(--success-bg);color:var(--success)}.fb.no{background:var(--danger-bg);color:var(--danger)}
@@ -187,6 +190,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
   <div class="set" id="backupSet">
     <h3>💾 本地备份与恢复（防丢失）</h3>
+    <div class="hintbox" style="margin-bottom:10px">程序更新只会更新页面本身，<b>不会动你的学习进度</b>；进度还做了双份存储，即使主记录被误清也能自动恢复。换设备/彻底清缓存前，请用下面的方式备份。</div>
     <div class="setrow"><div><div class="t">自动备份到本地文件</div><div class="d" id="bindDesc">桌面 Chrome / Edge 可绑定一个本地文件，每次学习后自动写入磁盘，清缓存也不丢</div></div><button class="btn primary" id="bindBtn">绑定文件</button></div>
     <div class="setrow"><div><div class="t">备份状态</div><div class="d" id="backupStatus">尚未备份</div></div><button class="btn" id="nowBtn">立即备份</button></div>
     <div class="setrow"><div><div class="t">下载备份文件</div><div class="d">所有浏览器可用，建议定期下载存到网盘/U盘</div></div><button class="btn" id="exportBtn">下载 JSON</button></div>
@@ -286,15 +290,29 @@ function scanPool(user,now){
 }
 
 /* ============ 数据层 ============ */
-const KEY='vocab9a_v1';
+// ⚠️ 铁律：KEY 与数据结构永不因版本更新而改变 —— 更新只改页面程序，不动进度数据。
+// 双写镜像：主 key 损坏/被误清时，从镜像自动恢复，确保"更新/清洗后不用重新学"。
+const KEY='vocab9a_v1', KEY_MIRROR='vocab9a_v1_mirror';
+function validDB(d){return d&&d.users&&typeof d.users==='object'&&Object.keys(d.users).length>0;}
 function defaultUser(name){return {name,created:Date.now(),states:{},settings:{newPerDay:20,dir:'both',round:20,scope:[]},daily:{},streak:0,lastDay:''};}
 let DB=loadDB();
 function loadDB(){
-  try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.users&&Object.keys(d.users).length)return d;}catch(e){}
+  let recovered=false;
+  try{const d=JSON.parse(localStorage.getItem(KEY));if(validDB(d))return d;}catch(e){}
+  // 主 key 丢失/损坏 → 尝试镜像
+  try{const d=JSON.parse(localStorage.getItem(KEY_MIRROR));if(validDB(d)){
+    recovered=true;
+    try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e2){}
+    setTimeout(()=>{try{alert('检测到主进度丢失，已从备份镜像自动恢复，继续学习即可。');}catch(e3){}},300);
+    return d;
+  }}catch(e){}
   const u=defaultUser('默认用户');return {users:{u0:u},current:'u0'};
 }
 function saveDB(){
-  try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){alert('保存失败：本地存储空间不足');}
+  let s='';
+  try{s=JSON.stringify(DB);}catch(e){return;}
+  try{localStorage.setItem(KEY,s);}catch(e){alert('保存失败：本地存储空间不足');}
+  try{localStorage.setItem(KEY_MIRROR,s);}catch(e){} // 镜像冗余，防误清
   if(typeof scheduleBackup==='function')scheduleBackup(); // 自动写入已绑定的本地文件
 }
 
@@ -416,18 +434,21 @@ function renderStudy(){
     '<div class="q"><div class="dir">'+sub+'</div><div class="word">'+(dir==='e2c'?qText+'<span class="speak" id="spk">🔊</span>':qText)+'</div>'+
       (dir==='e2c'?'<div class="hint">'+item.w.pos+' · 点击喇叭听发音</div>':'<div class="hint">请选择对应的英文单词</div>')+'</div>'+
     '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
+    '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
     '<div class="fb" id="fb"></div>';
-  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item));
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false));
+  document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true);
   const spk=document.getElementById('spk');if(spk)spk.onclick=()=>speak(item.w.en);
 }
 function dirText(d){return d==='e2c'?'英→中':'中→英';}
-function answer(i,opts,item){
+function answer(i,opts,item,unsure){
   if(SESSION.answered)return;SESSION.answered=true;
   const field=item.dir==='e2c'?'zh':'en';
-  const ok=opts[i]===item.w[field];
+  const picked=unsure?null:(i>=0?opts[i]:null);
+  const ok=!unsure&&picked===item.w[field];   // 不确信一律按"未答对"处理，纳入强化
   const old=wstate(DB.current,item.w.id,item.dir);
   const isNew=old.last===0;
-  const nst=schedule(old,ok,Date.now());
+  const nst=schedule(old,ok,Date.now());      // 走同一套降阶/错词逻辑
   setWstate(DB.current,item.w.id,item.dir,nst);
   logReview(ok);
   if(isNew){const d=U().daily[todayStr()];if(d)d.n++;}
@@ -437,9 +458,10 @@ function answer(i,opts,item){
     else if(idx===i)b.classList.add('wrongsel');
     b.disabled=true;
   });
+  const ub=document.getElementById('unsureBtn');if(ub)ub.disabled=true;
   const fb=document.getElementById('fb');
   fb.className='fb show '+(ok?'ok':'no');
-  fb.innerHTML=(ok?'✅ 答对了！':'❌ 答错了，已加入强化记忆')+
+  fb.innerHTML=(ok?'✅ 答对了！':(unsure?'🤔 已标记「不确信」，纳入强化记忆':'❌ 答错了，已加入强化记忆'))+
     '<div class="ans">'+item.w.en+'　'+item.w.zh+'</div>'+
     '<div style="font-size:12px;opacity:.8;margin-top:3px">下次复习：'+fmtDue(nst.due)+'　·　记忆阶段 '+nst.stage+'/'+MAX_STAGE+'</div>';
   const btn=document.createElement('button');btn.className='nextbtn';btn.textContent=SESSION.idx+1>=SESSION.queue.length?'查看结果 →':'下一题 →';
@@ -605,6 +627,7 @@ document.getElementById('addUserBtn').onclick=()=>openModal('新增用户','',na
 document.addEventListener('keydown',e=>{
   if(document.getElementById('mask').classList.contains('on')){if(e.key==='Enter')document.getElementById('modalOk').click();return;}
   if(!document.getElementById('v-study').classList.contains('on')||SESSION.answered)return;
+  if(e.key==='0'||e.key==='Backspace'){const u=document.getElementById('unsureBtn');if(u&&!u.disabled){e.preventDefault();u.click();}return;}
   const n=+e.key;if(n>=1&&n<=4){const b=document.querySelectorAll('.opt')[n-1];if(b)b.click();}
 });
 try{const th=localStorage.getItem('vocab9a_theme');if(th){document.documentElement.setAttribute('data-theme',th);document.getElementById('themeBtn').textContent=th==='dark'?'☀️':'🌙';}}catch(e){}
