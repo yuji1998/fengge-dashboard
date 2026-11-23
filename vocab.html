@@ -203,7 +203,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
   <div class="set">
     <h3>⚙️ 学习参数</h3>
-    <div class="setrow"><div><div class="t">每日新词数</div><div class="d">每天最多投放多少个新词</div></div><input type="number" id="setNew" min="0" max="100" value="20" style="width:70px"></div>
+    <div class="setrow"><div><div class="t">每日新词数</div><div class="d">每天自动投放的新词额度；一轮学完后可在结束页点「加量」继续往下背，不受此限制</div></div><input type="number" id="setNew" min="0" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习方向</div><div class="d">英→中=看单词选中文；中→英=看中文选单词</div></div><div class="seg" id="setDir"><button data-d="both" class="on">双向</button><button data-d="e2c">英→中</button><button data-d="c2e">中→英</button></div></div>
     <div class="setrow"><div><div class="t">词库</div><div class="d">每个用户可单独选库：中考=译林9A+核心补充（563词）；四六级=CET4/6高频（300词）。切换后各自进度独立保存，互不影响；后续可随时增减体量或新增词库（考研/雅思等）</div></div><div class="seg" id="setDict"></div></div>
     <div class="setrow"><div><div class="t">练习形式</div><div class="d">选择=四选一识别；拼写=看中文写单词；混合=随机交替（推荐，最贴近考场）</div></div><div class="seg" id="setMode"><button data-m="mix">混合</button><button data-m="choice">选择</button><button data-m="spell">拼写</button></div></div>
@@ -605,9 +605,8 @@ function buildSession(){
     shuffle(learned);
     q=q.concat(learned.slice(0,Math.max(0,cfg.round*2-q.length)));
   }
-  // 今日新词额度 = newPerDay × 方向数
-  const dirCount=cfg.dir==='both'?2:1;
-  const quota=Math.max(0,cfg.newPerDay*dirCount-(U().daily[todayStr()]?.n||0));
+  // 今日新词额度（含手动加量）
+  const quota=newQuota();
   q=q.concat(fresh.slice(0,quota));
   q.forEach(it=>{
     it.qtype=pickQType(it);
@@ -619,8 +618,7 @@ function buildSession(){
 }
 function renderPlan(){
   const {review,wrong,fresh}=scanPool(DB.current,Date.now());
-  const cfg=U().settings,dirCount=cfg.dir==='both'?2:1;
-  const quota=Math.max(0,cfg.newPerDay*dirCount-(U().daily[todayStr()]?.n||0));
+  const quota=newQuota();
   document.getElementById('pReview').textContent=review.length;
   document.getElementById('pWrong').textContent=wrong.length;
   document.getElementById('pNew').textContent=Math.min(fresh.length,quota);
@@ -630,8 +628,20 @@ function renderStudy(){
   renderDvBar();
   renderPlan();
   if(!SESSION.queue.length||SESSION.idx>=SESSION.queue.length){
-    box.innerHTML='<div class="done"><div class="big">🎉</div><h2>今日一轮完成</h2><p>本轮答对 '+SESSION.correct+' / '+SESSION.done+' 题</p><p style="margin:6px 0 18px">记忆曲线会自动安排下次复习时间，明天再来巩固</p><button class="btn primary" id="againBtn">再练一轮（错词优先）</button></div>';
-    document.getElementById('againBtn').onclick=buildSession;return;
+    const quota=newQuota(),hasFresh=freshQuotaAvail();
+    const extra=(((U().daily[todayStr()]||{}).x)||0);
+    box.innerHTML='<div class="done"><div class="big">🎉</div><h2>本轮完成</h2><p>本轮答对 '+SESSION.correct+' / '+SESSION.done+' 题</p>'+
+      (extra?('<p style="color:var(--success);font-weight:700">今日已加量 '+extra+' 个新词 💪</p>'):'')+
+      '<p style="margin:6px 0 18px">记忆曲线会自动安排下次复习时间</p>'+
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
+      '<button class="btn primary" id="againBtn">再练一轮（错词优先）</button>'+
+      (hasFresh?'<button class="btn" id="add10Btn">＋加 10 个新词</button><button class="btn" id="add20Btn">＋加 20 个新词</button>':'')+
+      '</div>'+(hasFresh?'':'<p style="font-size:12px;color:var(--muted);margin-top:12px">所选范围内新词已全部投放，想继续可扩大学习范围或换词库</p>')+'</div>';
+    document.getElementById('againBtn').onclick=buildSession;
+    const a10=document.getElementById('add10Btn'),a20=document.getElementById('add20Btn');
+    if(a10)a10.onclick=()=>addExtra(10);
+    if(a20)a20.onclick=()=>addExtra(20);
+    return;
   }
   const item=SESSION.queue[SESSION.idx];
   SESSION.cur=item;SESSION.answered=false;
@@ -719,18 +729,45 @@ function answer(i,opts,item,unsure,typed){
   saveDB();
 }
 function fmtDue(ts){const m=Math.round((ts-Date.now())/60000);if(m<1)return '马上';if(m<60)return m+' 分钟后';if(m<1440)return Math.round(m/60)+' 小时后';return Math.round(m/1440)+' 天后';}
+// 手动加量：今日临时增加 n 个新词额度（精力好想多背时用），立即重建一轮
+function addExtra(n){
+  const t=todayStr();
+  if(!U().daily[t])U().daily[t]={r:0,c:0,n:0};
+  U().daily[t].x=(U().daily[t].x||0)+n;
+  saveDB();
+  SESSION={queue:[],idx:0};buildSession();
+}
+function freshQuotaAvail(){
+  // 结束页是否还值得显示“加量”按钮：额度未用完且范围内还有新词
+  if(newQuota()<=0)return false;
+  const {fresh}=scanPool(DB.current,Date.now());
+  return fresh.length>0;
+}
 
 /* ============ 各视图 ============ */
-let bookUnit=0;
+function newQuota(){
+  const cfg=U().settings,dirCount=cfg.dir==='both'?2:1;
+  const d=U().daily[todayStr()]||{};
+  // 每日额度 = newPerDay×方向数 + 今日手动加量(x) − 已投新词(n)
+  return Math.max(0,cfg.newPerDay*dirCount+((d.x)||0)-((d.n)||0));
+}
 function renderBook(){
   const dict=DICTS_RAW[curDict()], words=curWords();
   const ulabel=dict.unitLabel||'Unit';
   const chips=document.getElementById('unitChips');
-  const units=[0].concat(words.map(w=>w.unit).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b));
-  chips.innerHTML='<span style="font-size:12px;color:var(--muted);align-self:center;margin-right:4px">'+dict.name+' · 筛选：</span>'+
-    units.map(u=>'<button class="unit-chip'+(bookUnit===u?' on':'')+'" data-u="'+u+'">'+(u===0?'全部':ulabel+' '+u)+'</button>').join('');
-  chips.querySelectorAll('.unit-chip').forEach(b=>b.onclick=()=>{bookUnit=+b.dataset.u;renderBook();});
-  const list=words.filter(w=>!bookUnit||w.unit===bookUnit);
+  const units=words.map(w=>w.unit).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b);
+  const scope=U().settings.scope||[];
+  chips.innerHTML='<span style="font-size:12px;color:var(--muted);align-self:center;margin-right:4px">'+dict.name+' · 学习范围（点击可多选）：</span>'+
+    '<button class="unit-chip'+(scope.length?'':' on')+'" data-u="0">全部</button>'+
+    units.map(u=>'<button class="unit-chip'+(scope.includes(u)?' on':'')+'" data-u="'+u+'">'+ulabel+' '+u+'</button>').join('')+
+    '<span style="font-size:11px;color:var(--muted);align-self:center">'+(scope.length?('已选 '+scope.length+' 个单元 · 多单元自动混编出题'):'点选单元多选，只背所选范围；不选=全部')+'</span>';
+  chips.querySelectorAll('.unit-chip').forEach(b=>b.onclick=()=>{
+    const u=+b.dataset.u;
+    if(u===0){U().settings.scope=[];}
+    else{const s=U().settings.scope;const i=s.indexOf(u);if(i>=0)s.splice(i,1);else s.push(u);s.sort((a,b)=>a-b);}
+    saveDB();renderBook();
+  });
+  const list=words.filter(w=>!scope.length||scope.includes(w.unit));
   const dirs=U().settings.dir==='both'?['e2c','c2e']:[U().settings.dir];
   document.getElementById('wlist').innerHTML=list.map(w=>{
     let cls='',tip='未学';
@@ -938,7 +975,7 @@ refreshAll();
 bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
