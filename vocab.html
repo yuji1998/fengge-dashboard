@@ -83,6 +83,9 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .cloze-sen{font-size:23px;font-weight:700;line-height:1.7;margin:10px auto;max-width:640px;word-break:break-word}
 .cloze-sen .blank{display:inline-block;min-width:78px;border-bottom:3px solid var(--primary);color:var(--primary);letter-spacing:2px}
 .cloze-zh{font-size:14px;color:var(--muted);margin-top:6px}
+.cloze-zh .zh-peek{display:inline-block;cursor:pointer;color:var(--primary2);font-size:12px;font-weight:600;border:1px dashed var(--primary2);border-radius:8px;padding:4px 12px;margin-top:6px;transition:.15s}
+.cloze-zh .zh-peek:hover{background:var(--card2)}
+.cloze-zh .zh-peek.on{border-style:solid}
 /* 词根拆解提示（卡片上） */
 .rootnote{font-size:12px;color:var(--primary2);font-weight:600;margin-top:8px;text-align:center}
 .tfroot{font-size:22px;font-weight:800;color:var(--primary);text-align:center;margin:6px 0}
@@ -782,6 +785,10 @@ function renderPlan(){
   document.getElementById('pWrong').textContent=wrong.length;
   document.getElementById('pNew').textContent=Math.min(fresh.length,quota);
 }
+// 语境题中文提示：默认只给一个"点看句意"按钮，点击后才展开整句中文（先靠语境猜，猜不出再看）
+function zhPeekHtml(zh){
+  return '<div class="cloze-zh"><span class="zh-peek" onclick="this.nextElementSibling.style.display=\'inline\';this.style.display=\'none\'">👆 点我看中文句意</span><span style="display:none">'+zh+'</span></div>';
+}
 function renderStudy(){
   const box=document.getElementById('studyBox');
   renderDvBar();
@@ -819,7 +826,7 @@ function renderStudy(){
       '<div class="cloze-q"><div class="dir">🎯 中考词形变换 · 用所给词的正确形式填空</div>'+
       '<div class="tfroot">'+item.root+' <span>（'+TRANSFORMS[item.root].mean+'）</span></div>'+
       '<div class="cloze-sen">'+sen+'</div>'+
-      '<div class="cloze-zh">'+tpl.zh+'</div></div>'+
+      zhPeekHtml(tpl.zh)+'</div>'+
       '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
       '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
       '<div class="fb" id="fb"></div>';
@@ -836,7 +843,7 @@ function renderStudy(){
       box.innerHTML=head+
         '<div class="cloze-q"><div class="dir">💬 读句子，选出挖空处的正确表达</div>'+
         '<div class="cloze-sen">'+sen+'</div>'+
-        '<div class="cloze-zh">'+ex.zh+'</div></div>'+
+        zhPeekHtml(ex.zh)+'</div>'+
         '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
         '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
         '<div class="fb" id="fb"></div>';
