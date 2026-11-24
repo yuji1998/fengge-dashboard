@@ -785,8 +785,10 @@ function renderPlan(){
   document.getElementById('pWrong').textContent=wrong.length;
   document.getElementById('pNew').textContent=Math.min(fresh.length,quota);
 }
-// 语境题中文提示：默认只给一个"点看句意"按钮，点击后才展开整句中文（先靠语境猜，猜不出再看）
+// 语境题中文提示：仅「🎯 中考冲刺」折叠中文（先靠语境猜，点一下才展开）；其他模式照旧直接显示
 function zhPeekHtml(zh){
+  const exam=!!(SESSION&&SESSION.refreshMode==='exam');
+  if(!exam)return '<div class="cloze-zh">'+zh+'</div>';
   return '<div class="cloze-zh"><span class="zh-peek" onclick="this.nextElementSibling.style.display=\'inline\';this.style.display=\'none\'">👆 点我看中文句意</span><span style="display:none">'+zh+'</span></div>';
 }
 function renderStudy(){
