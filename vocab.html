@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>背单词引擎 · 多词库</title>
 <script src="vocab_words.js?v=20261123a"></script>
+<script src="vocab_examples.js?v=20261124a"></script>
+<script src="vocab_roots.js?v=20261124a"></script>
 <style>
 :root{
   --bg:#eef2f7; --card:#ffffff; --card2:#f8fafc; --primary:#4f46e5; --primary2:#06b6d4;
@@ -72,6 +74,16 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .fb.show{display:block;animation:fade .2s}
 .fb.ok{background:var(--success-bg);color:var(--success)}.fb.no{background:var(--danger-bg);color:var(--danger)}
 .fb .ans{font-size:16px;font-weight:800;margin-top:4px}
+.fb .exline{margin-top:8px;padding:8px 11px;background:var(--card2);border-radius:8px;font-size:14px;font-weight:600;line-height:1.6;border-left:3px solid var(--primary)}
+.fb .exzh{font-size:12px;color:var(--muted);margin-top:4px;padding-left:11px}
+.fb .rootline{margin-top:6px;font-size:12px;color:var(--primary2);font-weight:600}
+/* 语境填空题 */
+.cloze-q{text-align:center;padding:14px 0 6px}
+.cloze-sen{font-size:23px;font-weight:700;line-height:1.7;margin:10px auto;max-width:640px;word-break:break-word}
+.cloze-sen .blank{display:inline-block;min-width:78px;border-bottom:3px solid var(--primary);color:var(--primary);letter-spacing:2px}
+.cloze-zh{font-size:14px;color:var(--muted);margin-top:6px}
+/* 词根拆解提示（卡片上） */
+.rootnote{font-size:12px;color:var(--primary2);font-weight:600;margin-top:8px;text-align:center}
 .nextbtn{display:block;width:100%;margin-top:14px;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-size:15px;font-weight:700;cursor:pointer}
 .progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:16px}
 .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));width:0;transition:width .3s}
@@ -221,7 +233,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
 </div>
 
-<footer>词库：中考（译林9A Unit1-8+高频核心补充 563词）· 四六级（CET4/6 高频 300词）· 独立文件动态维护，增减词不影响已有进度<br>练习形式：🔘 选择 · ✍️ 拼写（混合随机交替，主动回忆对抗遗忘）<br>多用户：每人可单独选词库，进度独立保存 · <span id="vocabInfo">—</span><br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
+<footer>词库：中考（译林9A Unit1-8+高频核心补充 563词）· 四六级（CET4/6 高频 300词）· 独立文件动态维护，增减词不影响已有进度<br>练习形式：🔘 选择 · ✍️ 拼写 · 💬 语境填空（混合随机交替，主动回忆对抗遗忘）<br>巩固维度：词性 / 短语 / 语境例句 / 词根词族 / 拼写 / 易混 / 主题 · 例句与词根数据外置可随时扩充<br>多用户：每人可单独选词库，进度独立保存 · <span id="vocabInfo">—</span><br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
 </div>
 
 <div class="mask" id="mask"><div class="modal"><h3 id="modalTitle">新增用户</h3><input id="modalInput" placeholder="输入名字，如：朱陈昕" maxlength="12"><div class="row"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalOk">确定</button></div></div></div>
@@ -256,6 +268,39 @@ Object.keys(DICTS_RAW).forEach(dk=>{
 const DICT_IDS=Object.keys(WORDS_BY_DICT);
 function curDict(){const s=U().settings;return (s&&s.dict&&WORDS_BY_DICT[s.dict])?s.dict:DICT_IDS[0];}
 function curWords(){return WORDS_BY_DICT[curDict()];}
+/* ============ 语境例句 & 词根词缀 索引 ============
+   数据外置在 vocab_examples.js / vocab_roots.js；按英文原词（小写）索引，跨词库通用。
+   示例/词根不匹配时返回 null，功能自动降级，不影响核心背诵。 */
+const EXAMPLES=window.VOCAB_EXAMPLES||{};
+const AFFIXES=window.VOCAB_AFFIXES||[];
+const ROOTS=window.VOCAB_ROOTS||[];
+// 取词条例句（同名短语/单词可能重复定义，后者覆盖前者；优先精确匹配）
+function exampleOf(w){const k=normKey(w.en);return EXAMPLES[k]||null;}
+function normKey(s){return (s||'').toLowerCase().trim();}
+// 词根拆解：返回 [{kind,text,mean,ex}]（前缀/词根/后缀），按前缀→词根→后缀顺序
+let ROOT_CACHE={};
+function rootParts(w){
+  const word=normKey(w.en);
+  if(ROOT_CACHE[word]!==undefined)return ROOT_CACHE[word];
+  const parts=[],bare=word.replace(/[^a-z]/g,'');
+  if(bare.length<3){ROOT_CACHE[word]=parts;return parts;}
+  // 前缀：匹配开头
+  const pre=AFFIXES.filter(a=>a.type==='prefix'&&bare.startsWith(a.a)&&bare.length-a.a.length>=2)
+    .sort((a,b)=>b.a.length-a.a.length)[0];
+  if(pre)parts.push({kind:'前缀',text:pre.a,mean:pre.mean,ex:pre.ex});
+  // 后缀：匹配结尾
+  const suf=AFFIXES.filter(a=>a.type==='suffix'&&bare.endsWith(a.a)&&bare.length-a.a.length>=2)
+    .sort((a,b)=>b.a.length-a.a.length)[0];
+  if(suf)parts.push({kind:'后缀',text:suf.a,mean:suf.mean,ex:suf.ex});
+  // 词根：取包含的最长词根（排除已作前缀/后缀的）
+  let best=null;
+  ROOTS.forEach(r=>{if(bare.includes(r.r)&&(!best||r.r.length>best.r.length))best=r;});
+  if(best)parts.push({kind:'词根',text:best.r,mean:best.mean,ex:best.ex});
+  ROOT_CACHE[word]=parts;
+  return parts;
+}
+function hasExample(w){return !!exampleOf(w);}
+function hasRoot(w){return rootParts(w).length>0;}
 // 旧版进度按“位置序号”存（v1），后按「单元|单词」存（v2）——统一升级为「词库|单元|单词」(v3)
 const LEGACY_KEYS=[]; // v1 数字序号 → 全新 key（基准永远用内嵌兑底词表原始顺序）
 Object.keys(FALLBACK_WORDS_RAW).forEach(u=>{FALLBACK_WORDS_RAW[u].forEach(([en])=>LEGACY_KEYS.push('zhongkao|'+u+'|'+en.toLowerCase()));});
@@ -492,15 +537,20 @@ let SESSION={queue:[],idx:0,done:0,correct:0,answered:false,cur:null};
 function pickQType(item){
   const mode=(U().settings&&U().settings.mode)||'mix';
   const single=!/\s/.test(item.w.en.trim());   // 多词短语拼写太繁琐，仍走选择
+  const clozeOK=hasExample(item.w);            // 有例句 → 可出语境题
   if(item.dir==='c2e'){
-    if(mode==='choice'||mode==='dictation')return 'choice';
-    if(!single)return 'choice';
+    if(mode==='choice'||mode==='dictation')return clozeOK&&Math.random()<0.3?'cloze':'choice';
+    if(!single)return clozeOK&&Math.random()<0.35?'cloze':'choice';  // 短语：加入语境题
     if(mode==='spell')return 'spell';
-    return Math.random()<0.55?'spell':'choice';   // mix：拼写为主
+    // mix：有例句的词穿插语境题，其余拼写为主
+    if(clozeOK&&Math.random()<0.35)return 'cloze';
+    return Math.random()<0.55?'spell':'choice';
   }
-  return 'choice';  // e2c 方向不再有听音题，统一为选择
+  // e2c：有例句的词穿插语境题，其余选择
+  if(clozeOK&&Math.random()<0.28)return 'cloze';
+  return 'choice';
 }
-function qtText(q){return q==='spell'?'✍️ 拼写':'🔘 选择';}
+function qtText(q){return q==='spell'?'✍️ 拼写':(q==='cloze'?'💬 语境':'🔘 选择');}
 // 拼写判分归一化：忽略大小写/首尾空格/连续空格/弯引号/省略号写法
 function normWord(s){return (s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[…]/g,'...').replace(/\s+/g,' ').trim();}
 function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m||!n)return Math.max(m,n);const d=[];for(let i=0;i<=m;i++){d[i]=[i];}for(let j=1;j<=n;j++){d[0][j]=j;}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));}return d[m][n];}
@@ -512,6 +562,8 @@ const DV_MODES=[
   {id:'adj',name:'🎨 形容词',tip:'形容词专项巩固'},
   {id:'adv',name:'🔗 副词·虚词',tip:'副词/连词/介词专项'},
   {id:'phr',name:'🧩 短语搭配',tip:'固定搭配与短语专项'},
+  {id:'context',name:'💬 语境例句',tip:'在真实句子中答题（词/短语放回语境）'},
+  {id:'root',name:'🌱 词根词族',tip:'按词根词缀归类，举一反三'},
   {id:'spell',name:'✍️ 拼写攻坚',tip:'长难词强制拼写'},
   {id:'confuse',name:'⚔️ 易混辨析',tip:'形近词对比辨析'},
   {id:'theme',name:'🗂 主题词场',tip:'按主题归类记忆（词以类记）'},
@@ -522,6 +574,8 @@ function dvFilter(mode){
   if(mode==='adj')return w=>/^adj/.test(w.pos);
   if(mode==='adv')return w=>/^(adv|conj|pron|prep|num|interj|art)/.test(w.pos);
   if(mode==='phr')return w=>/\s/.test(w.en)||/phr/i.test(w.pos);
+  if(mode==='context')return w=>hasExample(w);          // 有语境例句的词
+  if(mode==='root')return w=>hasRoot(w);                // 有词根拆解的词
   if(mode==='spell')return w=>w.en.replace(/\s/g,'').length>=8;
   return null;
 }
@@ -610,8 +664,10 @@ function buildSession(){
   q=q.concat(fresh.slice(0,quota));
   q.forEach(it=>{
     it.qtype=pickQType(it);
-    if(mode==='spell')it.qtype='spell';        // 拼写攻坚：强制拼写
+    if(mode==='spell')it.qtype='spell';                 // 拼写攻坚：强制拼写
+    if(mode==='context'&&hasExample(it.w))it.qtype='cloze'; // 语境专项：有例句的一律语境题
     if(mode==='confuse')it.confuse=confuseMap()[it.w.key];
+    if(it.qtype==='cloze')it.cloze=exampleOf(it.w);      // 挂上例句数据
   });
   SESSION={queue:q.slice(0,cfg.round),idx:0,done:0,correct:0,answered:false,cur:null,refreshMode:mode,refreshTheme:SESSION.refreshTheme};
   renderStudy();
@@ -650,7 +706,28 @@ function renderStudy(){
   const wrongTag=(st.wrong?'<span class="pill wrong">⚠ 错词强化</span>':'');
   const head='<div class="meta"><span>第 '+(SESSION.idx+1)+' / '+SESSION.queue.length+' 题　'+wrongTag+'</span><span class="pill">'+qtText(qt)+' · '+item.w.unit+'</span></div>'+
     '<div class="progress"><i style="width:'+(SESSION.idx/SESSION.queue.length*100)+'%"></i></div>'+
-    (item.confuse?'<div style="font-size:12px;color:var(--warn);margin:-4px 0 8px">⚔️ 注意区分：'+item.confuse.map(x=>x.en+'（'+x.zh+'）').join('　')+'</div>':'');
+    (item.confuse?'<div style="font-size:12px;color:var(--warn);margin:-4px 0 8px">⚔️ 注意区分：'+item.confuse.map(x=>x.en+'（'+x.zh+'）').join('　')+'</div>':'')+
+    ((qt!=='cloze'&&rootParts(item.w).length)?'<div class="rootnote">🌱 '+rootParts(item.w).map(p=>p.text+'='+p.mean).join('　|　')+'</div>':'');
+  // cloze：语境填空——给英文句子（目标词挖空），选/填回正确的词或短语
+  if(qt==='cloze'){
+    const ex=item.cloze||exampleOf(item.w);
+    if(ex){
+      const sen=ex.en.replace('____','<span class="blank">______</span>');
+      const opts=buildOptions(item.w,'c2e');   // 选项为英文词/短语
+      box.innerHTML=head+
+        '<div class="cloze-q"><div class="dir">💬 读句子，选出挖空处的正确表达</div>'+
+        '<div class="cloze-sen">'+sen+'</div>'+
+        '<div class="cloze-zh">'+ex.zh+'</div></div>'+
+        '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
+        '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
+        '<div class="fb" id="fb"></div>';
+      document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false,''));
+      document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true,'');
+      return;
+    }
+    // 例句数据缺失时降级为普通选择题
+    item.qtype='choice';
+  }
   if(qt==='choice'){
     const opts=buildOptions(item.w,dir);
     const qText=dir==='e2c'?item.w.en:item.w.zh;
@@ -691,6 +768,9 @@ function answer(i,opts,item,unsure,typed){
     const guess=normWord(typed), target=normWord(item.w.en);
     ok=!unsure&&guess===target;
     if(!ok&&!unsure&&guess&&target.replace(/\s/g,'').length>=5)closeSpell=(lev(guess,target)<=2);
+  }else if(qt==='cloze'){
+    const picked=unsure?null:(i>=0?opts[i]:null);
+    ok=!unsure&&picked===item.w.en;    // 语境题选的英文词/短语须与词条一致
   }else{
     const field=item.dir==='e2c'?'zh':'en';
     const picked=unsure?null:(i>=0?opts[i]:null);
@@ -703,8 +783,8 @@ function answer(i,opts,item,unsure,typed){
   logReview(ok);
   if(isNew){const d=U().daily[todayStr()];if(d)d.n++;}
   SESSION.done++;if(ok)SESSION.correct++;
-  if(qt==='choice'){
-    const field=item.dir==='e2c'?'zh':'en';
+  if(qt==='choice'||qt==='cloze'){
+    const field=qt==='cloze'?'en':(item.dir==='e2c'?'zh':'en');
     document.querySelectorAll('.opt').forEach((b,idx)=>{
       if(opts[idx]===item.w[field])b.classList.add('correct');
       else if(idx===i)b.classList.add('wrongsel');
@@ -720,8 +800,20 @@ function answer(i,opts,item,unsure,typed){
   const fb=document.getElementById('fb');
   const msg=ok?'✅ 答对了！':(unsure?'🤔 已标记「不确信」，纳入强化记忆':'❌ 答错了，已加入强化记忆'+(closeSpell?'（拼写很接近，注意字母顺序）':''));
   fb.className='fb show '+(ok?'ok':'no');
+  // 语境例句：把挖空处还原为自然填入形式（answer 优先，否则用原词）
+  let extra='';
+  const ex=qt==='cloze'?(item.cloze||exampleOf(item.w)):exampleOf(item.w);
+  if(ex&&ex.en){
+    const filled=ex.en.replace('____',ex.a||item.w.en);
+    extra+='<div class="exline">💬 '+filled+'</div><div class="exzh">'+ex.zh+'</div>';
+  }
+  const rp=rootParts(item.w);
+  if(rp.length){
+    extra+='<div class="rootline">🌱 '+rp.map(p=>p.text+'='+p.mean).join('　|　')+'</div>';
+  }
   fb.innerHTML=msg+
     '<div class="ans">'+item.w.en+'　'+item.w.zh+'</div>'+
+    extra+
     '<div style="font-size:12px;opacity:.8;margin-top:3px">下次复习：'+fmtDue(nst.due)+'　·　记忆阶段 '+nst.stage+'/'+MAX_STAGE+'</div>';
   const btn=document.createElement('button');btn.className='nextbtn';btn.textContent=SESSION.idx+1>=SESSION.queue.length?'查看结果 →':'下一题 →';
   btn.onclick=()=>{SESSION.idx++;renderStudy();};
@@ -975,7 +1067,7 @@ refreshAll();
 bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,exampleOf,rootParts,hasExample,hasRoot,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
