@@ -7,6 +7,7 @@
 <script src="vocab_words.js?v=20261123a"></script>
 <script src="vocab_examples.js?v=20261124a"></script>
 <script src="vocab_roots.js?v=20261124a"></script>
+<script src="vocab_transforms.js?v=20261125a"></script>
 <style>
 :root{
   --bg:#eef2f7; --card:#ffffff; --card2:#f8fafc; --primary:#4f46e5; --primary2:#06b6d4;
@@ -84,6 +85,8 @@ header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 18px
 .cloze-zh{font-size:14px;color:var(--muted);margin-top:6px}
 /* 词根拆解提示（卡片上） */
 .rootnote{font-size:12px;color:var(--primary2);font-weight:600;margin-top:8px;text-align:center}
+.tfroot{font-size:22px;font-weight:800;color:var(--primary);text-align:center;margin:6px 0}
+.tfroot span{font-size:13px;color:var(--muted);font-weight:600}
 .nextbtn{display:block;width:100%;margin-top:14px;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-size:15px;font-weight:700;cursor:pointer}
 .progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:16px}
 .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));width:0;transition:width .3s}
@@ -233,7 +236,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
 </div>
 
-<footer>词库：中考（译林9A Unit1-8+高频核心补充 563词）· 四六级（CET4/6 高频 300词）· 独立文件动态维护，增减词不影响已有进度<br>练习形式：🔘 选择 · ✍️ 拼写 · 💬 语境填空（混合随机交替，主动回忆对抗遗忘）<br>巩固维度：词性 / 短语 / 语境例句 / 词根词族 / 拼写 / 易混 / 主题 · 例句与词根数据外置可随时扩充<br>多用户：每人可单独选词库，进度独立保存 · <span id="vocabInfo">—</span><br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
+<footer>词库：中考（译林9A Unit1-8+高频核心补充 563词）· 四六级（CET4/6 高频 300词）· 独立文件动态维护，增减词不影响已有进度<br>练习形式：🔘 选择 · ✍️ 拼写 · 💬 语境填空（混合随机交替，主动回忆对抗遗忘）<br>巩固维度：🎯中考冲刺（词形变换） / 词性 / 短语 / 语境例句 / 词根词族 / 拼写 / 易混 / 主题 · 例句/词根/词形数据外置可随时扩充<br>多用户：每人可单独选词库，进度独立保存 · <span id="vocabInfo">—</span><br>记忆算法：艾宾浩斯间隔重复 + 遗忘曲线降阶 · 进度存本机，可绑定本地文件自动备份或下载 JSON 长期保存</footer>
 </div>
 
 <div class="mask" id="mask"><div class="modal"><h3 id="modalTitle">新增用户</h3><input id="modalInput" placeholder="输入名字，如：朱陈昕" maxlength="12"><div class="row"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalOk">确定</button></div></div></div>
@@ -274,6 +277,8 @@ function curWords(){return WORDS_BY_DICT[curDict()];}
 const EXAMPLES=window.VOCAB_EXAMPLES||{};
 const AFFIXES=window.VOCAB_AFFIXES||[];
 const ROOTS=window.VOCAB_ROOTS||[];
+const TRANSFORMS=window.VOCAB_TRANSFORMS||{};   // 中考词形变换题库
+const TF_KEYS=Object.keys(TRANSFORMS);
 // 取词条例句（同名短语/单词可能重复定义，后者覆盖前者；优先精确匹配）
 function exampleOf(w){const k=normKey(w.en);return EXAMPLES[k]||null;}
 function normKey(s){return (s||'').toLowerCase().trim();}
@@ -584,6 +589,7 @@ function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m||!n)return
 /* ============ 巩固模式：词性/短语/拼写/易混/主题（词以类记） ============ */
 const DV_MODES=[
   {id:'normal',name:'📅 常规',tip:'按记忆曲线调度（默认）'},
+  {id:'exam',name:'🎯 中考冲刺',tip:'中考必考：词形变换+错词高频+真题语境'},
   {id:'v',name:'⚡ 动词',tip:'动词专项巩固'},
   {id:'n',name:'📦 名词',tip:'名词专项巩固'},
   {id:'adj',name:'🎨 形容词',tip:'形容词专项巩固'},
@@ -648,6 +654,51 @@ function confuseMap(){
   }
   CONFUSE_MAP=map;return map;
 }
+/* ============ 中考词形变换：调度与组卷 ============
+   每题进度存于 key='tf|词根|题号'，方向固定 e2c，走与单词完全相同的 schedule。
+   groupOf(root) 返回该词根的全部题目；transformItem(root,i) 构造一道可答题。 */
+function scanTransformPool(now){
+  now=now||Date.now();
+  const overdue=[],freshTf=[];
+  TF_KEYS.forEach(root=>{
+    const items=TRANSFORMS[root].items||[];
+    items.forEach((tpl,i)=>{
+      const key='tf|'+root+'|'+i;
+      const st=wstate(DB.current,key,'e2c');
+      if(st.last===0){freshTf.push({root,i,tpl});return;}
+      const it={root,i,tpl,st};
+      if(st.wrong||st.due<=now)overdue.push(it); else {it.future=true;overdue.push(it);}
+    });
+  });
+  overdue.sort((a,b)=>(a.st.due||0)-(b.st.due||0));
+  shuffle(freshTf);shuffle(overdue);
+  return {overdue,freshTf};
+}
+function transformItem(root,i){
+  const tpl=TRANSFORMS[root].items[i];
+  return {
+    tf:true, root, ti:i, tpl,
+    key:'tf|'+root+'|'+i,          // 进度 key
+    dir:'e2c', qtype:'choice',
+    w:{key:'tf|'+root+'|'+i, en:tpl.a, zh:TRANSFORMS[root].mean, pos:'词形', unit:'中考', tf:true},
+  };
+}
+// 词形变换题的4个选项：正确答案 + 3个干扰（优先同词根其他形式，不足则取其他词的变形）
+function transformOptions(item){
+  const correct=item.tpl.a;
+  const forms=new Set();
+  (TRANSFORMS[item.root].items||[]).forEach(t=>{if(t.a!==correct)forms.add(t.a);});
+  const others=[];
+  Object.keys(TRANSFORMS).forEach(r=>{if(r!==item.root)(TRANSFORMS[r].items||[]).forEach(t=>{if(t.a!==correct)others.push(t.a);});});
+  shuffle(others);
+  const cand=[...forms];
+  shuffle(cand);
+  while(cand.length<3&&others.length){const o=others.shift();if(!cand.includes(o))cand.push(o);}
+  const opts=[correct];
+  for(let i=0;i<3&&i<cand.length;i++){if(!opts.includes(cand[i]))opts.push(cand[i]);}
+  shuffle(opts);
+  return opts;
+}
 function renderDvBar(){
   const bar=document.getElementById('dvBar');
   const mode=SESSION.refreshMode||'normal';
@@ -669,6 +720,31 @@ function buildSession(){
     :filt;
   const {review,wrong,fresh}=scanPool(DB.current,Date.now(),filterFn);
   let q=wrong.concat(review);
+  // 🎯 中考冲刺：词形变换（招牌题型）占约一半 + 错词/复习词占一半
+  if(mode==='exam'&&TF_KEYS.length){
+    const now=Date.now();
+    const tf=scanTransformPool(now);
+    // 词形变换：错词/到期优先，未学的补一批（受今日新词额度约束）
+    const tfPick=tf.overdue.filter(x=>!x.future).slice(0,Math.ceil(cfg.round*0.4));
+    const tfQuota=Math.max(0,Math.ceil(cfg.round*0.6)-tfPick.length);
+    const tfItems=tfPick.concat(tf.freshTf.slice(0,tfQuota));
+    const tfQs=tfItems.map(x=>{
+      const it=transformItem(x.root,x.i);
+      it.st=x.st||blankState();it.qtype='choice';
+      it.tfOpts=transformOptions(it);
+      it.examKind='tf';
+      return it;
+    });
+    //  ordinary 词：错词+复习+少量新词，压到剩下名额
+    const ordinary=wrong.concat(review);
+    const maxOrd=Math.max(0,cfg.round-tfQs.length);
+    shuffle(ordinary);
+    q=tfQs.concat(ordinary.slice(0,maxOrd));
+    // exam 模式直接组好卷，跳过下面常规/新词追加
+    q.forEach(it=>{if(!it.tf){it.qtype=pickQType(it);if(it.qtype==='cloze')it.cloze=exampleOf(it.w);}});
+    SESSION={queue:q.slice(0,cfg.round),idx:0,done:0,correct:0,answered:false,cur:null,refreshMode:mode,refreshTheme:null};
+    renderStudy();return;
+  }
   // 巩固模式核心：把已学未到期的词也拉进来（定期巩固，不受复习时间表约束）
   if(mode!=='normal'){
     const now=Date.now(),dirs=cfg.dir==='both'?['e2c','c2e']:[cfg.dir];
@@ -734,7 +810,23 @@ function renderStudy(){
   const head='<div class="meta"><span>第 '+(SESSION.idx+1)+' / '+SESSION.queue.length+' 题　'+wrongTag+'</span><span class="pill">'+qtText(qt)+' · '+item.w.unit+'</span></div>'+
     '<div class="progress"><i style="width:'+(SESSION.idx/SESSION.queue.length*100)+'%"></i></div>'+
     (item.confuse?'<div style="font-size:12px;color:var(--warn);margin:-4px 0 8px">⚔️ 注意区分：'+item.confuse.map(x=>x.en+'（'+x.zh+'）').join('　')+'</div>':'')+
-    ((qt!=='cloze'&&rootParts(item.w).length)?'<div class="rootnote">🌱 '+rootParts(item.w).map(p=>p.text+'='+p.mean).join('　|　')+'</div>':'');
+    ((qt!=='cloze'&&!item.tf&&rootParts(item.w).length)?'<div class="rootnote">🌱 '+rootParts(item.w).map(p=>p.text+'='+p.mean).join('　|　')+'</div>':'');
+  // 🎯 词形变换（中考招牌题型）：给词根+挖空句，选出所给词的正确形式
+  if(item.tf){
+    const tpl=item.tpl, opts=item.tfOpts||transformOptions(item);
+    const sen=tpl.q.replace('_____','<span class="blank">_____</span>');
+    box.innerHTML=head+
+      '<div class="cloze-q"><div class="dir">🎯 中考词形变换 · 用所给词的正确形式填空</div>'+
+      '<div class="tfroot">'+item.root+' <span>（'+TRANSFORMS[item.root].mean+'）</span></div>'+
+      '<div class="cloze-sen">'+sen+'</div>'+
+      '<div class="cloze-zh">'+tpl.zh+'</div></div>'+
+      '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+o+'</button>').join('')+'</div>'+
+      '<button class="unsure" id="unsureBtn">😕 不确信（也算错，纳入强化）</button>'+
+      '<div class="fb" id="fb"></div>';
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i,opts,item,false,''));
+    document.getElementById('unsureBtn').onclick=()=>answer(-1,opts,item,true,'');
+    return;
+  }
   // cloze：语境填空——给英文句子（目标词挖空），选/填回正确的词或短语
   if(qt==='cloze'){
     const ex=item.cloze||exampleOf(item.w);
@@ -798,6 +890,9 @@ function answer(i,opts,item,unsure,typed){
   }else if(qt==='cloze'){
     const picked=unsure?null:(i>=0?opts[i]:null);
     ok=!unsure&&picked===item.w.en;    // 语境题选的英文词/短语须与词条一致
+  }else if(item.tf){
+    const picked=unsure?null:(i>=0?opts[i]:null);
+    ok=!unsure&&picked===item.tpl.a;   // 词形变换：选中所给词的正确形式
   }else{
     const field=item.dir==='e2c'?'zh':'en';
     const picked=unsure?null:(i>=0?opts[i]:null);
@@ -810,10 +905,10 @@ function answer(i,opts,item,unsure,typed){
   logReview(ok);
   if(isNew){const d=U().daily[todayStr()];if(d)d.n++;}
   SESSION.done++;if(ok)SESSION.correct++;
-  if(qt==='choice'||qt==='cloze'){
-    const field=qt==='cloze'?'en':(item.dir==='e2c'?'zh':'en');
+  if(qt==='choice'||qt==='cloze'||item.tf){
+    const right=item.tf?item.tpl.a:(qt==='cloze'?'en':(item.dir==='e2c'?'zh':'en'));
     document.querySelectorAll('.opt').forEach((b,idx)=>{
-      if(opts[idx]===item.w[field])b.classList.add('correct');
+      if(opts[idx]===(item.tf?right:item.w[right]))b.classList.add('correct');
       else if(idx===i)b.classList.add('wrongsel');
       b.disabled=true;
     });
@@ -828,19 +923,24 @@ function answer(i,opts,item,unsure,typed){
   const msg=ok?'✅ 答对了！':(unsure?'🤔 已标记「不确信」，纳入强化记忆':'❌ 答错了，已加入强化记忆'+(closeSpell?'（拼写很接近，注意字母顺序）':''));
   fb.className='fb show '+(ok?'ok':'no');
   // 语境例句：把挖空处还原为自然填入形式（answer 优先，否则用原词）
-  let extra='';
-  const ex=qt==='cloze'?(item.cloze||exampleOf(item.w)):exampleOf(item.w);
-  if(ex&&ex.en){
-    const filled=ex.en.replace('____',ex.a||item.w.en);
-    extra+='<div class="exline">💬 '+filled+'</div><div class="exzh">'+ex.zh+'</div>';
+  let extra='',ansLine='';
+  if(item.tf){
+    // 词形变换：还原完整句 + 考点
+    const filled=item.tpl.q.replace('_____',item.tpl.a);
+    ansLine='<div class="ans">'+item.root+' → '+item.tpl.a+'</div>';
+    extra='<div class="exline">🎯 '+filled+'</div><div class="exzh">'+item.tpl.zh+'</div>'+
+      '<div class="rootline">📌 考点：'+item.tpl.tip+'</div>';
+  }else{
+    ansLine='<div class="ans">'+item.w.en+'　'+item.w.zh+'</div>';
+    const ex=qt==='cloze'?(item.cloze||exampleOf(item.w)):exampleOf(item.w);
+    if(ex&&ex.en){
+      const filled=ex.en.replace('____',ex.a||item.w.en);
+      extra+='<div class="exline">💬 '+filled+'</div><div class="exzh">'+ex.zh+'</div>';
+    }
+    const rp=rootParts(item.w);
+    if(rp.length)extra+='<div class="rootline">🌱 '+rp.map(p=>p.text+'='+p.mean).join('　|　')+'</div>';
   }
-  const rp=rootParts(item.w);
-  if(rp.length){
-    extra+='<div class="rootline">🌱 '+rp.map(p=>p.text+'='+p.mean).join('　|　')+'</div>';
-  }
-  fb.innerHTML=msg+
-    '<div class="ans">'+item.w.en+'　'+item.w.zh+'</div>'+
-    extra+
+  fb.innerHTML=msg+ansLine+extra+
     '<div style="font-size:12px;opacity:.8;margin-top:3px">下次复习：'+fmtDue(nst.due)+'　·　记忆阶段 '+nst.stage+'/'+MAX_STAGE+'</div>';
   const btn=document.createElement('button');btn.className='nextbtn';btn.textContent=SESSION.idx+1>=SESSION.queue.length?'查看结果 →':'下一题 →';
   btn.onclick=()=>{SESSION.idx++;renderStudy();};
@@ -1096,7 +1196,7 @@ if(typeof bkAutoRestore==='function')bkAutoRestore().then(()=>bkCheckOnLoad()).c
 else bkCheckOnLoad();
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkAutoRestore,bkGetSnap,bkSetSnap,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,exampleOf,rootParts,hasExample,hasRoot,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkAutoRestore,bkGetSnap,bkSetSnap,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,TRANSFORMS,TF_KEYS,exampleOf,rootParts,hasExample,hasRoot,scanTransformPool,transformItem,transformOptions,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
