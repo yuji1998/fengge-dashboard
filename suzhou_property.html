@@ -107,7 +107,6 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
       <div class="t2" id="upd">加载中…</div>
     </div>
     <div class="topact">
-      <a href="suzhou_property_monthly.html" style="text-decoration:none"><button class="rfbtn">📅 月度视角</button></a>
       <button class="rfbtn" id="rf" onclick="refresh()">↻ 刷新</button>
       <span class="tag">住宅口径 · 全市六区</span>
     </div>
@@ -273,9 +272,8 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
 
   C.innerHTML =
     '<div class="grid">'+cards+'</div>'+
-    trendHtml + tableHtml + monthlyHtml + dailyHtml +
+    trendHtml + tableHtml + dailyHtml +
     '<div class="note"><b>口径说明：</b>周报为「住宅」口径，含苏州市区六区；环比=较上周，同比=较上年同期。'+
-    '月度数据由周报按月归并，环比为上月vs本月。'+
     '单日播报为公众号裸数字，与周报口径不同。去化周期等衍生指标仅供参考。'+
     (D.note? '<br>'+D.note : '')+'</div>';
 
@@ -309,22 +307,7 @@ footer{ text-align:center; color:var(--muted); font-size:11px; margin-top:20px; 
         ]
       });
     }
-    if(monthly.length){
-      var monthLabels = monthly.map(function(x){return x.label;});
-      mcht = echarts.init(document.getElementById('chartMonth'));
-      mcht.setOption({
-        tooltip:{trigger:'axis'},
-        legend:{data:['新房','二手'],top:0,textStyle:{color:'#1f2d3d'}},
-        grid:{left:8,right:16,top:34,bottom:24,containLabel:true},
-        xAxis:{type:'category',data:monthLabels,axisLabel:{color:'#8a97a8',interval:0},axisLine:{lineStyle:{color:'#e8edf2'}}},
-        yAxis:{type:'value',axisLabel:{color:'#8a97a8'},splitLine:{lineStyle:{color:'#f0f3f6'}}},
-        series:[
-          {name:'新房',type:'bar',data:monthly.map(function(x){return x.new_home;}),itemStyle:{color:'#2b7de9',borderRadius:[4,4,0,0]},barMaxWidth:40},
-          {name:'二手',type:'bar',data:monthly.map(function(x){return x.second_hand;}),itemStyle:{color:'#00ae66',borderRadius:[4,4,0,0]},barMaxWidth:40}
-        ]
-      });
-    }
-    window.addEventListener('resize',function(){ if(v)v.resize(); if(q)q.resize(); if(mcht)mcht.resize(); });
+    window.addEventListener('resize',function(){ if(v)v.resize(); if(q)q.resize(); });
   });
 })();
 </script>
