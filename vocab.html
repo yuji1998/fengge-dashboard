@@ -224,7 +224,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
   </div>
   <div class="set" id="backupSet">
     <h3>💾 本地备份与恢复（防丢失）</h3>
-    <div class="hintbox" style="margin-bottom:10px">程序更新只会更新页面本身，<b>不会动你的学习进度</b>；进度还做了双份存储，即使主记录被误清也能自动恢复。换设备/彻底清缓存前，请用下面的方式备份。</div>
+    <div class="hintbox" style="margin-bottom:10px">✅ <b>三重自动保险已在运行（手机端同样生效）</b>：进度同时存 localStorage 主记录、镜像、IndexedDB 快照三份；只要有一份在，打开页面就会自动找回，程序更新也不动进度。<br>只有<b>手动"清除网站数据/换设备"</b>会把三份一起清掉——这种情况请用下面的「下载 JSON」备份、「选择文件恢复」还原。</div>
     <div class="setrow"><div><div class="t">自动备份到本地文件</div><div class="d" id="bindDesc">桌面 Chrome / Edge 可绑定一个本地文件，每次学习后自动写入磁盘，清缓存也不丢</div></div><button class="btn primary" id="bindBtn">绑定文件</button></div>
     <div class="setrow"><div><div class="t">备份状态</div><div class="d" id="backupStatus">尚未备份</div></div><button class="btn" id="nowBtn">立即备份</button><button class="btn" id="checkBtn" style="margin-left:6px">自检</button></div>
     <div class="setrow"><div><div class="t">下载备份文件</div><div class="d">所有浏览器可用，建议定期下载存到网盘/U盘</div></div><button class="btn" id="exportBtn">下载 JSON</button></div>
@@ -401,6 +401,7 @@ function saveDB(){
   try{s=JSON.stringify(DB);}catch(e){return;}
   try{localStorage.setItem(KEY,s);}catch(e){alert('保存失败：本地存储空间不足');}
   try{localStorage.setItem(KEY_MIRROR,s);}catch(e){} // 镜像冗余，防误清
+  if(typeof scheduleSnap==='function')scheduleSnap(s);  // 第三层：IndexedDB 快照（手机端自动保险）
   if(typeof scheduleBackup==='function')scheduleBackup(); // 自动写入已绑定的本地文件
 }
 /* ---- 词库进化迁移：v1 数字序号 → v2「单元|单词」 → v3「词库|单元|单词」。
@@ -431,6 +432,32 @@ const BK_IDB='vocab9a_fs',BK_STORE='handles',BK_LAST='vocab9a_bk_last',BK_BOUND=
 function idbOpen(){return new Promise((res,rej)=>{try{const r=indexedDB.open(BK_IDB,1);r.onupgradeneeded=()=>{try{r.result.createObjectStore(BK_STORE);}catch(e){}};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
 async function bkGetHandle(){try{const db=await idbOpen();return await new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readonly').objectStore(BK_STORE).get('file');t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);});}catch(e){return null;}}
 async function bkSetHandle(h){const db=await idbOpen();return new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readwrite').objectStore(BK_STORE).put(h,'file');t.onsuccess=()=>res();t.onerror=()=>rej(t.error);});}
+/* ---- 第三层保险：IndexedDB 进度快照（手机端也支持，独立于 localStorage）
+   localStorage 主+镜像被"清除网站数据"会一起没；IndexedDB 快照提供额外一层，
+   且页面打开时若主/镜像都失效，自动从这里恢复。数据仅存本机浏览器，不上云。 ---- */
+const SNAP_KEY='snapshot';
+async function bkGetSnap(){try{const db=await idbOpen();return await new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readonly').objectStore(BK_STORE).get(SNAP_KEY);t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);});}catch(e){return null;}}
+async function bkSetSnap(s){try{const db=await idbOpen();return await new Promise((res,rej)=>{const t=db.transaction(BK_STORE,'readwrite').objectStore(BK_STORE).put(s,SNAP_KEY);t.onsuccess=()=>res();t.onerror=()=>rej(t.error);});}catch(e){}}
+let snapTimer=null;
+function scheduleSnap(s){clearTimeout(snapTimer);snapTimer=setTimeout(()=>{bkSetSnap(s).catch(()=>{});},700);}
+// 启动时自动恢复：主/镜像均失效但快照有效 → 自动还原（手机端"打开即恢复"的关键）
+async function bkAutoRestore(){
+  const ok=d=>{try{return validDB(typeof d==='string'?JSON.parse(d):d);}catch(e){return false;}};
+  let mainOK=false,mirOK=false;
+  try{mainOK=ok(localStorage.getItem(KEY));}catch(e){}
+  try{mirOK=ok(localStorage.getItem(KEY_MIRROR));}catch(e){}
+  const snap=await bkGetSnap();
+  let snapOK=false,snapData=null;
+  try{snapData=typeof snap==='string'?JSON.parse(snap):snap;snapOK=validDB(snapData);}catch(e){}
+  if(!mainOK&&!mirOK&&snapOK){
+    DB=migrateDB(snapData);saveDB();refreshAll();
+    try{alert('已从本机进度快照自动恢复（三重保险生效），继续学习即可。');}catch(e){}
+    return true;
+  }
+  // 主/镜像有效但快照落后 → 用当前进度刷新快照
+  if((mainOK||mirOK))scheduleSnap(JSON.stringify(DB));
+  return false;
+}
 function bkPayload(){return {meta:{app:'vocab9a',v:2,time:Date.now(),note:'背单词引擎进度备份 · 多词库版'},data:DB};}
 let bkTimer=null,bkStatus='idle'; // idle|ok|needperm|failed|nohandle|unsupported
 function bkSetStatus(s){bkStatus=s;try{localStorage.setItem('vocab9a_bk_status',s);}catch(e){}updateBackupTip();}
@@ -1064,10 +1091,12 @@ function refreshAll(){
   SESSION={queue:[],idx:0};buildSession();renderSetting();renderStats();renderBook();updateBackupStatus();
 }
 refreshAll();
-bkCheckOnLoad(); // 打开页面即查文件权限，失效则报警（不静默）
+// 打开页面：①先从 IndexedDB 快照自动找回进度（手机端也生效）②再查文件备份权限
+if(typeof bkAutoRestore==='function')bkAutoRestore().then(()=>bkCheckOnLoad()).catch(()=>bkCheckOnLoad());
+else bkCheckOnLoad();
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,exampleOf,rootParts,hasExample,hasRoot,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkAutoRestore,bkGetSnap,bkSetSnap,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,exampleOf,rootParts,hasExample,hasRoot,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
