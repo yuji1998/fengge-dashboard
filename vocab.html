@@ -228,6 +228,12 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:26px;line-
     <div class="setrow"><div><div class="t">每轮题数</div><div class="d">一次连续做多少题后结算</div></div><input type="number" id="setRound" min="5" max="100" value="20" style="width:70px"></div>
     <div class="setrow"><div><div class="t">学习范围</div><div class="d">只背诵选中单元（单词本里勾选，留空=全部）</div></div><span id="setUnitInfo" style="font-size:12px;color:var(--muted)">全部单元</span></div>
   </div>
+  <div class="set" id="shareSet" style="border-color:var(--primary)">
+    <h3>📤 分享进度（发给龙虾分析）</h3>
+    <div class="hintbox" style="margin-bottom:10px">想把每天的背单词记录发给龙虾做统计分析时，点下面按钮——会生成一份带可读摘要的进度报告，手机上可直接选择「飞书 / 微信 / 邮件」发出，电脑上自动复制到剪贴板，粘贴发我即可。<b>进度仍只存你本机</b>，分享是手动触发，不上传任何服务器。</div>
+    <div class="setrow"><div><div class="t">一键分享今日进度</div><div class="d" id="shareDesc">生成报告：已学词数、记忆阶段分布、今日新词、连续天数、薄弱词，附完整数据</div></div><button class="btn primary" id="shareBtn">📤 分享 / 复制</button></div>
+    <div class="setrow"><div><div class="t">只复制文字摘要</div><div class="d">不附完整数据，只要看得懂的统计摘要（发我后又想看图用）</div></div><button class="btn" id="shareTextBtn">复制摘要</button></div>
+  </div>
   <div class="set" id="backupSet">
     <h3>💾 本地备份与恢复（防丢失）</h3>
     <div class="hintbox" style="margin-bottom:10px">✅ <b>三重自动保险已在运行（手机端同样生效）</b>：进度同时存 localStorage 主记录、镜像、IndexedDB 快照三份；只要有一份在，打开页面就会自动找回，程序更新也不动进度。<br>只有<b>手动"清除网站数据/换设备"</b>会把三份一起清掉——这种情况请用下面的「下载 JSON」备份、「选择文件恢复」还原。</div>
@@ -1134,6 +1140,83 @@ document.getElementById('exportBtn').onclick=()=>{
     alert('已下载备份文件：背单词进度备份_'+todayStr()+'.json\n请存到网盘 / U盘 / 微信收藏，换设备时用「选择文件恢复」导入。');
   }catch(e){alert('下载失败：'+e.message);}
 };
+/* ---- 📤 分享进度（手动触发，发给龙虾分析用）----
+   进度只存本机；点按钮才生成报告，不自动上传任何服务器。
+   报告=人能看懂的统计摘要 + 可选完整JSON（龙虾可精确解析/恢复）。 */
+function buildShareText(withData){
+  const now=Date.now();
+  const L=[];
+  L.push('【背单词进度报告】'+new Date().toLocaleString('zh-CN'));
+  L.push('工具：即单词（多词库·独立进度）');
+  L.push('');
+  Object.keys(DB.users).forEach((k,i)=>{
+    const u=DB.users[k];
+    const dict=(u.settings&&DICTS_RAW[u.settings.dict])?DICTS_RAW[u.settings.dict].name:(u.settings&&u.settings.dict||'默认');
+    const states=u.states||{};
+    const keys=Object.keys(states);
+    // 统计每个方向的词：stage分布、答错次数、待复习
+    let learned=0,mastered=0,wrongCnt=0,dueCnt=0,stageSum=0,dirCnt={};
+    const weak=[];
+    keys.forEach(w=>{
+      Object.keys(states[w]).forEach(dir=>{
+        const st=states[w][dir];
+        if(!st||!st.reps)return;
+        learned++;
+        dirCnt[dir]=(dirCnt[dir]||0)+1;
+        stageSum+=(st.stage||0);
+        if(st.stage>=7)mastered++;
+        if(st.wrong||st.lapses>0)wrongCnt++;
+        if(st.due&&st.due<=now)dueCnt++;
+        if((st.lapses||0)>=2||st.wrong){
+          const en=(w.split('|').pop()||w);
+          weak.push(en+'(错'+(st.lapses||1)+'次/阶段'+(st.stage||0)+')');
+        }
+      });
+    });
+    const d=u.daily||{},today=todayStr(),td=d[today]||{};
+    const days=Object.keys(d).filter(x=>d[x]&&(d[x].n||d[x].x)).length;
+    L.push((i+1)+'. '+u.name+(k===DB.current?'（当前）':''));
+    L.push('   词库：'+dict+'　|　已学：'+learned+'词次　|　掌握(阶段≥7)：'+mastered+'　|　平均阶段：'+(learned?(stageSum/learned).toFixed(1):'0'));
+    L.push('   今日新词：'+(td.n||0)+'（另加量'+(td.x||0)+'）　|　累计学习天数：'+days+'　|　连续天数：'+(u.streak||0));
+    L.push('   错题／待巩固：'+wrongCnt+'　|　当前待复习：'+dueCnt);
+    L.push('   设置：每轮'+(u.settings.round||20)+'题 · 每日新词'+(u.settings.newPerDay||20)+' · '+(u.settings.mode||'mix')+' · '+(u.settings.dir||'both'));
+    if(weak.length)L.push('   薄弱词（前15）：'+weak.slice(0,15).join('、'));
+    L.push('');
+  });
+  if(withData){
+    L.push('====== 完整数据（龙虾解析用，可原样恢复）======');
+    L.push(JSON.stringify(bkPayload()));
+  }
+  return L.join('\n');
+}
+async function shareOrCopy(text){
+  // 手机优先系统分享（可直接发飞书/微信）；失败或不支持则复制到剪贴板
+  if(navigator.share){
+    try{await navigator.share({title:'背单词进度报告',text:text});return 'shared';}catch(e){if(e&&e.name==='AbortError')return 'abort';}
+  }
+  try{
+    if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return 'copied';}
+  }catch(e){}
+  // 兜底：隐藏 textarea + execCommand
+  try{
+    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();return 'copied';
+  }catch(e){return 'failed';}
+}
+document.getElementById('shareBtn').onclick=async()=>{
+  const stamp=todayStr();
+  const r=await shareOrCopy(buildShareText(true));
+  if(r==='shared'){document.getElementById('shareDesc').textContent='✓ 已调起系统分享，选飞书/微信发给龙虾即可';}
+  else if(r==='copied'){alert('已复制完整进度报告（含数据）到剪贴板！\n粘贴到飞书发给龙虾即可。\n（如需纯文字摘要，点「复制摘要」）');document.getElementById('shareDesc').textContent='✓ 已复制，去飞书粘贴发我';}
+  else if(r==='abort'){/* 用户取消，不提示 */}
+  else{alert('自动分享不可用，请点「下载 JSON」后把文件发我。');}
+};
+document.getElementById('shareTextBtn').onclick=async()=>{
+  const r=await shareOrCopy(buildShareText(false));
+  if(r==='copied')alert('已复制文字摘要到剪贴板，粘贴发我即可。');
+  else if(r==='shared'){/* 已分享 */}
+  else if(r!=='abort')alert('复制失败，请用「下载 JSON」。');
+};
 // 绑定本地文件 / 立即备份
 document.getElementById('bindBtn').onclick=()=>bkBind();
 document.getElementById('checkBtn').onclick=async()=>{
@@ -1205,7 +1288,7 @@ if(typeof bkAutoRestore==='function')bkAutoRestore().then(()=>bkCheckOnLoad()).c
 else bkCheckOnLoad();
 
 /* 测试钩子 */
-window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkAutoRestore,bkGetSnap,bkSetSnap,bkSetStatus,getBkStatus:()=>bkStatus,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,TRANSFORMS,TF_KEYS,exampleOf,rootParts,hasExample,hasRoot,scanTransformPool,transformItem,transformOptions,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
+window.__VOCAB__={WORDS:curWords,WORDS_BY_DICT,DICT_IDS,INTERVALS,schedule,buildOptions,scanPool,blankState,pickQType,normWord,normKey,lev,migrateDB,dvFilter,THEMES,themeOf,confuseMap,DV_MODES,buildSession,newQuota,addExtra,getSession:()=>SESSION,getDB:()=>DB,setUser:k=>{DB.current=k;saveDB();refreshAll();},bkPayload,bkWrite,bkCheckOnLoad,bkAutoRestore,bkGetSnap,bkSetSnap,bkSetStatus,getBkStatus:()=>bkStatus,buildShareText,shareOrCopy,memoryFingerprint,EXAMPLES,AFFIXES,ROOTS,TRANSFORMS,TF_KEYS,exampleOf,rootParts,hasExample,hasRoot,scanTransformPool,transformItem,transformOptions,restoreText:t=>{const p=JSON.parse(t);DB=migrateDB(p.data&&p.data.users?p.data:p);saveDB();refreshAll();return Object.keys(DB.users).length;}};
 </script>
 </body>
 </html>
